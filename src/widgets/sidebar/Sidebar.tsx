@@ -25,6 +25,11 @@ import type { MenuItem } from '@/types';
 
 // ─── Icon Map ──────────────────────────────────────────────────
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
+import {
   LayoutDashboard,
   CreditCard,
   Banknote,
@@ -49,6 +54,32 @@ import {
   Building2,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  Cpu,
+  ShieldAlert,
+  Users,
+  Server,
+  Monitor,
+  MonitorSmartphone,
+  PlusCircle,
+  PlusSquare,
+  List,
+  Wallet,
+  PiggyBank,
+  Settings,
+  Eye,
+  Sliders,
+  Calendar,
+  HardDrive,
+  Table,
+  BookOpen,
+  Award,
+  BarChart2,
+  PieChart,
+  UserCircle,
+  Database,
+  Send,
+  RefreshCw,
 } from 'lucide-react';
 
 const iconMap: Record<string, React.ElementType> = {
@@ -72,6 +103,31 @@ const iconMap: Record<string, React.ElementType> = {
   Activity,
   ClipboardCheck,
   FileText,
+  Cpu,
+  ShieldAlert,
+  Users,
+  Server,
+  Monitor,
+  MonitorSmartphone,
+  PlusCircle,
+  PlusSquare,
+  List,
+  Wallet,
+  PiggyBank,
+  Settings,
+  Eye,
+  Sliders,
+  Calendar,
+  HardDrive,
+  Table,
+  BookOpen,
+  Award,
+  BarChart2,
+  PieChart,
+  UserCircle,
+  Database,
+  Send,
+  RefreshCw,
 };
 
 function MenuIcon({ name, className }: { name?: string; className?: string }) {
@@ -86,11 +142,13 @@ function NavItem({
   isActive,
   collapsed,
   onClick,
+  isChild = false,
 }: {
   item: MenuItem;
   isActive: boolean;
   collapsed: boolean;
   onClick: () => void;
+  isChild?: boolean;
 }) {
   const button = (
     <button
@@ -101,18 +159,21 @@ function NavItem({
         isActive
           ? 'bg-bank-active text-bank-red'
           : 'text-muted-foreground hover:bg-bank-active/60 hover:text-bank-red',
-        collapsed && 'justify-center px-0'
+        collapsed && 'justify-center px-0',
+        isChild && !collapsed && 'pl-11 py-2 text-[13px]'
       )}
     >
-      <MenuIcon
-        name={item.icon}
-        className={cn(
-          'h-5 w-5 shrink-0',
-          isActive
-            ? 'text-bank-red'
-            : 'text-muted-foreground group-hover:text-bank-red'
-        )}
-      />
+      {!isChild && (
+        <MenuIcon
+          name={item.icon}
+          className={cn(
+            'h-5 w-5 shrink-0',
+            isActive
+              ? 'text-bank-red'
+              : 'text-muted-foreground group-hover:text-bank-red'
+          )}
+        />
+      )}
       {!collapsed && (
         <span className="truncate">{item.label}</span>
       )}
@@ -151,6 +212,17 @@ function NavGroup({
 }) {
   const { currentPage, navigate } = useNavigationStore();
   const hasChildren = group.children && group.children.length > 0;
+  
+  const isAnyChildActive = React.useMemo(() => {
+    return group.children?.some(child => child.id === currentPage);
+  }, [group.children, currentPage]);
+
+  const [isOpen, setIsOpen] = React.useState(isAnyChildActive);
+
+  // Re-open if a child becomes active externally
+  React.useEffect(() => {
+    if (isAnyChildActive) setIsOpen(true);
+  }, [isAnyChildActive]);
 
   if (collapsed) {
     return (
@@ -170,23 +242,49 @@ function NavGroup({
   }
 
   return (
-    <div className="flex flex-col gap-1">
-      {/* Group Header */}
-      <p className="px-3 pt-4 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-        {group.label}
-      </p>
-      {/* Group Items */}
-      {hasChildren &&
-        group.children!.map((child) => (
-          <NavItem
-            key={child.id}
-            item={child}
-            isActive={currentPage === child.id}
-            collapsed={collapsed}
-            onClick={() => navigate(child.id)}
+    <Collapsible
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      className="flex flex-col gap-0.5"
+    >
+      <CollapsibleTrigger asChild>
+        <button
+          className={cn(
+            'group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150',
+            'text-muted-foreground hover:bg-bank-active/60 hover:text-bank-red',
+            isAnyChildActive && 'bg-bank-active text-bank-red font-bold'
+          )}
+        >
+          <MenuIcon
+            name={group.icon}
+            className={cn(
+              'h-5 w-5 shrink-0',
+              isAnyChildActive ? 'text-bank-red' : 'text-muted-foreground group-hover:text-bank-red'
+            )}
           />
-        ))}
-    </div>
+          <span className="truncate">{group.label}</span>
+          <ChevronDown
+            className={cn(
+              'ml-auto h-4 w-4 shrink-0 transition-transform duration-200',
+              isOpen && 'rotate-180'
+            )}
+          />
+        </button>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="flex flex-col gap-0.5 overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
+        {hasChildren &&
+          group.children!.map((child) => (
+            <NavItem
+              key={child.id}
+              item={child}
+              isActive={currentPage === child.id}
+              collapsed={collapsed}
+              onClick={() => navigate(child.id)}
+              isChild
+            />
+          ))}
+      </CollapsibleContent>
+    </Collapsible>
   );
 }
 
