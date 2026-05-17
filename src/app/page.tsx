@@ -116,17 +116,17 @@ export default function Home() {
   }, [handleActivity]);
 
   // ── Auth Gate: Show login when not authenticated ────────────
-  // if (!isAuthenticated || !user) {
-  //   return (
-  //     <Suspense fallback={
-  //       <div className="min-h-screen flex items-center justify-center bg-background">
-  //         <Skeleton className="h-96 w-full max-w-md rounded-xl" />
-  //       </div>
-  //     }>
-  //       <LoginPage />
-  //     </Suspense>
-  //   );
-  // }
+  if (!isAuthenticated || !user) {
+    return (
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <Skeleton className="h-96 w-full max-w-md rounded-xl" />
+        </div>
+      }>
+        <LoginPage />
+      </Suspense>
+    );
+  }
 
   // ── Portal Layout ───────────────────────────────────────────
   const PageComponent = pageComponents[currentPage];
