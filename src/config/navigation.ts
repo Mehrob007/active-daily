@@ -319,13 +319,13 @@ const menuTree: MenuItem[] = [
   {
     id: "processing",
     label: "Процессинг",
-    icon: "Server",
+    icon: "Cpu",
     roles: allRoles,
     children: [
       {
         id: "processing-limits",
         label: "Лимиты",
-        icon: "Sliders",
+        icon: "ShieldAlert",
         path: "processing-limits",
         roles: allRoles,
       },
