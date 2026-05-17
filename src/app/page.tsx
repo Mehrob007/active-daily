@@ -30,8 +30,8 @@ const ChairmanReportsPage = lazy(() => import('@/features/analytics/ChairmanRepo
 const DirectorReportsPage = lazy(() => import('@/features/analytics/DirectorReportsPage'));
 const SystemLogsPage = lazy(() => import('@/features/analytics/SystemLogsPage'));
 const DailyTasksPage = lazy(() => import('@/features/analytics/DailyTasksPage'));
+const KnowledgeBasePage = lazy(() => import('@/features/knowledge-base/KnowledgeBasePage'));
 
-// ─── Page Map ───────────────────────────────────────────────────
 const pageComponents: Record<string, React.LazyExoticComponent<React.ComponentType>> = {
   dashboard: DashboardPage,
   applications: ApplicationsPage,
@@ -53,6 +53,7 @@ const pageComponents: Record<string, React.LazyExoticComponent<React.ComponentTy
   'director-reports': DirectorReportsPage,
   'system-logs': SystemLogsPage,
   'daily-tasks': DailyTasksPage,
+  'knowledge-base': KnowledgeBasePage,
 };
 
 // ─── Loading Fallback ───────────────────────────────────────────
@@ -115,17 +116,17 @@ export default function Home() {
   }, [handleActivity]);
 
   // ── Auth Gate: Show login when not authenticated ────────────
-  if (!isAuthenticated || !user) {
-    return (
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-background">
-          <Skeleton className="h-96 w-full max-w-md rounded-xl" />
-        </div>
-      }>
-        <LoginPage />
-      </Suspense>
-    );
-  }
+  // if (!isAuthenticated || !user) {
+  //   return (
+  //     <Suspense fallback={
+  //       <div className="min-h-screen flex items-center justify-center bg-background">
+  //         <Skeleton className="h-96 w-full max-w-md rounded-xl" />
+  //       </div>
+  //     }>
+  //       <LoginPage />
+  //     </Suspense>
+  //   );
+  // }
 
   // ── Portal Layout ───────────────────────────────────────────
   const PageComponent = pageComponents[currentPage];

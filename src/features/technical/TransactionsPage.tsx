@@ -1,10 +1,9 @@
-'use client';
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@/widgets/page-container/PageContainer';
 import { DataTable, StatusBadge } from '@/components/banking';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { useNavigationStore } from '@/stores/navigation-store';
 import {
   Select,
   SelectContent,
@@ -88,12 +87,22 @@ const columns: ColumnDef<Transaction>[] = [
 // ─── Page Component ─────────────────────────────────────────────
 
 export default function TransactionsPage() {
+  const [accountNumber, setAccountNumber] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
+
+  const currentParams = useNavigationStore((state) => state.currentParams);
+
+  useEffect(() => {
+    if (currentParams && (currentParams.cardId || currentParams.accountId)) {
+      setAccountNumber(currentParams.cardId || currentParams.accountId);
+    }
+  }, [currentParams]);
 
   const filteredData = mockTransactions.filter((tx) => {
     if (statusFilter !== 'all' && tx.status !== statusFilter) return false;
     if (typeFilter !== 'all' && tx.type !== typeFilter) return false;
+    if (accountNumber && !tx.accountId.toLowerCase().includes(accountNumber.toLowerCase())) return false;
     return true;
   });
 
@@ -103,7 +112,12 @@ export default function TransactionsPage() {
       <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-          <Input placeholder="Номер счёта..." className="h-9 pl-8" />
+          <Input 
+            placeholder="Номер счёта..." 
+            value={accountNumber}
+            onChange={(e) => setAccountNumber(e.target.value)}
+            className="h-9 pl-8" 
+          />
         </div>
         <Input type="date" className="h-9" />
         <Select value={typeFilter} onValueChange={setTypeFilter}>

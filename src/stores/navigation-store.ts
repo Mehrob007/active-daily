@@ -4,6 +4,8 @@ import { persist } from 'zustand/middleware';
 interface NavigationState {
   /** Current active page slug (e.g. 'dashboard', 'applications') */
   currentPage: string;
+  /** Optional parameter payload passed on navigation */
+  currentParams?: any;
   /** Whether the sidebar is collapsed (desktop) */
   sidebarCollapsed: boolean;
   /** Whether the mobile sidebar sheet is open */
@@ -11,8 +13,8 @@ interface NavigationState {
 }
 
 interface NavigationActions {
-  /** Navigate to a page by slug */
-  navigate: (page: string) => void;
+  /** Navigate to a page by slug with optional parameters */
+  navigate: (page: string, params?: any) => void;
   /** Toggle sidebar collapsed / expanded (desktop) */
   toggleSidebar: () => void;
   /** Explicitly set sidebar collapsed state */
@@ -28,12 +30,13 @@ export const useNavigationStore = create<NavigationStore>()(
     (set) => ({
       // ── State ──────────────────────────────────────────────
       currentPage: 'dashboard',
+      currentParams: null,
       sidebarCollapsed: false,
       sidebarMobileOpen: false,
 
       // ── Actions ────────────────────────────────────────────
-      navigate: (page: string) => {
-        set({ currentPage: page, sidebarMobileOpen: false });
+      navigate: (page: string, params?: any) => {
+        set({ currentPage: page, currentParams: params || null, sidebarMobileOpen: false });
       },
 
       toggleSidebar: () => {
@@ -52,6 +55,7 @@ export const useNavigationStore = create<NavigationStore>()(
       name: 'premies-navigation-storage',
       partialize: (state) => ({
         currentPage: state.currentPage,
+        currentParams: state.currentParams,
         sidebarCollapsed: state.sidebarCollapsed,
       }),
     }

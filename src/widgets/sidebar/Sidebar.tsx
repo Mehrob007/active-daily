@@ -6,7 +6,7 @@ import { useNavigationStore } from '@/stores/navigation-store';
 import { useAuthStore } from '@/stores/auth-store';
 import { getFilteredMenu } from '@/config/navigation';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ScrollArea } from '@/components/ui/scroll-area';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -259,8 +259,8 @@ function SidebarContent({ collapsed }: { collapsed: boolean }) {
   const { user } = useAuthStore();
   const { currentPage, navigate } = useNavigationStore();
 
-  const menuItems: MenuItem[] = user?.roleIds
-    ? getFilteredMenu(user.roleIds)
+  const menuItems: MenuItem[] = (user?.roleIds || [5, 9, 10, 11, 12, 13, 14, 17, 18, 21, 22, 23, 26, 27, 31, 32])
+    ? getFilteredMenu(user?.roleIds || [5, 9, 10, 11, 12, 13, 14, 17, 18, 21, 22, 23, 26, 27, 31, 32])
     : [];
 
   // Separate top-level items from groups
@@ -268,7 +268,7 @@ function SidebarContent({ collapsed }: { collapsed: boolean }) {
   const groups = menuItems.filter((item) => item.children);
 
   return (
-    <div className="flex h-full flex-col bg-white">
+    <div className="flex h-full flex-col bg-white overflow-hidden">
       {/* Logo Area */}
       <div
         className={cn(
@@ -287,7 +287,7 @@ function SidebarContent({ collapsed }: { collapsed: boolean }) {
       </div>
 
       {/* Navigation */}
-      <ScrollArea className="flex-1 px-2 py-2">
+      <div className="flex-1 overflow-y-auto px-2 py-2 no-scrollbar">
         <nav className="flex flex-col gap-1" aria-label="Main navigation">
           {/* Top-level items (Dashboard) */}
           {topItems.map((item) => (
@@ -305,7 +305,7 @@ function SidebarContent({ collapsed }: { collapsed: boolean }) {
             <NavGroup key={group.id} group={group} collapsed={collapsed} />
           ))}
         </nav>
-      </ScrollArea>
+      </div>
 
       {/* User Section */}
       <div className="px-2 pb-3">

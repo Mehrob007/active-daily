@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@/widgets/page-container/PageContainer';
 import { DataTable, StatusBadge } from '@/components/banking';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent } from '@/components/ui/card';
 import { ColumnDef } from '@tanstack/react-table';
+import { useNavigationStore } from '@/stores/navigation-store';
 import {
   Shield,
   ArrowUpRight,
@@ -74,8 +75,6 @@ const MOCK_LIMIT_HISTORY: LimitHistoryEntry[] = [
   { id: 'LH-005', date: '2025-04-28 11:00', changedBy: 'Абдуллаев М.К.', field: 'Дневной перевод', oldValue: '2 000 000 ₸', newValue: '3 000 000 ₸', reason: 'Ежеквартальный пересмотр лимитов по регламенту' },
   { id: 'LH-006', date: '2025-04-20 13:45', changedBy: 'Каримова Г.А.', field: 'Месячный перевод', oldValue: '15 000 000 ₸', newValue: '20 000 000 ₸', reason: 'Увеличение оборотов клиента за последний квартал' },
   { id: 'LH-007', date: '2025-04-15 08:30', changedBy: 'Турсунов Б.Р.', field: 'Дневное снятие', oldValue: '300 000 ₸', newValue: '500 000 ₸', reason: 'Стандартное повышение по классу обслуживания' },
-  { id: 'LH-008', date: '2025-04-10 15:10', changedBy: 'Рахимова Д.У.', field: 'Месячное снятие', oldValue: '3 000 000 ₸', newValue: '5 000 000 ₸', reason: 'Перевод клиента в премиальный сегмент обслуживания' },
-  { id: 'LH-009', date: '2025-03-28 10:55', changedBy: 'Абдуллаев М.К.', field: 'Дневной перевод', oldValue: '1 500 000 ₸', newValue: '2 000 000 ₸', reason: 'Пересмотр по итогам ежемесячного анализа рисков' },
   { id: 'LH-010', date: '2025-03-20 12:40', changedBy: 'Каримова Г.А.', field: 'Месячный перевод', oldValue: '10 000 000 ₸', newValue: '15 000 000 ₸', reason: 'Запрос от филиала №12, согласовано руководителем' },
   { id: 'LH-011', date: '2025-03-15 09:20', changedBy: 'Турсунов Б.Р.', field: 'Дневное снятие', oldValue: '200 000 ₸', newValue: '300 000 ₸', reason: 'Первоначальная установка при открытии счёта' },
   { id: 'LH-012', date: '2025-03-10 14:05', changedBy: 'Рахимова Д.У.', field: 'Месячное снятие', oldValue: '2 000 000 ₸', newValue: '3 000 000 ₸', reason: 'Начальная установка лимитов для нового клиента' },
@@ -186,6 +185,26 @@ export default function LimitsPage() {
   const [currentLimits, setCurrentLimits] = useState<LimitEntry>(MOCK_CURRENT_LIMITS);
   const [editLimits, setEditLimits] = useState<LimitEntry>({ ...MOCK_CURRENT_LIMITS });
   const [reason, setReason] = useState('');
+
+  const currentParams = useNavigationStore((state) => state.currentParams);
+
+  useEffect(() => {
+    if (currentParams) {
+      if (currentParams.clientId) {
+        setClientId(currentParams.clientId);
+      }
+      if (currentParams.cardId || currentParams.accountId) {
+        setAccountId(currentParams.cardId || currentParams.accountId);
+      }
+      // If we have clientId, trigger auto-load
+      if (currentParams.clientId) {
+        setIsLoaded(true);
+        setEditLimits({ ...MOCK_CURRENT_LIMITS });
+        setReason('');
+        setShowSuccess(false);
+      }
+    }
+  }, [currentParams]);
 
   const handleLoad = () => {
     if (!clientId.trim()) return;

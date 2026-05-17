@@ -1,9 +1,6 @@
-import type { MenuItem, RoleId } from '@/types';
-
 const allRoles = [5, 9, 10, 11, 12, 13, 14, 17, 18, 21, 22, 23, 26, 27, 31, 32];
 
 const menuTree: MenuItem[] = [
-  { id: 'dashboard', label: 'Главная', icon: 'LayoutDashboard', path: 'dashboard', roles: allRoles },
   { id: 'knowledge-base', label: 'База знаний', icon: 'BookOpen', path: 'knowledge-base', roles: allRoles },
   { id: 'tests', label: 'Тесты', icon: 'GraduationCap', path: 'tests', roles: allRoles },
   { id: 'my-premie', label: 'Моя премия', icon: 'Award', path: 'my-premie', roles: allRoles },
@@ -133,68 +130,3 @@ const menuTree: MenuItem[] = [
     ]
   },
 ];
-
-// ─── Filter helpers ────────────────────────────────────────────
-function filterMenuItems(items: MenuItem[], roleIds: number[]): MenuItem[] {
-  const result: MenuItem[] = [];
-
-  for (const item of items) {
-    if (!item.roles.some((r) => roleIds.includes(r))) continue;
-
-    if (item.children) {
-      const filteredChildren = filterMenuItems(item.children, roleIds);
-      if (filteredChildren.length > 0) {
-        result.push({ ...item, children: filteredChildren });
-      }
-    } else {
-      result.push(item);
-    }
-  }
-
-  return result;
-}
-
-// ─── Public API ────────────────────────────────────────────────
-export function getFilteredMenu(roleIds: number[]): MenuItem[] {
-  return filterMenuItems(menuTree, roleIds);
-}
-
-/** Get breadcrumbs for a page: [group, page] */
-export function getBreadcrumbsForPath(pageId: string): { label: string; path?: string }[] {
-  const crumbs: { label: string; path?: string }[] = [{ label: 'Premies Portal' }];
-
-  for (const group of menuTree) {
-    if (group.id === pageId) {
-      crumbs.push({ label: group.label });
-      return crumbs;
-    }
-    if (group.children) {
-      for (const child of group.children) {
-        if (child.id === pageId) {
-          crumbs.push({ label: group.label });
-          crumbs.push({ label: child.label });
-          return crumbs;
-        }
-      }
-    }
-  }
-
-  crumbs.push({ label: pageId });
-  return crumbs;
-}
-
-/** Get a flat list of all visible page IDs for quick lookup */
-export function getAllowedPages(roleIds: number[]): string[] {
-  const flat: string[] = [];
-  const walk = (items: MenuItem[]) => {
-    for (const item of items) {
-      if (item.children) {
-        walk(item.children);
-      } else if (item.path) {
-        flat.push(item.id);
-      }
-    }
-  };
-  walk(getFilteredMenu(roleIds));
-  return flat;
-}
