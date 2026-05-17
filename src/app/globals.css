@@ -1,0 +1,204 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================
+   PREMIES PORTAL — ActivBank Design System
+   ============================================ */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono);
+
+  /* Sidebar */
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+
+  /* Charts */
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+
+  /* Base */
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  /* Custom portal colors */
+  --color-bank-red: var(--bank-red);
+  --color-bank-red-light: var(--bank-red-light);
+  --color-bank-red-dark: var(--bank-red-dark);
+  --color-bank-coal: var(--bank-coal);
+  --color-bank-surface: var(--bank-surface);
+  --color-bank-bg: var(--bank-bg);
+  --color-bank-active: var(--bank-active);
+  --color-bank-success: var(--bank-success);
+  --color-bank-warning: var(--bank-warning);
+  --color-bank-info: var(--bank-info);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  /* ActivBank Palette */
+  --bank-red: #C8102E;
+  --bank-red-light: #E8354F;
+  --bank-red-dark: #A00D24;
+  --bank-coal: #1A1A1A;
+  --bank-surface: #FFFFFF;
+  --bank-bg: #F8F9FA;
+  --bank-active: #FFE5EA;
+  --bank-success: #16A34A;
+  --bank-warning: #F59E0B;
+  --bank-info: #0EA5E9;
+
+  /* Radius — 8px base for banking UI */
+  --radius: 0.5rem;
+
+  /* Background & Foreground */
+  --background: #F8F9FA;
+  --foreground: #1A1A1A;
+
+  /* Card */
+  --card: #FFFFFF;
+  --card-foreground: #1A1A1A;
+
+  /* Popover */
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1A1A;
+
+  /* Primary — Bank Red */
+  --primary: #C8102E;
+  --primary-foreground: #FFFFFF;
+
+  /* Secondary — Coal */
+  --secondary: #1A1A1A;
+  --secondary-foreground: #FFFFFF;
+
+  /* Muted */
+  --muted: #F1F3F5;
+  --muted-foreground: #6C757D;
+
+  /* Accent — Active State Pink */
+  --accent: #FFE5EA;
+  --accent-foreground: #C8102E;
+
+  /* Destructive */
+  --destructive: #DC2626;
+
+  /* Border & Input */
+  --border: #E5E7EB;
+  --input: #E5E7EB;
+
+  /* Ring */
+  --ring: #C8102E;
+
+  /* Charts — Bank-themed */
+  --chart-1: #C8102E;
+  --chart-2: #1A1A1A;
+  --chart-3: #F59E0B;
+  --chart-4: #0EA5E9;
+  --chart-5: #16A34A;
+
+  /* Sidebar — White on gray */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #1A1A1A;
+  --sidebar-primary: #C8102E;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #FFE5EA;
+  --sidebar-accent-foreground: #C8102E;
+  --sidebar-border: #E5E7EB;
+  --sidebar-ring: #C8102E;
+}
+
+.dark {
+  --background: #0F0F0F;
+  --foreground: #F1F3F5;
+  --card: #1A1A1A;
+  --card-foreground: #F1F3F5;
+  --popover: #1A1A1A;
+  --popover-foreground: #F1F3F5;
+  --primary: #E8354F;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F1F3F5;
+  --secondary-foreground: #1A1A1A;
+  --muted: #2A2A2A;
+  --muted-foreground: #9CA3AF;
+  --accent: #3D1520;
+  --accent-foreground: #E8354F;
+  --destructive: #EF4444;
+  --border: #2A2A2A;
+  --input: #2A2A2A;
+  --ring: #E8354F;
+  --chart-1: #E8354F;
+  --chart-2: #F1F3F5;
+  --chart-3: #FBBF24;
+  --chart-4: #38BDF8;
+  --chart-5: #4ADE80;
+  --sidebar: #1A1A1A;
+  --sidebar-foreground: #F1F3F5;
+  --sidebar-primary: #E8354F;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #3D1520;
+  --sidebar-accent-foreground: #E8354F;
+  --sidebar-border: #2A2A2A;
+  --sidebar-ring: #E8354F;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+  }
+}
