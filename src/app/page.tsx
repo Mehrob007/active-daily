@@ -131,27 +131,11 @@ export default function Home() {
   // ── Portal Layout ───────────────────────────────────────────
   const PageComponent = pageComponents[currentPage];
 
-  return (
-    <div className="flex h-screen bg-background overflow-hidden">
-      {/* Sidebar */}
-      <Sidebar />
-
-      {/* Main Content */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Header */}
-        <Header />
-
-        {/* Scrollable Page Area */}
-        <main className="flex-1 overflow-y-auto">
-          {PageComponent ? (
-            <Suspense fallback={<PageLoader />}>
-              <PageComponent />
-            </Suspense>
-          ) : (
-            <PlaceholderPage pageId={currentPage} />
-          )}
-        </main>
-      </div>
-    </div>
+  return PageComponent ? (
+    <Suspense fallback={<PageLoader />}>
+      <PageComponent />
+    </Suspense>
+  ) : (
+    <PlaceholderPage pageId={currentPage} />
   );
 }

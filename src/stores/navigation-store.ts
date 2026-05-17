@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { getPathFromPageId } from '@/config/navigation';
 
 interface NavigationState {
   /** Current active page slug (e.g. 'dashboard', 'applications') */
@@ -37,6 +38,17 @@ export const useNavigationStore = create<NavigationStore>()(
       // ── Actions ────────────────────────────────────────────
       navigate: (page: string, params?: any) => {
         set({ currentPage: page, currentParams: params || null, sidebarMobileOpen: false });
+        if (typeof window !== 'undefined') {
+          const path = getPathFromPageId(page);
+          if (window.location.pathname !== path) {
+            const nextRouter = (window as any).nextRouter;
+            if (nextRouter) {
+              nextRouter.push(path);
+            } else {
+              window.location.href = path;
+            }
+          }
+        }
       },
 
       toggleSidebar: () => {

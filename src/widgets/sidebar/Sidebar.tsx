@@ -287,7 +287,7 @@ function SidebarContent({ collapsed }: { collapsed: boolean }) {
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto px-2 py-2 no-scrollbar">
+      <div className="flex-1 overflow-y-auto px-2 py-2 pr-1">
         <nav className="flex flex-col gap-1" aria-label="Main navigation">
           {/* Top-level items (Dashboard) */}
           {topItems.map((item) => (

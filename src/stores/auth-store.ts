@@ -97,6 +97,13 @@ export const useAuthStore = create<AuthStore>()(
           document.cookie = `access_token=${tokens.accessToken}; path=/; max-age=${tokens.expiresIn}`;
           document.cookie = `refresh_token=${tokens.refreshToken}; path=/; max-age=${tokens.expiresIn * 2}`;
 
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('access_token', tokens.accessToken);
+            if (tokens.refreshToken) {
+              localStorage.setItem('refresh_token', tokens.refreshToken);
+            }
+          }
+
           set({
             tokens,
             user: userProfile,
@@ -216,6 +223,12 @@ export const useAuthStore = create<AuthStore>()(
       setTokens: (tokens: AuthTokens) => {
         document.cookie = `access_token=${tokens.accessToken}; path=/; max-age=${tokens.expiresIn}`;
         document.cookie = `refresh_token=${tokens.refreshToken}; path=/; max-age=${tokens.expiresIn * 2}`;
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('access_token', tokens.accessToken);
+          if (tokens.refreshToken) {
+            localStorage.setItem('refresh_token', tokens.refreshToken);
+          }
+        }
         set({ tokens, isAuthenticated: true, lastActivity: Date.now() });
       },
 

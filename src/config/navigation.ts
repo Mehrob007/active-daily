@@ -198,3 +198,161 @@ export function getAllowedPages(roleIds: number[]): string[] {
   walk(getFilteredMenu(roleIds));
   return flat;
 }
+
+/** Map custom navigation/Zustand page IDs to standard next.js route paths */
+export function getPathFromPageId(id: string): string {
+  switch (id) {
+    case 'dashboard': return '/';
+    case 'knowledge-base': return '/knowledge-base';
+    case 'tests': return '/tests';
+    case 'my-premie': return '/my-premie';
+    case 'office-stats': return '/office-stats';
+    case 'bank-stats': return '/bank-stats';
+    
+    // Operator
+    case 'operator-premies': return '/operator/premies';
+    case 'operator-reports': return '/operator/reports';
+    case 'operator-data': return '/operator/data';
+    case 'operator-tests': return '/operator/tests';
+    case 'operator-manage-kb': return '/operator/manage-kb';
+    
+    // Card apps
+    case 'card-create': return '/card-apps/create';
+    case 'card-list': return '/card-apps/list';
+    
+    // Bank products
+    case 'products-cards': return '/products/cards';
+    case 'products-credits': return '/products/credits';
+    case 'products-accounts': return '/products/accounts';
+    case 'products-deposits': return '/products/deposits';
+    case 'products-transfers': return '/products/transfers';
+    
+    // Credit apps
+    case 'credit-create': return '/credit-apps/create';
+    case 'credit-list': return '/credit-apps/list';
+    
+    // Deposit apps
+    case 'deposit-create': return '/deposit-apps/create';
+    case 'deposit-list': return '/deposit-apps/list';
+    
+    // QR agent
+    case 'qr-transactions': return '/qr-agent/transactions';
+    case 'qr-other-bank-create': return '/qr-agent/other-bank-create';
+    case 'qr-other-bank-settings': return '/qr-agent/other-bank-settings';
+    
+    // PVN
+    case 'pvn-transactions': return '/pvn/transactions';
+    case 'pvn-settings': return '/pvn/settings';
+    
+    // SMS agent
+    case 'sms-send': return '/sms-agent/send';
+    
+    // Transaction agent
+    case 'transaction-update': return '/transaction-agent/update';
+    case 'terminal-assign': return '/transaction-agent/terminal-assign';
+    
+    // Customs agent
+    case 'customs-pay': return '/customs-agent/pay';
+    
+    // Frontovik
+    case 'abs-search': return '/frontovik/abs-search';
+    
+    // Processing
+    case 'processing-limits': return '/processing/limits';
+    case 'processing-transactions': return '/processing/transactions';
+    case 'limits': return '/processing/limits';
+    case 'transactions': return '/processing/transactions';
+    
+    // Processing search
+    case 'processing-search-transactions': return '/processing-search/transactions';
+    
+    // Client documents
+    case 'client-documents': return '/client-documents';
+    case 'documents': return '/client-documents';
+    
+    // ATM
+    case 'atm-table': return '/atm/table';
+    
+    // Account statements
+    case 'view-statements': return '/account-statements/view';
+    
+    // Cashback
+    case 'cashback-settings': return '/cashback/settings';
+    case 'cashback-cards': return '/cashback/cards';
+    case 'cashback-limits': return '/cashback/limits';
+    case 'cashback-qr': return '/cashback/qr';
+    
+    // Payments
+    case 'payments-list': return '/payments/list';
+    
+    default: return '/';
+  }
+}
+
+/** Map pathname to custom navigation/Zustand page ID */
+export function getPageIdFromPath(pathname: string): string {
+  const p = pathname.replace(/\/$/, ''); // strip trailing slash
+  if (p === '' || p === '/dashboard') return 'dashboard';
+  if (p === '/knowledge-base') return 'knowledge-base';
+  if (p === '/tests') return 'tests';
+  if (p === '/my-premie') return 'my-premie';
+  if (p === '/office-stats') return 'office-stats';
+  if (p === '/bank-stats') return 'bank-stats';
+  
+  if (p === '/operator/premies') return 'operator-premies';
+  if (p === '/operator/reports') return 'operator-reports';
+  if (p === '/operator/data') return 'operator-data';
+  if (p === '/operator/tests') return 'operator-tests';
+  if (p === '/operator/manage-kb') return 'operator-manage-kb';
+  
+  if (p === '/card-apps/create') return 'card-create';
+  if (p === '/card-apps/list') return 'card-list';
+  
+  if (p === '/products/cards') return 'products-cards';
+  if (p === '/products/credits') return 'products-credits';
+  if (p === '/products/accounts') return 'products-accounts';
+  if (p === '/products/deposits') return 'products-deposits';
+  if (p === '/products/transfers') return 'products-transfers';
+  
+  if (p === '/credit-apps/create') return 'credit-create';
+  if (p === '/credit-apps/list') return 'credit-list';
+  
+  if (p === '/deposit-apps/create') return 'deposit-create';
+  if (p === '/deposit-apps/list') return 'deposit-list';
+  
+  if (p === '/qr-agent/transactions') return 'qr-transactions';
+  if (p === '/qr-agent/other-bank-create') return 'qr-other-bank-create';
+  if (p === '/qr-agent/other-bank-settings') return 'qr-other-bank-settings';
+  
+  if (p === '/pvn/transactions') return 'pvn-transactions';
+  if (p === '/pvn/settings') return 'pvn-settings';
+  
+  if (p === '/sms-agent/send') return 'sms-send';
+  
+  if (p === '/transaction-agent/update') return 'transaction-update';
+  if (p === '/transaction-agent/terminal-assign') return 'terminal-assign';
+  
+  if (p === '/customs-agent/pay') return 'customs-pay';
+  
+  if (p === '/frontovik/abs-search') return 'abs-search';
+  
+  if (p === '/processing/limits') return 'limits';
+  if (p === '/processing/transactions') return 'transactions';
+  
+  if (p === '/processing-search/transactions') return 'processing-search-transactions';
+  
+  if (p === '/client-documents') return 'documents';
+  
+  if (p === '/atm/table') return 'atm-table';
+  
+  if (p === '/account-statements/view') return 'view-statements';
+  
+  if (p === '/cashback/settings') return 'cashback-settings';
+  if (p === '/cashback/cards') return 'cashback-cards';
+  if (p === '/cashback/limits') return 'cashback-limits';
+  if (p === '/cashback/qr') return 'cashback-qr';
+  
+  if (p === '/payments/list') return 'payments-list';
+  
+  return 'dashboard';
+}

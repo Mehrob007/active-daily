@@ -27,6 +27,8 @@ export const metadata: Metadata = {
   },
 };
 
+import PortalLayout from "@/components/layout/PortalLayout";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,7 +38,9 @@ export default function RootLayout({
     <html lang="ru" suppressHydrationWarning>
       <body className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased font-sans bg-background text-foreground`}>
         <AppProvider>
-          {children}
+          <PortalLayout>
+            {children}
+          </PortalLayout>
           <Toaster />
         </AppProvider>
       </body>
