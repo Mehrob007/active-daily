@@ -179,6 +179,11 @@ export const useAuthStore = create<AuthStore>()(
           lastActivity: 0,
           autoLogoutTimer: null,
         });
+
+        // Redirect to login page
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
       },
 
       exchangeV2Token: async () => {

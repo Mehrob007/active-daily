@@ -235,42 +235,7 @@ export default function LoginPage() {
               </form>
             </Form>
 
-            {/* Demo accounts */}
-            <div className="mt-5 pt-4 border-t border-border">
-              <p className="text-xs font-medium text-muted-foreground mb-3 text-center uppercase tracking-wider">
-                Демо-доступ
-              </p>
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleDemoLogin('admin')}
-                  className="flex flex-col items-center gap-1.5 rounded-lg border border-border/60 bg-muted/30 p-3 transition-all hover:bg-bank-active hover:border-bank-red/20"
-                >
-                  <Users className="h-4 w-4 text-bank-red" />
-                  <span className="text-xs font-medium text-foreground">Председатель</span>
-                  <span className="text-[10px] text-muted-foreground">admin/admin</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDemoLogin('agent')}
-                  className="flex flex-col items-center gap-1.5 rounded-lg border border-border/60 bg-muted/30 p-3 transition-all hover:bg-bank-active hover:border-bank-red/20"
-                >
-                  <MonitorSmartphone className="h-4 w-4 text-bank-red" />
-                  <span className="text-xs font-medium text-foreground">Агент</span>
-                  <span className="text-[10px] text-muted-foreground">agent/agent</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDemoLogin('operator')}
-                  className="flex flex-col items-center gap-1.5 rounded-lg border border-border/60 bg-muted/30 p-3 transition-all hover:bg-bank-active hover:border-bank-red/20"
-                >
-                  <Shield className="h-4 w-4 text-bank-red" />
-                  <span className="text-xs font-medium text-foreground">Фронтовик</span>
-                  <span className="text-[10px] text-muted-foreground">operator/operator</span>
-                </button>
-              </div>
-            </div>
-
+          
             <div className="mt-5 pt-3 border-t border-border text-center">
               <p className="text-xs text-muted-foreground">
                 © {new Date().getFullYear()} ActivBank. Все права защищены.

@@ -42,6 +42,12 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
     }
   }, [pathname, currentPage, navigate]);
 
+  const isLoginPage = pathname === '/login';
+
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="flex h-screen bg-background overflow-hidden">
       {/* Sidebar */}
