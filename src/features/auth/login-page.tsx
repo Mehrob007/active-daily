@@ -151,7 +151,7 @@ export default function LoginPage() {
           <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-[#C8102E] mb-4">
             <Shield className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground">Premies Portal</h1>
+          <h1 className="text-2xl font-bold text-foreground">Active Daily</h1>
           <p className="text-sm text-muted-foreground mt-1">ActivBank — Банковский портал</p>
         </div>
 

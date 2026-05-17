@@ -236,9 +236,9 @@ export function getPathFromPageId(id: string): string {
     case 'deposit-list': return '/deposit-apps/list';
     
     // QR agent
-    case 'qr-transactions': return '/qr-agent/transactions';
-    case 'qr-other-bank-create': return '/qr-agent/other-bank-create';
-    case 'qr-other-bank-settings': return '/qr-agent/other-bank-settings';
+    case 'qr-transactions': return '/agent-qr/transactions/list';
+    case 'qr-other-bank-create': return '/accounts-qr/operations';
+    case 'qr-other-bank-settings': return '/accounts-qr/settings';
     
     // PVN
     case 'pvn-transactions': return '/pvn/transactions';
@@ -320,9 +320,9 @@ export function getPageIdFromPath(pathname: string): string {
   if (p === '/deposit-apps/create') return 'deposit-create';
   if (p === '/deposit-apps/list') return 'deposit-list';
   
-  if (p === '/qr-agent/transactions') return 'qr-transactions';
-  if (p === '/qr-agent/other-bank-create') return 'qr-other-bank-create';
-  if (p === '/qr-agent/other-bank-settings') return 'qr-other-bank-settings';
+  if (p === '/agent-qr/transactions/list') return 'qr-transactions';
+  if (p === '/accounts-qr/operations') return 'qr-other-bank-create';
+  if (p === '/accounts-qr/settings') return 'qr-other-bank-settings';
   
   if (p === '/pvn/transactions') return 'pvn-transactions';
   if (p === '/pvn/settings') return 'pvn-settings';

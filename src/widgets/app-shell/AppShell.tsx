@@ -127,7 +127,7 @@ function SidebarNav() {
           </div>
           {sidebarOpen && (
             <div className="flex flex-col min-w-0">
-              <span className="text-sm font-bold text-foreground leading-tight truncate">Premies Portal</span>
+              <span className="text-sm font-bold text-foreground leading-tight truncate">Activ Daily</span>
               <span className="text-[10px] text-muted-foreground leading-tight">ActivBank</span>
             </div>
           )}
