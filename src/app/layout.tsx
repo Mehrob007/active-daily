@@ -20,8 +20,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Premies Portal — ActivBank",
-  description: "Банковский портал для управления продуктами, заявками и аналитикой",
+  title: "Active Daily — ActivBank",
+  description:
+    "Банковский портал для управления продуктами, заявками и аналитикой",
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
@@ -36,11 +37,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" suppressHydrationWarning>
-      <body className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased font-sans bg-background text-foreground`}>
+      <body
+        className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased font-sans bg-background text-foreground`}
+      >
         <AppProvider>
-          <PortalLayout>
-            {children}
-          </PortalLayout>
+          <PortalLayout>{children}</PortalLayout>
           <Toaster />
         </AppProvider>
       </body>

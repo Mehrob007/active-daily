@@ -1,24 +1,24 @@
 // ============================================
-// PREMIES PORTAL — Core Type Definitions
+// Active Daily — Core Type Definitions
 // ============================================
 
 /** User roles in the banking portal */
 export type RoleId =
-  | 5   // Директор
-  | 9   // Председатель
-  | 10  // Агент Карты
-  | 11  // Агент Кредиты
-  | 12  // Агент Депозиты
-  | 13  // Агент QR & Accounts
-  | 14  // SMS Сервис
-  | 17  // Frontovik (ABS Search)
-  | 18  // Frontovik (Limits)
-  | 21  // Frontovik (Transactions)
-  | 22  // Продукты (Dynamic Catalog)
-  | 23  // Cashback
-  | 26  // Агент (операции)
-  | 27  // Frontovik (Documents)
-  | 31  // Admin (System Logs)
+  | 5 // Директор
+  | 9 // Председатель
+  | 10 // Агент Карты
+  | 11 // Агент Кредиты
+  | 12 // Агент Депозиты
+  | 13 // Агент QR & Accounts
+  | 14 // SMS Сервис
+  | 17 // Frontovik (ABS Search)
+  | 18 // Frontovik (Limits)
+  | 21 // Frontovik (Transactions)
+  | 22 // Продукты (Dynamic Catalog)
+  | 23 // Cashback
+  | 26 // Агент (операции)
+  | 27 // Frontovik (Documents)
+  | 31 // Admin (System Logs)
   | 32; // Admin (Daily Tasks)
 
 export interface User {
@@ -98,11 +98,18 @@ export interface ApiError {
 // Application / Product Types
 // ============================================
 
-export type ApplicationStatus = 'draft' | 'pending' | 'approved' | 'rejected' | 'active' | 'closed' | 'cancelled';
+export type ApplicationStatus =
+  | "draft"
+  | "pending"
+  | "approved"
+  | "rejected"
+  | "active"
+  | "closed"
+  | "cancelled";
 
 export interface Application {
   id: string;
-  type: 'card' | 'credit' | 'deposit';
+  type: "card" | "credit" | "deposit";
   status: ApplicationStatus;
   clientId: string;
   clientName: string;
@@ -118,8 +125,8 @@ export interface Application {
 export interface CardProduct {
   id: string;
   name: string;
-  type: 'debit' | 'credit' | 'prepaid';
-  brand: 'visa' | 'mastercard' | 'uzcard' | 'humo';
+  type: "debit" | "credit" | "prepaid";
+  brand: "visa" | "mastercard" | "uzcard" | "humo";
   annualFee: number;
   cashbackPercent: number;
   minBalance?: number;
@@ -155,10 +162,10 @@ export interface DepositProduct {
 
 export interface Transaction {
   id: string;
-  type: 'credit' | 'debit' | 'transfer';
+  type: "credit" | "debit" | "transfer";
   amount: number;
   currency: string;
-  status: 'completed' | 'pending' | 'failed' | 'reversed';
+  status: "completed" | "pending" | "failed" | "reversed";
   description: string;
   createdAt: string;
   accountId?: string;
@@ -185,10 +192,10 @@ export interface Client {
 export interface ClientAccount {
   id: string;
   number: string;
-  type: 'current' | 'savings' | 'card' | 'deposit';
+  type: "current" | "savings" | "card" | "deposit";
   balance: number;
   currency: string;
-  status: 'active' | 'blocked' | 'closed';
+  status: "active" | "blocked" | "closed";
 }
 
 // ============================================
@@ -230,7 +237,7 @@ export interface PremieRecord {
   bonusAmount: number;
   deductions: number;
   totalAmount: number;
-  status: 'calculated' | 'approved' | 'paid';
+  status: "calculated" | "approved" | "paid";
 }
 
 // ============================================
