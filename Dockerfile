@@ -1,5 +1,5 @@
 # Stage 1: Base
-FROM oven/bun:1.1 as base
+FROM oven/bun:latest as base
 WORKDIR /app
 
 # Stage 2: Dependencies
@@ -20,7 +20,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN bun run build
 
 # Stage 4: Runner
-FROM oven/bun:1.1-slim AS runner
+FROM oven/bun:latest-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
