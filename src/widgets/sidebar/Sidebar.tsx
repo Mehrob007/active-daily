@@ -382,7 +382,7 @@ function SidebarContent({ collapsed }: { collapsed: boolean }) {
         </div>
         {!collapsed && (
           <span className="text-lg font-extrabold tracking-tight text-bank-red">
-            ActivBank
+            Activ Daily
           </span>
         )}
       </div>
