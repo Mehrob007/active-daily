@@ -20,7 +20,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN bun run build
 
 # Stage 4: Runner
-FROM oven/bun:latest-slim AS runner
+FROM oven/bun:slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
