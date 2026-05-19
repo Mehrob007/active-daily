@@ -16,12 +16,11 @@ COPY . .
 # Generate Prisma client
 RUN bun run db:generate
 
-# Initialize a template database structure (optional but helpful for standalone)
+# Initialize a template database structure
 ENV DATABASE_URL="file:./db/custom.db"
 RUN mkdir -p db && bun run db:push
 
 # Build Next.js
-# The build script in package.json handles copying static and public into standalone
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN bun run build
 
@@ -32,21 +31,21 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
+# Install adduser if missing (slim images are based on debian/ubuntu)
+RUN apt-get update && apt-get install -y --no-install-recommends     adduser     && rm -rf /var/lib/apt/lists/*
+
 # Create a non-root user
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 --ingroup nodejs nextjs
+RUN addgroup --system --gid 1001 nodejs &&     adduser --system --uid 1001 --ingroup nodejs nextjs
 
 # Copy the standalone build from builder
-# Note: package.json build script copies .next/static and public into .next/standalone
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 
 # Handle Database
-# Copy the initialized database structure
 COPY --from=builder /app/db ./db
 
-# Set permissions for the nextjs user to be able to write to the database
+# Set permissions
 RUN chown -R nextjs:nodejs /app/db
 
 # Set default environment variables
