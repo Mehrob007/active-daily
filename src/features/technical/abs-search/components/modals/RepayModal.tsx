@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { absService } from '../../services/abs-service';
+import { loanSoapService } from '../../services/loan-service';
 import { toast } from '@/hooks/use-toast';
 import { Credit, Account } from '../../types';
 
@@ -35,9 +35,9 @@ export const RepayModal: React.FC<RepayModalProps> = ({
     if (!credit || !amount || !selectedAccount) return;
     setIsLoading(true);
     try {
-      await absService.repayLoan({
+      await loanSoapService.repayLoan({
         referenceId: credit.referenceId,
-        accountNumber: selectedAccount,
+        sourceOrdNum: selectedAccount,
         amount: Number(amount),
       });
       toast({ title: 'Успешно', description: 'Запрос на погашение отправлен' });
