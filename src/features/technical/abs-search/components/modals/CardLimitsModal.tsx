@@ -21,9 +21,7 @@ export const CardLimitsModal: React.FC<CardLimitsModalProps> = ({ cardId, onClos
   useEffect(() => {
     if (cardId) {
       setIsLoading(true);
-      // fetchCardLimits was used in old project, adding to absService
-      fetch(`http://10.64.20.84:5012/api/Transactions/limits?CardId=${cardId}`)
-        .then(res => res.json())
+      absService.getCardLimits(cardId)
         .then(setData)
         .catch(console.error)
         .finally(() => setIsLoading(false));
