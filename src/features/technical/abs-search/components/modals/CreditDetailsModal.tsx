@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { absService } from '../../services/abs-service';
+import { loanSoapService } from '../../services/loan-service';
 
 interface CreditDetailsModalProps {
   referenceId: string | null;
@@ -19,7 +19,7 @@ export const CreditDetailsModal: React.FC<CreditDetailsModalProps> = ({ referenc
   useEffect(() => {
     if (referenceId) {
       setIsLoading(true);
-      absService.getLoanDetails(referenceId)
+      loanSoapService.getLoanDetails(referenceId)
         .then(setData)
         .catch(console.error)
         .finally(() => setIsLoading(false));
