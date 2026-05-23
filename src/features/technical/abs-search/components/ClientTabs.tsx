@@ -14,6 +14,7 @@ import { GraphModal } from './modals/GraphModal';
 import { CreditDetailsModal } from './modals/CreditDetailsModal';
 import { RepayModal } from './modals/RepayModal';
 import { DocumentsModal } from './modals/DocumentsModal';
+import { BlockCardModal } from './modals/BlockCardModal';
 import { Client, Account, Card, Credit, Deposit } from '../types';
 import { absService } from '../services/abs-service';
 import { toast } from '@/hooks/use-toast';
@@ -45,16 +46,9 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
   const [activeCreditForDetails, setActiveCreditForDetails] = useState<string | null>(null);
   const [activeCreditForRepay, setActiveCreditForRepay] = useState<Credit | null>(null);
   const [activeInnForDocs, setActiveInnForDocs] = useState<string | null>(null);
+  const [activeCardForBlock, setActiveCardForBlock] = useState<string | null>(null);
 
-  const handleBlockCard = async (cardId: string) => {
-    try {
-      await absService.blockCard(cardId);
-      toast({ title: 'Успешно', description: 'Карта успешно заблокирована' });
-      onRefresh();
-    } catch (err) {
-      toast({ title: 'Ошибка', description: 'Не удалось заблокировать карту', variant: 'destructive' });
-    }
-  };
+  // Handle block card moved to BlockCardModal
 
   const handleUnblockCard = async (cardId: string) => {
     try {
@@ -129,7 +123,7 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
                   onOpenServices={setActiveCardForServices}
                   onOpenPin={setActiveCardForPin}
                   onOpenLimits={(card) => setActiveCardForLimits(card.cardId)}
-                  onBlockCard={handleBlockCard}
+                  onBlockCard={(cardId) => setActiveCardForBlock(cardId)}
                   onUnblockCard={handleUnblockCard}
                   onResetPin={handleResetPin}
                   clientId={client.client_code || client.code}
@@ -201,6 +195,11 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
       <DocumentsModal 
         inn={activeInnForDocs} 
         onClose={() => setActiveInnForDocs(null)} 
+      />
+      <BlockCardModal
+        cardId={activeCardForBlock}
+        onClose={() => setActiveCardForBlock(null)}
+        onRefresh={onRefresh}
       />
     </div>
   );
