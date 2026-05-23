@@ -25,7 +25,7 @@ export const qrAgentService = {
   },
 
   async getBanks() {
-    const response = await fetch('http://10.64.20.101:8080/banks');
+    const response = await fetch(`${QR_BASE_URL}banks`);
     if (!response.ok) throw new Error('Failed to fetch banks');
     return response.json();
   },
