@@ -49,44 +49,62 @@ export const absService = {
   },
 
   async getCardDetails(cardId: string) {
-    const response = await fetch(`${SYSTEM_5012_URL}/api/Transactions/card-data`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cardId: String(cardId) }),
+    const response = await fetch(`${ABS_BASE_URL}/api/v1/processing/card/${cardId}/details`, {
+      method: 'GET',
+      headers: getHeaders(),
     });
     return response.ok ? response.json() : null;
   },
 
   async getCardServices(cardId: string) {
-    const response = await fetch(`${SYSTEM_5012_URL}/api/Transactions/services?CardId=${cardId}`);
+    const response = await fetch(`${ABS_BASE_URL}/api/v1/processing/card/${cardId}/services`, {
+      headers: getHeaders()
+    });
     return response.ok ? response.json() : [];
   },
 
-  async blockCard(cardId: string) {
-    const response = await fetch(`${BACKEND_URL}/api/transactions/block-card`, {
+  async getCardLimits(cardId: string) {
+    const response = await fetch(`${ABS_BASE_URL}/api/v1/processing/card/${cardId}/limits`, {
+      method: 'GET',
+      headers: getHeaders(),
+    });
+    if (!response.ok) throw new Error('Failed to fetch card limits');
+    return response.json();
+  },
+
+  async updateCardLimits(cardId: string, limitsData: any) {
+    const response = await fetch(`${ABS_BASE_URL}/api/v1/processing/card/${cardId}/limits`, {
+      method: 'PUT',
+      headers: getHeaders(),
+      body: JSON.stringify(limitsData),
+    });
+    if (!response.ok) throw new Error('Failed to update card limits');
+    return response.json();
+  },
+
+  async blockCard(cardId: string, reasonCode: string) {
+    const response = await fetch(`${ABS_BASE_URL}/api/v1/processing/card/${cardId}/block`, {
       method: 'POST',
       headers: getHeaders(),
-      body: JSON.stringify({ cardId: String(cardId), hotCardStatus: '1' }),
+      body: JSON.stringify({ status: 'blocked', reason: reasonCode }),
     });
     if (!response.ok) throw new Error('Block failed');
     return response.json();
   },
 
   async unblockCard(cardId: string) {
-    const response = await fetch(`${SYSTEM_5012_URL}/api/Transactions/validate-card`, {
+    const response = await fetch(`${ABS_BASE_URL}/api/v1/processing/card/${cardId}/unblock`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cardId: String(cardId) }),
+      headers: getHeaders(),
     });
     if (!response.ok) throw new Error('Unblock failed');
     return response.json();
   },
 
   async resetPinCounter(cardId: string) {
-    const response = await fetch(`${SYSTEM_5012_URL}/api/Transactions/reset-pin-counter`, {
+    const response = await fetch(`${ABS_BASE_URL}/api/v1/processing/card/${cardId}/reset-pin-counter`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cardId: String(cardId) }),
+      headers: getHeaders(),
     });
     if (!response.ok) throw new Error('Reset PIN failed');
     return response.json();
@@ -128,9 +146,9 @@ export const absService = {
   },
 
   async executeServiceAction(action: any) {
-    const response = await fetch(`${SYSTEM_5012_URL}/api/Transactions/service-action`, {
+    const response = await fetch(`${ABS_BASE_URL}/api/v1/processing/card/${action.cardId || 'unknown'}/services/manage`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getHeaders(),
       body: JSON.stringify(action),
     });
     if (!response.ok) throw new Error('Service action failed');
