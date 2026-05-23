@@ -57,7 +57,7 @@ export const useAuthStore = create<AuthStore>()(
       login: async (credentials: LoginCredentials) => {
         set({ isLoading: true });
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || '/api'}/auth/sign-in`, {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://192.168.10.150:8001'}/api/v1/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(credentials),
@@ -130,7 +130,7 @@ export const useAuthStore = create<AuthStore>()(
       register: async (data: unknown) => {
         set({ isLoading: true });
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || '/api'}/auth/sign-up`, {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://192.168.10.150:8001'}/api/v1/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
@@ -153,7 +153,7 @@ export const useAuthStore = create<AuthStore>()(
 
         // Call API logout
         if (state.tokens?.accessToken) {
-          fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || '/api'}/auth/logout`, {
+          fetch(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://192.168.10.150:8001'}/api/v1/auth/logout`, {
             method: 'DELETE',
             headers: { Authorization: `Bearer ${state.tokens.accessToken}` },
           }).catch(() => {});
@@ -190,7 +190,7 @@ export const useAuthStore = create<AuthStore>()(
         const state = get();
         if (!state.tokens?.accessToken) return;
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || '/api'}/auth/v2/token-exchange`, {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://192.168.10.150:8001'}/api/v1/auth/v2/token-exchange`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -213,7 +213,7 @@ export const useAuthStore = create<AuthStore>()(
         const state = get();
         if (!state.tokens?.accessToken) return;
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || '/api'}/auth/me`, {
+          const res = await fetch(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://192.168.10.150:8001'}/api/v1/users/me`, {
             headers: { Authorization: `Bearer ${state.tokens.accessToken}` },
           });
           const data = await res.json();
