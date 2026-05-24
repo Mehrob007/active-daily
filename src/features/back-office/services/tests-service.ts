@@ -52,12 +52,8 @@ export const testsService = {
   // --- Answers & Participation ---
   async checkAllowed(): Promise<boolean> {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://10.65.10.20:7575'}/tests/answers/allow`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-        }
-      });
-      return response.status === 200;
+      await apiClient.get('/tests/answers/allow');
+      return true;
     } catch (e) {
       return false;
     }
