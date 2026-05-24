@@ -14,6 +14,8 @@ import {
   Filter,
   RefreshCw,
   Wallet,
+  Play,
+  RotateCcw,
 } from 'lucide-react';
 import { qrAgentService } from '../services/qr-agent-service';
 import { QRWithdrawOperation } from '../types';
@@ -29,6 +31,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const STATEMENT_ACCOUNT_NUMBER = "26202972381810638175";
 
@@ -46,8 +49,10 @@ export default function QRWithdrawOperationsPage() {
   const [showFilters, setShowFilters] = useState(false);
 
   const [confirmTarget, setConfirmTarget] = useState<QRWithdrawOperation | null>(null);
+  const [showBulkConfirm, setShowBulkConfirm] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (showSuccess = false) => {
     setIsLoading(true);
     try {
       const format = (d: string) => d.split('-').reverse().join('.');
@@ -67,11 +72,36 @@ export default function QRWithdrawOperationsPage() {
       );
       
       setOperations(flat);
+      if (showSuccess) {
+        toast({ title: 'Успешно', description: `Загружено ${flat.length} транзакций` });
+      }
     } catch (err) {
       console.error(err);
       toast({ title: 'Ошибка', description: 'Не удалось загрузить выписку', variant: 'destructive' });
     } finally {
       setIsLoading(false);
+    }
+  }, [startDate, endDate]);
+
+  const silentRefresh = useCallback(async () => {
+    try {
+      const format = (d: string) => d.split('-').reverse().join('.');
+      const data = await qrAgentService.getWithdrawOperations(format(startDate), format(endDate), STATEMENT_ACCOUNT_NUMBER);
+      const flat = (data || []).flatMap((day: any) =>
+        (day.Transactions || []).map((tx: any) => ({
+          ...tx,
+          doper: day.DOPER,
+          kurs: day.Kurs,
+          sumBalOut: day.SumBalOut,
+          sumMovD: day.SumMovD,
+          sumMovC: day.SumMovC,
+          account: day.Account,
+          _key: `${day.DOPER}__${tx.NUMDOC}__${tx.REFER}`,
+        }))
+      );
+      setOperations(flat);
+    } catch (err) {
+      console.error('Silent refresh failed:', err);
     }
   }, [startDate, endDate]);
 
@@ -98,23 +128,8 @@ export default function QRWithdrawOperationsPage() {
     setPayingKeys(prev => new Set([...prev, row._key]));
     try {
       await qrAgentService.payOperation(row);
-      toast({ title: 'Успешно', description: 'Оплата успешно отправлена' });
-      // Silent refresh
-      const format = (d: string) => d.split('-').reverse().join('.');
-      const data = await qrAgentService.getWithdrawOperations(format(startDate), format(endDate), STATEMENT_ACCOUNT_NUMBER);
-      const flat = (data || []).flatMap((day: any) =>
-        (day.Transactions || []).map((tx: any) => ({
-          ...tx,
-          doper: day.DOPER,
-          kurs: day.Kurs,
-          sumBalOut: day.SumBalOut,
-          sumMovD: day.SumMovD,
-          sumMovC: day.SumMovC,
-          account: day.Account,
-          _key: `${day.DOPER}__${tx.NUMDOC}__${tx.REFER}`,
-        }))
-      );
-      setOperations(flat);
+      toast({ title: 'Успешно', description: `Транзакция №${row.NUMDOC} оплачена` });
+      setTimeout(silentRefresh, 800);
     } catch (err: any) {
       toast({ title: 'Ошибка оплаты', description: err.message, variant: 'destructive' });
     } finally {
@@ -126,7 +141,91 @@ export default function QRWithdrawOperationsPage() {
     }
   };
 
+  const handleBulkPay = async () => {
+    const toPay = filteredData.filter(row => selectedKeys.has(row._key) && !row.IsPayed);
+    if (toPay.length === 0) return;
+    
+    setShowBulkConfirm(false);
+    setPayingKeys(prev => {
+      const next = new Set(prev);
+      toPay.forEach(r => next.add(r._key));
+      return next;
+    });
+
+    let ok = 0;
+    let fail = 0;
+    const batchSize = 10;
+
+    for (let i = 0; i < toPay.length; i += batchSize) {
+      const batch = toPay.slice(i, i + batchSize);
+      await Promise.all(batch.map(async (row) => {
+        try {
+          await qrAgentService.payOperation(row);
+          ok++;
+        } catch (err) {
+          fail++;
+        }
+      }));
+      if (i + batchSize < toPay.length) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+
+    toast({ 
+      title: 'Массовая оплата завершена', 
+      description: `Успешно: ${ok}, Ошибок: ${fail}`,
+      variant: fail > 0 ? 'warning' : 'default' as any
+    });
+    
+    setPayingKeys(prev => {
+      const next = new Set(prev);
+      toPay.forEach(r => next.delete(r._key));
+      return next;
+    });
+    setTimeout(silentRefresh, 800);
+    setSelectedKeys(new Set());
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedKeys.size === filteredData.length && filteredData.length > 0) {
+      setSelectedKeys(new Set());
+    } else {
+      setSelectedKeys(new Set(filteredData.map(r => r._key)));
+    }
+  };
+
+  const selectUnpaid = () => {
+    const unpaid = filteredData.filter(r => !r.IsPayed).map(r => r._key);
+    setSelectedKeys(new Set(unpaid));
+  };
+
   const columns: ColumnDef<QRWithdrawOperation>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={selectedKeys.size === filteredData.length && filteredData.length > 0}
+          onCheckedChange={toggleSelectAll}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={selectedKeys.has(row.original._key)}
+          onCheckedChange={(checked) => {
+            setSelectedKeys(prev => {
+              const next = new Set(prev);
+              if (checked) next.add(row.original._key);
+              else next.delete(row.original._key);
+              return next;
+            });
+          }}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
     { 
       accessorKey: 'doper', 
       header: 'Дата оп.',
@@ -175,7 +274,7 @@ export default function QRWithdrawOperationsPage() {
             size="sm" 
             variant={isPaid ? "ghost" : "default"}
             disabled={isPaid || isPaying}
-            className={isPaid ? "text-emerald-600" : "bg-bank-red hover:bg-bank-red/90 h-7 text-[11px]"}
+            className={isPaid ? "text-emerald-600 h-7 text-[11px]" : "bg-bank-red hover:bg-bank-red/90 h-7 text-[11px]"}
             onClick={() => setConfirmTarget(row.original)}
           >
             {isPaying ? '...' : isPaid ? 'Оплачено' : 'Оплатить'}
@@ -189,6 +288,7 @@ export default function QRWithdrawOperationsPage() {
     total: operations.length,
     paid: operations.filter(o => o.IsPayed).length,
     unpaid: operations.filter(o => !o.IsPayed).length,
+    selected: selectedKeys.size,
   };
 
   return (
@@ -204,7 +304,7 @@ export default function QRWithdrawOperationsPage() {
             <Label className="text-xs text-muted-foreground">До</Label>
             <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-9 w-40" />
           </div>
-          <Button variant="outline" size="icon" onClick={fetchData} disabled={isLoading}>
+          <Button variant="outline" size="icon" onClick={() => fetchData(true)} disabled={isLoading}>
             <RefreshCw className={`size-4 ${isLoading ? 'animate-spin' : ''}`} />
           </Button>
         </div>
@@ -213,10 +313,26 @@ export default function QRWithdrawOperationsPage() {
           <Button variant="outline" size="sm" onClick={() => setShowFilters(!showFilters)} className={showFilters ? 'bg-bank-active text-bank-red border-bank-red' : 'gap-2'}>
             <Filter className="size-4" /> Фильтры
           </Button>
+          <Button 
+            size="sm" 
+            variant="outline"
+            onClick={selectUnpaid}
+            className="gap-2 border-amber-200 text-amber-700 hover:bg-amber-50"
+          >
+            <RotateCcw className="size-4" /> Выбрать неоплаченные
+          </Button>
+          <Button 
+            size="sm" 
+            className="gap-2 bg-emerald-600 text-white hover:bg-emerald-700"
+            disabled={selectedKeys.size === 0 || payingKeys.size > 0}
+            onClick={() => setShowBulkConfirm(true)}
+          >
+            <Play className="size-4" /> Оплатить выбранные ({selectedKeys.size})
+          </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
           <div className="size-10 rounded-full bg-slate-100 flex items-center justify-center">
             <Wallet className="size-5 text-slate-600" />
@@ -244,13 +360,22 @@ export default function QRWithdrawOperationsPage() {
             <p className="text-xl font-bold text-amber-600">{stats.unpaid}</p>
           </div>
         </div>
+        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4 border-l-4 border-l-bank-red">
+          <div className="size-10 rounded-full bg-rose-50 flex items-center justify-center">
+            <Play className="size-5 text-bank-red" />
+          </div>
+          <div>
+            <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Выбрано</p>
+            <p className="text-xl font-bold text-bank-red">{stats.selected}</p>
+          </div>
+        </div>
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
           <div className="size-10 rounded-full bg-bank-active flex items-center justify-center">
             <CreditCard className="size-5 text-bank-red" />
           </div>
           <div>
             <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Счет АБС</p>
-            <p className="text-xs font-mono font-medium truncate w-32">{STATEMENT_ACCOUNT_NUMBER}</p>
+            <p className="text-xs font-mono font-medium truncate w-24">{STATEMENT_ACCOUNT_NUMBER}</p>
           </div>
         </div>
       </div>
@@ -296,7 +421,9 @@ export default function QRWithdrawOperationsPage() {
             <AlertDialogDescription>
               Вы уверены, что хотите оплатить транзакцию №{confirmTarget?.NUMDOC}?
               <br />
-              <strong>Сумма:</strong> {confirmTarget?.MOVC} {confirmTarget?.TXTDSCR}
+              <strong>Описание:</strong> {confirmTarget?.TXTDSCR}
+              <br />
+              <strong>Сумма:</strong> {confirmTarget?.MOVC} с.
               <br /><br />
               Это действие необратимо.
             </AlertDialogDescription>
@@ -305,6 +432,26 @@ export default function QRWithdrawOperationsPage() {
             <AlertDialogCancel>Отмена</AlertDialogCancel>
             <AlertDialogAction onClick={() => confirmTarget && handlePay(confirmTarget)} className="bg-bank-red hover:bg-bank-red/90 text-white">
               Да, оплатить
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={showBulkConfirm} onOpenChange={setShowBulkConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Массовая оплата</AlertDialogTitle>
+            <AlertDialogDescription>
+              Вы собираетесь оплатить <strong>{selectedKeys.size}</strong> транзакций. 
+              Процесс может занять некоторое время.
+              <br /><br />
+              Продолжить?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
+            <AlertDialogAction onClick={handleBulkPay} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+              Да, оплатить все
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

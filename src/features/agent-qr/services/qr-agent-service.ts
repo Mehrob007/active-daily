@@ -1,31 +1,35 @@
-const QR_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_QR_URL || 'http://10.65.1.10:8080/';
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://10.65.10.20:7575';
-const ABS_SERVICE_URL = process.env.NEXT_PUBLIC_BACKEND_ABS_SERVICE_URL || 'http://localhost:5000';
+const QR_BASE_URL = (process.env.NEXT_PUBLIC_BACKEND_QR_URL || 'http://10.65.1.10:8080').replace(/\/$/, '');
+const BACKEND_URL = (process.env.NEXT_PUBLIC_BACKEND_URL || 'http://10.65.10.20:7575').replace(/\/$/, '');
+const ABS_SERVICE_URL = (process.env.NEXT_PUBLIC_BACKEND_ABS_SERVICE_URL || 'http://localhost:5000').replace(/\/$/, '');
 
 const getHeaders = () => {
-  const token = localStorage.getItem('access_token');
-  return {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
   };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
 };
 
 export const qrAgentService = {
   async getLimit() {
-    const response = await fetch(`${QR_BASE_URL}limit`);
+    const response = await fetch(`${QR_BASE_URL}/limit`);
     if (!response.ok) throw new Error('Failed to fetch limit');
     return response.json();
   },
 
   async getTransactions(type: 'usOnThem' | 'themOnUs', startDate: string, endDate: string, page: number, limit: number) {
     const endpoint = type === 'usOnThem' ? 'transactions' : 'incoming_tx';
-    const response = await fetch(`${QR_BASE_URL}${endpoint}?start_date=${startDate}&end_date=${endDate}&page=${page}&limit=${limit}`);
+    const response = await fetch(`${QR_BASE_URL}/${endpoint}?start_date=${startDate}&end_date=${endDate}&page=${page}&limit=${limit}`);
     if (!response.ok) throw new Error('Failed to fetch transactions');
     return response.json();
   },
 
   async getBanks() {
-    const response = await fetch(`${QR_BASE_URL}banks`);
+    // В референсном проекте этот URL указан как верный для базы банков
+    const response = await fetch(`http://10.64.20.101:8080/banks`);
     if (!response.ok) throw new Error('Failed to fetch banks');
     return response.json();
   },
