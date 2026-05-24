@@ -182,7 +182,7 @@ export default function TestsPage() {
   const currentQuestion = test.Questions?.[currentQuestionIdx];
 
   return (
-    <div className="p-4 md:p-8 h-full flex flex-col">
+    <div className="p-4 md:p-8 md:px-0 px-0 h-full flex flex-col">
       <div className="flex items-center justify-between mb-6 bg-white p-6 rounded-xl border shadow-sm border-slate-100">
         <div className="space-y-1">
           <h2 className="text-2xl font-bold text-slate-900">{test.Title}</h2>
