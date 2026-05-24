@@ -95,8 +95,8 @@ export default function ProcessingTransactionsPage() {
       if (searchType === 'utrnno') params.utrnno = filters.utrnno;
       if (searchType === 'transactionType') params.transactionType = filters.transactionType;
       if (searchType === 'amount') {
-        params.amountFrom = filters.amountFrom;
-        params.amountTo = filters.amountTo;
+        params.fromAmount = filters.amountFrom;
+        params.toAmount = filters.amountTo;
       }
       if (searchType === 'reversal') params.reversal = filters.reversal;
       if (searchType === 'mcc') params.mcc = filters.mcc;
@@ -109,8 +109,8 @@ export default function ProcessingTransactionsPage() {
       }
 
       if (searchType !== 'utrnno' && searchType !== 'cardBinSearch') {
-        params.startDate = filters.fromDate;
-        params.endDate = filters.toDate;
+        params.fromDate = filters.fromDate;
+        params.toDate = filters.toDate;
       }
 
       const data = await processingService.fetchTransactions(searchType, params);
