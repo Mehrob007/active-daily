@@ -80,6 +80,7 @@ export interface Deposit {
   AgreementData?: {
     Code: string;
     Status?: {
+      Code?: string;
       Name: string;
     };
     Product?: {
@@ -89,9 +90,19 @@ export interface Deposit {
     DateTo?: string;
     Amount?: string | number;
     Currency?: string;
+    DepoTermTU?: string | number;
+    DepoTermTimeType?: string;
   };
   BalanceAccounts?: {
+    RuleCode?: string;
+    AccCode?: string;
     Balance: string | number;
+    CurrCode?: string;
+  }[];
+  SumTypes?: {
+    Code: string;
+    Name: string;
+    Pcn?: string | number;
   }[];
 }
 

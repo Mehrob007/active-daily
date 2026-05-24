@@ -12,6 +12,7 @@ import { PinChangeModal } from './modals/PinChangeModal';
 import { CardLimitsModal } from './modals/CardLimitsModal';
 import { GraphModal } from './modals/GraphModal';
 import { CreditDetailsModal } from './modals/CreditDetailsModal';
+import { DepositDetailsModal } from './modals/DepositDetailsModal';
 import { RepayModal } from './modals/RepayModal';
 import { DocumentsModal } from './modals/DocumentsModal';
 import { BlockCardModal } from './modals/BlockCardModal';
@@ -44,6 +45,7 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
   const [activeCardForLimits, setActiveCardForLimits] = useState<string | null>(null);
   const [activeCreditForGraph, setActiveCreditForGraph] = useState<string | null>(null);
   const [activeCreditForDetails, setActiveCreditForDetails] = useState<string | null>(null);
+  const [activeDepositForDetails, setActiveDepositForDetails] = useState<Deposit | null>(null);
   const [activeCreditForRepay, setActiveCreditForRepay] = useState<Credit | null>(null);
   const [activeInnForDocs, setActiveInnForDocs] = useState<string | null>(null);
   const [activeCardForBlock, setActiveCardForBlock] = useState<string | null>(null);
@@ -139,7 +141,7 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
                 />
               </TabsContent>
               <TabsContent value="deposits">
-                <DepositsTable data={deposits} isLoading={isLoading} />
+                <DepositsTable data={deposits} isLoading={isLoading} onOpenDetails={setActiveDepositForDetails} />
               </TabsContent>
               <TabsContent value="details">
                 <CardUI>
@@ -185,6 +187,10 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
       <CreditDetailsModal 
         referenceId={activeCreditForDetails} 
         onClose={() => setActiveCreditForDetails(null)} 
+      />
+      <DepositDetailsModal 
+        deposit={activeDepositForDetails} 
+        onClose={() => setActiveDepositForDetails(null)} 
       />
       <RepayModal 
         credit={activeCreditForRepay} 
