@@ -1,6 +1,5 @@
 import { apiClient } from '@/services/api-client';
 import type {
-  ApiResponse,
   AuthTokens,
   LoginCredentials,
   RegisterData,
@@ -11,11 +10,12 @@ import type {
 // Auth Service — Authentication API
 // ============================================
 
-/** Response shape returned by sign-in */
-interface SignInResponse {
+/** Response shape returned by sign-in and token-exchange */
+interface AuthResponse {
   access_token: string;
   refresh_token: string;
   expires_in: number;
+  role_ids?: number[];
 }
 
 /** Response shape returned by sign-up */
@@ -25,24 +25,13 @@ interface SignUpResponse {
   message: string;
 }
 
-/** Response shape for V2 token exchange */
-interface V2TokenResponse {
-  v2_token: string;
-  expires_in: number;
-}
-
-/** Response shape for /auth/me */
-interface MeResponse {
-  user: User;
-}
-
 export const authService = {
   /**
    * Sign in with username and password.
    * Returns auth tokens on success.
    */
-  async signIn(credentials: LoginCredentials): Promise<ApiResponse<SignInResponse>> {
-    return apiClient.post<ApiResponse<SignInResponse>>('/auth/sign-in', {
+  async signIn(credentials: LoginCredentials): Promise<AuthResponse> {
+    return apiClient.post<AuthResponse>('/auth/sign-in', {
       body: credentials,
       skipAuth: true,
     });
@@ -51,8 +40,8 @@ export const authService = {
   /**
    * Register a new user account.
    */
-  async signUp(data: RegisterData): Promise<ApiResponse<SignUpResponse>> {
-    return apiClient.post<ApiResponse<SignUpResponse>>('/auth/sign-up', {
+  async signUp(data: RegisterData): Promise<SignUpResponse> {
+    return apiClient.post<SignUpResponse>('/auth/sign-up', {
       body: data,
       skipAuth: true,
     });
@@ -61,22 +50,22 @@ export const authService = {
   /**
    * Sign out the current user and invalidate tokens.
    */
-  async logout(): Promise<ApiResponse<null>> {
-    return apiClient.delete<ApiResponse<null>>('/auth/logout');
+  async logout(): Promise<void> {
+    return apiClient.delete<void>('/auth/logout');
   },
 
   /**
-   * Exchange the current access token for a V2 system token.
-   * Used for accessing downstream banking ABS services.
+   * Exchange the current access token for a fresh set of tokens.
+   * Mirrors CheckTokenVersion logic from reference project.
    */
-  async getV2Token(): Promise<ApiResponse<V2TokenResponse>> {
-    return apiClient.post<ApiResponse<V2TokenResponse>>('/auth/v2/token-exchange');
+  async translateToken(): Promise<AuthResponse> {
+    return apiClient.get<AuthResponse>('/auth/translate-token');
   },
 
   /**
    * Fetch the currently authenticated user profile.
    */
-  async getMe(): Promise<ApiResponse<MeResponse>> {
-    return apiClient.get<ApiResponse<MeResponse>>('/auth/me');
+  async getMe(): Promise<User> {
+    return apiClient.get<User>('/roles/user/my');
   },
 };

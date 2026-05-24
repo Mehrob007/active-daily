@@ -20,18 +20,14 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
     }
   }, [router]);
 
-  // Synchronize localStorage access_token for legacy pages
+  // Mirror CheckTokenVersion.jsx from reference project:
+  // Translate/refresh tokens only once on initial mount if authenticated
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const state = useAuthStore.getState();
-      if (state.tokens?.accessToken) {
-        localStorage.setItem('access_token', state.tokens.accessToken);
-        if (state.tokens.refreshToken) {
-          localStorage.setItem('refresh_token', state.tokens.refreshToken);
-        }
-      }
+    const state = useAuthStore.getState();
+    if (state.isAuthenticated) {
+      state.checkAuth();
     }
-  }, []);
+  }, []); // Run once on mount like in the reference project
 
   // Synchronize navigation state with the current pathname on initial load and route changes
   useEffect(() => {

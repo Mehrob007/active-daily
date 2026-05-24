@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { AuthState, AuthTokens, LoginCredentials, User } from "@/types";
 import { useNavigationStore } from "@/stores/navigation-store";
+import { authService } from "@/services/auth-service";
 
 function getDefaultPageForRoles(roleIds: number[]): string {
   if (roleIds.includes(3)) return "premies";
@@ -21,13 +22,12 @@ function getDefaultPageForRoles(roleIds: number[]): string {
 }
 
 const AUTO_LOGOUT_MS = 30 * 60 * 1000; // 30 minutes
-const ACTIVITY_RESET_MS = 5 * 60 * 1000; // Reset timer every 5 min of activity
 
 interface AuthActions {
   login: (credentials: LoginCredentials) => Promise<void>;
-  register: (data: unknown) => Promise<void>;
+  register: (data: any) => Promise<void>;
   logout: () => void;
-  exchangeV2Token: () => Promise<void>;
+  checkAuth: () => Promise<void>;
   fetchMe: () => Promise<void>;
   setTokens: (tokens: AuthTokens) => void;
   resetActivityTimer: () => void;
@@ -52,16 +52,7 @@ export const useAuthStore = create<AuthStore>()(
       login: async (credentials: LoginCredentials) => {
         set({ isLoading: true });
         try {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_AUTH_API_URL}/auth/sign-in`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(credentials),
-            },
-          );
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.message || "Ошибка авторизации");
+          const data = await authService.signIn(credentials);
 
           const tokens: AuthTokens = {
             accessToken: data.access_token,
@@ -69,15 +60,10 @@ export const useAuthStore = create<AuthStore>()(
             expiresIn: data.expires_in || 3600,
           };
 
-          // Parse roles from data.role_ids
-          let roleIds: number[] = [];
-          if (data.role_ids) {
-            if (Array.isArray(data.role_ids)) {
-              roleIds = data.role_ids.map(Number);
-            } else {
-              roleIds = [Number(data.role_ids)];
-            }
-          }
+          // Parse roles
+          const roleIds = Array.isArray(data.role_ids) 
+            ? data.role_ids.map(Number) 
+            : data.role_ids !== undefined ? [Number(data.role_ids)] : [];
 
           const userProfile: User = {
             id: credentials.username,
@@ -91,29 +77,29 @@ export const useAuthStore = create<AuthStore>()(
             isActive: true,
           };
 
-          // Save to cookies for middleware
-          document.cookie = `access_token=${tokens.accessToken}; path=/; max-age=${tokens.expiresIn}`;
-          document.cookie = `refresh_token=${tokens.refreshToken}; path=/; max-age=${tokens.expiresIn * 2}`;
+          get().setTokens(tokens);
 
-          if (typeof window !== "undefined") {
-            localStorage.setItem("access_token", tokens.accessToken);
-            if (tokens.refreshToken) {
-              localStorage.setItem("refresh_token", tokens.refreshToken);
-            }
+          // Mirror reference logic: immediately translate token after login
+          try {
+            const translated = await authService.translateToken();
+            get().setTokens({
+              accessToken: translated.access_token,
+              refreshToken: translated.refresh_token,
+              expiresIn: translated.expires_in || 3600,
+            });
+          } catch (e) {
+            console.warn("Immediate token translation failed", e);
           }
 
           set({
-            tokens,
             user: userProfile,
             isAuthenticated: true,
             isLoading: false,
             lastActivity: Date.now(),
           });
 
-          // Auto exchange V2 token
-          get().exchangeV2Token();
-          // Fetch user profile
-          get().fetchMe();
+          // Fetch actual user profile from /my
+          await get().fetchMe();
           // Start auto-logout timer
           get().startAutoLogout();
 
@@ -127,19 +113,10 @@ export const useAuthStore = create<AuthStore>()(
         }
       },
 
-      register: async (data: unknown) => {
+      register: async (data: any) => {
         set({ isLoading: true });
         try {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_AUTH_API_URL || "http://192.168.10.150:8001"}/api/v1/auth/register`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(data),
-            },
-          );
-          const result = await res.json();
-          if (!res.ok) throw new Error(result.message || "Ошибка регистрации");
+          const result = await authService.signUp(data);
           set({ isLoading: false });
           return result;
         } catch (error) {
@@ -148,24 +125,22 @@ export const useAuthStore = create<AuthStore>()(
         }
       },
 
-      logout: () => {
+      logout: async () => {
         const state = get();
         // Preserve specific keys
         const lastPasswordChange = localStorage.getItem("last_password_change");
         const passwordCheckDone = localStorage.getItem("password_check_done");
 
-        // Call API logout
-        if (state.tokens?.accessToken) {
-          fetch(
-            `${process.env.NEXT_PUBLIC_AUTH_API_URL || "http://192.168.10.150:8001"}/api/v1/auth/logout`,
-            {
-              method: "DELETE",
-              headers: { Authorization: `Bearer ${state.tokens.accessToken}` },
-            },
-          ).catch(() => {});
+        try {
+          if (state.isAuthenticated) {
+            await authService.logout();
+          }
+        } catch (e) {
+          console.warn("Logout failed", e);
         }
 
-        // Clear cookies
+        // Clear everything
+        localStorage.clear();
         document.cookie = "access_token=; path=/; max-age=0";
         document.cookie = "refresh_token=; path=/; max-age=0";
         document.cookie = "v2_token=; path=/; max-age=0";
@@ -194,66 +169,73 @@ export const useAuthStore = create<AuthStore>()(
         }
       },
 
-      exchangeV2Token: async () => {
+      checkAuth: async () => {
         const state = get();
-        if (!state.tokens?.accessToken) return;
+        if (!state.isAuthenticated || !state.tokens?.accessToken) return;
+
         try {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_AUTH_API_URL || "http://192.168.10.150:8001"}/api/v1/auth/v2/token-exchange`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${state.tokens.accessToken}`,
-              },
-            },
-          );
-          const data = await res.json();
-          if (res.ok && data.v2_token) {
-            document.cookie = `v2_token=${data.v2_token}; path=/; max-age=3600`;
+          // Mirror CheckTokenVersion.jsx: translate token to get fresh set
+          const data = await authService.translateToken();
+          
+          const tokens: AuthTokens = {
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token,
+            expiresIn: data.expires_in || 3600,
+          };
+
+          const roleIds = Array.isArray(data.role_ids) 
+            ? data.role_ids.map(Number) 
+            : data.role_ids !== undefined ? [Number(data.role_ids)] : [];
+
+          get().setTokens(tokens);
+
+          if (state.user) {
             set({
-              tokens: { ...state.tokens, v2Token: data.v2_token },
+              user: {
+                ...state.user,
+                role: roleIds[0] || state.user.role,
+                roleIds: roleIds,
+              }
             });
           }
-        } catch {
-          // V2 token exchange failed — non-critical
+        } catch (error) {
+          console.error("Token translation failed", error);
+          // If translation fails, we might want to log out or just let it be
+          // Reference project just logs it.
         }
       },
 
       fetchMe: async () => {
         const state = get();
-        if (!state.tokens?.accessToken) return;
+        if (!state.isAuthenticated) return;
         try {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_AUTH_API_URL || "http://192.168.10.150:8001"}/roles/user/me`,
-            {
-              headers: { Authorization: `Bearer ${state.tokens.accessToken}` },
-            },
-          );
-          const data = await res.json();
-          if (res.ok) {
-            set({ user: data as User });
+          const user = await authService.getMe();
+          if (user) {
+            set({ user: { ...state.user, ...user } as User });
           }
-        } catch {
-          // Fetch me failed
+        } catch (error) {
+          console.error("Fetch me failed", error);
         }
       },
 
       setTokens: (tokens: AuthTokens) => {
+        // Cookies for middleware
         document.cookie = `access_token=${tokens.accessToken}; path=/; max-age=${tokens.expiresIn}`;
         document.cookie = `refresh_token=${tokens.refreshToken}; path=/; max-age=${tokens.expiresIn * 2}`;
+        
+        // LocalStorage for legacy/external compatibility
         if (typeof window !== "undefined") {
           localStorage.setItem("access_token", tokens.accessToken);
           if (tokens.refreshToken) {
             localStorage.setItem("refresh_token", tokens.refreshToken);
           }
         }
+        
         set({ tokens, isAuthenticated: true, lastActivity: Date.now() });
       },
 
       resetActivityTimer: () => {
         set({ lastActivity: Date.now() });
-        // Restart auto-logout if authenticated
         const state = get();
         if (state.isAuthenticated) {
           get().startAutoLogout();
