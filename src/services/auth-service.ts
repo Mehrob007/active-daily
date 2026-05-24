@@ -59,7 +59,7 @@ export const authService = {
    * Mirrors CheckTokenVersion logic from reference project.
    */
   async translateToken(): Promise<AuthResponse> {
-    return apiClient.get<AuthResponse>('/auth/translate-token');
+    return apiClient.post<AuthResponse>('/auth/translate-token', { body: {} });
   },
 
   /**

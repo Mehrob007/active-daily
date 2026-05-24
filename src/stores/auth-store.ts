@@ -173,6 +173,10 @@ export const useAuthStore = create<AuthStore>()(
         const state = get();
         if (!state.isAuthenticated || !state.tokens?.accessToken) return;
 
+        // Skip if we already have what looks like a V2 token or just refreshed
+        // Usually V2 tokens have different claims or roles, but we can't easily check JWT here.
+        // We'll just rely on the try/catch.
+
         try {
           // Mirror CheckTokenVersion.jsx: translate token to get fresh set
           const data = await authService.translateToken();
@@ -188,6 +192,9 @@ export const useAuthStore = create<AuthStore>()(
             : data.role_ids !== undefined ? [Number(data.role_ids)] : [];
 
           get().setTokens(tokens);
+
+          // Fetch fresh profile with new token
+          await get().fetchMe();
 
           if (state.user) {
             set({

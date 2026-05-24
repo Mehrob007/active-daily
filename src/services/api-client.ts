@@ -5,7 +5,7 @@ import type { ApiResponse, ApiError, PaginatedResponse } from '@/types';
 // API Client — Typed Fetch Wrapper
 // ============================================
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
+const BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || '').trim();
 
 /** Custom error class for typed API error handling */
 export class ApiException extends Error {
@@ -58,8 +58,12 @@ function buildUrl(endpoint: string, params?: QueryParams): string {
   return url.toString();
 }
 
-/** Read the access token from cookies */
+/** Read the access token from localStorage or cookies */
 function getAccessToken(): string | undefined {
+  if (typeof window !== 'undefined') {
+    const localToken = localStorage.getItem('access_token');
+    if (localToken) return localToken;
+  }
   return Cookies.get('access_token');
 }
 
