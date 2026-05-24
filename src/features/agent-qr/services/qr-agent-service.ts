@@ -31,7 +31,6 @@ export const qrAgentService = {
   },
 
   async getBanks() {
-    // В референсном проекте этот URL указан как верный для базы банков
     const response = await fetch(`http://10.64.20.101:8080/banks`);
     if (!response.ok) throw new Error('Failed to fetch banks');
     return response.json();

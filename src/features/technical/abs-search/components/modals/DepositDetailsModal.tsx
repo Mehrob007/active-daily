@@ -8,7 +8,7 @@ import {
 import { Deposit } from '../../types';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+import { Progress } from '@/components/ui/progress';
 
 interface DepositDetailsModalProps {
   deposit: Deposit | null;
@@ -20,95 +20,96 @@ export const DepositDetailsModal: React.FC<DepositDetailsModalProps> = ({ deposi
 
   const { AgreementData, BalanceAccounts, SumTypes } = deposit;
 
+  // Find specific balance accounts
+  const mainAccount = BalanceAccounts?.find(acc => acc.RuleCode === 'DEPOACC');
+  
+  // Find interest rate & taxes from SumTypes
+  const bonusRate = SumTypes?.find(s => s.Code === 'DEP_BONUS')?.Pcn || 0;
+  const penaltyRate = SumTypes?.find(s => s.Code === 'DEP_PNLTY')?.Pcn || 0;
+  const taxRate = SumTypes?.find(s => s.Code === 'DEP_TAX')?.Pcn || 0;
+
+  // Calculate progress
+  const dateFrom = AgreementData?.DateFrom ? new Date(AgreementData.DateFrom) : null;
+  const dateTo = AgreementData?.DateTo ? new Date(AgreementData.DateTo) : null;
+  const now = new Date();
+  
+  let progress = 0;
+  let elapsedMonths = 0;
+  const totalMonths = Math.round(Number(AgreementData?.DepoTermTU || 0));
+
+  if (dateFrom && dateTo) {
+    const total = dateTo.getTime() - dateFrom.getTime();
+    const elapsed = now.getTime() - dateFrom.getTime();
+    progress = Math.min(100, Math.max(0, (elapsed / total) * 100));
+    
+    elapsedMonths = Math.max(0, Math.round((now.getTime() - dateFrom.getTime()) / (1000 * 60 * 60 * 24 * 30.44)));
+  }
+
+  // Department name (mapping or default)
+  const departmentName = AgreementData?.Department?.Code === '5100' ? 'Садбарг' : (AgreementData?.Department?.Code || "Головной офис");
+
   return (
     <Dialog open={!!deposit} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-3xl max-h-[85vh] flex flex-col p-0 overflow-hidden">
-        <DialogHeader className="p-6 pb-2">
-          <div className="flex items-center gap-3">
-            <DialogTitle className="text-xl font-bold">
-              {AgreementData?.Product?.Name}
-            </DialogTitle>
-            <Badge className={
-              AgreementData?.Status?.Code === 'ACTUAL' 
-                ? "bg-emerald-50 text-emerald-600 border-emerald-200"
-                : "bg-slate-50 text-slate-500 border-slate-200"
-            }>
-              {AgreementData?.Status?.Name}
-            </Badge>
-          </div>
-          <p className="text-sm text-muted-foreground font-mono mt-1">
-            Договор №{AgreementData?.Code}
-          </p>
+      <DialogContent className="max-w-4xl p-10 bg-slate-50 border-none shadow-2xl rounded-[40px] overflow-hidden">
+        <DialogHeader className="mb-8">
+           <DialogTitle className="text-3xl font-black text-slate-900">
+              Депозит - {AgreementData?.Product?.Name}
+           </DialogTitle>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 p-6 pt-2">
-          <div className="space-y-8">
-            {/* Agreement Section */}
-            <section className="space-y-4">
-              <h3 className="text-xs uppercase font-black tracking-widest text-slate-400">Параметры договора</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                {[
-                  { label: "Дата открытия", value: AgreementData?.DateFrom },
-                  { label: "Дата окончания", value: AgreementData?.DateTo },
-                  { label: "Срок", value: `${AgreementData?.DepoTermTU} ${AgreementData?.DepoTermTimeType === 'M' ? 'мес' : AgreementData?.DepoTermTimeType}` },
-                  { label: "Сумма договора", value: `${AgreementData?.Amount} ${AgreementData?.Currency}` },
-                  { label: "Валюта", value: AgreementData?.Currency },
-                ].map((item, idx) => (
-                  <div key={idx} className="space-y-1">
-                    <p className="text-[10px] uppercase font-bold text-muted-foreground">{item.label}</p>
-                    <p className="text-sm font-semibold">{item.value || "-"}</p>
-                  </div>
-                ))}
+        <div className="space-y-10">
+           {/* Top Summary Blocks */}
+           <div className="grid grid-cols-4 gap-4">
+              {[
+                { label: "Подразделение", value: departmentName },
+                { label: "Сумма первоначального взноса", value: `${AgreementData?.Amount} ${AgreementData?.Currency}` },
+                { label: "% Ставка", value: `${bonusRate}%`, highlight: true },
+                { label: "Срок", value: `${totalMonths} мес` },
+              ].map((item, idx) => (
+                <div key={idx} className="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-center min-h-[90px]">
+                   <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2 leading-tight">{item.label}</p>
+                   <p className={`text-lg font-black ${item.highlight ? 'text-emerald-600' : 'text-slate-900'}`}>{item.value}</p>
+                </div>
+              ))}
+           </div>
+
+           {/* Main Progress Card */}
+           <div className="bg-white p-10 rounded-[40px] shadow-sm border border-slate-100 relative overflow-hidden">
+              <div className="flex justify-between items-end mb-4">
+                 <h3 className="text-xl font-bold text-slate-400 uppercase tracking-widest">Срок вклада</h3>
+                 <span className="text-sm font-bold text-slate-600">
+                    {Math.min(elapsedMonths, totalMonths)} из {totalMonths} мес
+                 </span>
               </div>
-            </section>
+              
+              <Progress value={progress} className="h-4 bg-slate-50 [&>div]:bg-bank-red rounded-full mb-12" />
 
-            <Separator />
-
-            {/* Accounts Section */}
-            <section className="space-y-4">
-              <h3 className="text-xs uppercase font-black tracking-widest text-slate-400">Счета и остатки</h3>
-              <div className="rounded-xl border border-slate-100 overflow-hidden">
-                <table className="w-full text-xs">
-                  <thead className="bg-slate-50">
-                    <tr>
-                      <th className="px-4 py-3 text-left font-bold text-slate-500 uppercase tracking-wider">Тип счета</th>
-                      <th className="px-4 py-3 text-left font-bold text-slate-500 uppercase tracking-wider">Номер счета</th>
-                      <th className="px-4 py-3 text-right font-bold text-slate-500 uppercase tracking-wider">Остаток</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-50">
-                    {BalanceAccounts?.map((acc, idx) => (
-                      <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
-                        <td className="px-4 py-3 font-medium text-slate-600">{acc.RuleCode}</td>
-                        <td className="px-4 py-3 font-mono text-slate-900">{acc.AccCode}</td>
-                        <td className="px-4 py-3 text-right font-bold text-bank-red">
-                          {Number(acc.Balance).toLocaleString('ru-RU')} {acc.CurrCode}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="grid grid-cols-3 gap-12">
+                 <div className="space-y-1">
+                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Ставка при досрочно расторжении</p>
+                    <p className="text-xl font-black text-slate-900">{penaltyRate}%</p>
+                 </div>
+                 <div className="space-y-1">
+                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Подоходный налог</p>
+                    <p className="text-xl font-black text-slate-900">{taxRate}%</p>
+                 </div>
+                 <div className="space-y-1">
+                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Счет</p>
+                    <p className="text-lg font-mono font-bold text-emerald-600 truncate">{mainAccount?.AccCode || "-"}</p>
+                 </div>
               </div>
-            </section>
+           </div>
 
-            <Separator />
-
-            {/* Sum Types Section */}
-            <section className="space-y-4">
-              <h3 className="text-xs uppercase font-black tracking-widest text-slate-400">Дополнительные показатели</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {SumTypes?.map((st, idx) => (
-                  <div key={idx} className="flex justify-between items-center p-4 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-xs font-medium text-slate-600">{st.Name}</span>
-                    <Badge variant="secondary" className="bg-white text-slate-900 font-bold border-slate-200">
-                      {st.Pcn}{st.Code.includes('PERCENT') || st.Code.includes('BONUS') ? '%' : ''}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </div>
-        </ScrollArea>
+           {/* Quick Actions / Footer */}
+           <div className="flex justify-end pt-4">
+              <button 
+                onClick={onClose}
+                className="px-8 py-3 rounded-2xl bg-slate-900 text-white font-bold uppercase tracking-widest text-xs hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/10"
+              >
+                Закрыть детали
+              </button>
+           </div>
+        </div>
       </DialogContent>
     </Dialog>
   );

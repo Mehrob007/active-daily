@@ -14,38 +14,32 @@ const getHeaders = () => {
 };
 
 export const processingService = {
-  // --- Transactions Search (Processing URL - port 5003) ---
-  
+
   async fetchTransactions(searchType: string, params: any) {
     let url = '';
     const q = new URLSearchParams();
     
-    // Aligns with fetchTransactionsByCardId
     if (searchType === 'cardId') {
       url = `${PROCESSING_URL}/api/Transactions/by-cards`;
       q.append('cardIds', params.cardId || params.cardIds);
       if (params.fromDate) q.append('fromDate', params.fromDate);
       if (params.toDate) q.append('toDate', params.toDate);
     } 
-    // Aligns with fetchTransactionsByATM
     else if (searchType === 'atmId') {
       url = `${PROCESSING_URL}/api/Transactions/by-atm`;
       q.append('atmId', params.atmId);
       if (params.fromDate) q.append('fromDate', params.fromDate);
       if (params.toDate) q.append('toDate', params.toDate);
     }
-    // Aligns with fetchTransactionsByUTRNNO
     else if (searchType === 'utrnno') {
       url = `${PROCESSING_URL}/api/Transactions/by-utrnno/${params.utrnno}`;
     }
-    // Aligns with fetchTransactionsByType
     else if (searchType === 'transactionType') {
       url = `${PROCESSING_URL}/api/Transactions/by-transaction-type`;
       q.append('transactionType', params.transactionType);
       if (params.fromDate) q.append('fromDate', params.fromDate);
       if (params.toDate) q.append('toDate', params.toDate);
     }
-    // Aligns with fetchTransactionsByAmount
     else if (searchType === 'amount') {
       url = `${PROCESSING_URL}/api/Transactions/by-amount-with-date`;
       q.append('fromAmount', params.fromAmount);
@@ -53,21 +47,18 @@ export const processingService = {
       if (params.fromDate) q.append('fromDate', params.fromDate);
       if (params.toDate) q.append('toDate', params.toDate);
     }
-    // Aligns with fetchTransactionsByReversal
     else if (searchType === 'reversal') {
       url = `${PROCESSING_URL}/api/Transactions/by-reversal`;
       q.append('reversal', params.reversal);
       if (params.fromDate) q.append('fromDate', params.fromDate);
       if (params.toDate) q.append('toDate', params.toDate);
     }
-    // Aligns with fetchTransactionsByMCC
     else if (searchType === 'mcc') {
       url = `${PROCESSING_URL}/api/Transactions/by-mcc`;
       q.append('mcc', params.mcc);
       if (params.fromDate) q.append('fromDate', params.fromDate);
       if (params.toDate) q.append('toDate', params.toDate);
     }
-    // Aligns with fetchTransactionsByCardBinAndType
     else if (searchType === 'cardBinSearch') {
       url = `${PROCESSING_URL}/api/Transactions/search`;
       q.append('cardBin', params.cardBin);
@@ -76,7 +67,6 @@ export const processingService = {
       if (params.fromTime) q.append('fromTime', params.fromTime);
       if (params.toTime) q.append('toTime', params.toTime);
     }
-    // Aligns with fetchTransactionsSearch (Universal)
     else if (searchType === 'universal') {
       url = `${PROCESSING_URL}/api/Transactions/search-transactions`;
       Object.entries(params).forEach(([key, value]) => {
@@ -93,8 +83,6 @@ export const processingService = {
     const data = await response.json();
     return data.transactions || data;
   },
-
-  // --- Card Management (System URL - port 5012) ---
 
   async fetchCardDetails(cardId: string) {
     const response = await fetch(`${SYSTEM_5012_URL}/api/Transactions/card-data`, {
@@ -141,7 +129,6 @@ export const processingService = {
   },
 
   async updateLimit(cardNumber: string, limitName: string, limitValue: string) {
-    // Reference project uses GET for update!
     const q = new URLSearchParams({ limitName, limitValue });
     const response = await fetch(`${PROCESSING_URL}/api/Transactions/${cardNumber}?${q.toString()}`, {
       headers: getHeaders(),
@@ -159,8 +146,6 @@ export const processingService = {
     if (!response.ok) throw new Error('Failed to manage service');
     return response.json();
   },
-
-  // --- Gateway (Main Backend URL - port 7575) ---
 
   async changeCardStatus(cardId: string, status: string) {
     const response = await fetch(`${GATEWAY_URL}/api/transactions/block-card`, {

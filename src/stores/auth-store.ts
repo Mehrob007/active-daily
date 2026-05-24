@@ -21,7 +21,7 @@ function getDefaultPageForRoles(roleIds: number[]): string {
   return "dashboard";
 }
 
-const AUTO_LOGOUT_MS = 30 * 60 * 1000; // 30 minutes
+const AUTO_LOGOUT_MS = 30 * 60 * 1000;
 
 interface AuthActions {
   login: (credentials: LoginCredentials) => Promise<void>;
@@ -40,7 +40,6 @@ type AuthStore = AuthState & AuthActions;
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set, get) => ({
-      // State
       user: null,
       tokens: null,
       isAuthenticated: false,
@@ -48,7 +47,6 @@ export const useAuthStore = create<AuthStore>()(
       lastActivity: Date.now(),
       autoLogoutTimer: null,
 
-      // Actions
       login: async (credentials: LoginCredentials) => {
         set({ isLoading: true });
         try {
@@ -60,7 +58,6 @@ export const useAuthStore = create<AuthStore>()(
             expiresIn: data.expires_in || 3600,
           };
 
-          // Parse roles
           const roleIds = Array.isArray(data.role_ids) 
             ? data.role_ids.map(Number) 
             : data.role_ids !== undefined ? [Number(data.role_ids)] : [];
@@ -79,7 +76,6 @@ export const useAuthStore = create<AuthStore>()(
 
           get().setTokens(tokens);
 
-          // Mirror reference logic: immediately translate token after login
           try {
             const translated = await authService.translateToken();
             get().setTokens({
@@ -98,12 +94,9 @@ export const useAuthStore = create<AuthStore>()(
             lastActivity: Date.now(),
           });
 
-          // Fetch actual user profile from /my
           await get().fetchMe();
-          // Start auto-logout timer
           get().startAutoLogout();
 
-          // Navigate to correct dashboard based on role
           useNavigationStore
             .getState()
             .navigate(getDefaultPageForRoles(roleIds));
@@ -127,7 +120,6 @@ export const useAuthStore = create<AuthStore>()(
 
       logout: async () => {
         const state = get();
-        // Preserve specific keys
         const lastPasswordChange = localStorage.getItem("last_password_change");
         const passwordCheckDone = localStorage.getItem("password_check_done");
 
@@ -139,19 +131,16 @@ export const useAuthStore = create<AuthStore>()(
           console.warn("Logout failed", e);
         }
 
-        // Clear everything
         localStorage.clear();
         document.cookie = "access_token=; path=/; max-age=0";
         document.cookie = "refresh_token=; path=/; max-age=0";
         document.cookie = "v2_token=; path=/; max-age=0";
 
-        // Restore preserved keys
         if (lastPasswordChange)
           localStorage.setItem("last_password_change", lastPasswordChange);
         if (passwordCheckDone)
           localStorage.setItem("password_check_done", passwordCheckDone);
 
-        // Stop auto-logout
         get().stopAutoLogout();
 
         set({
@@ -163,7 +152,6 @@ export const useAuthStore = create<AuthStore>()(
           autoLogoutTimer: null,
         });
 
-        // Redirect to login page
         if (typeof window !== "undefined") {
           window.location.href = "/login";
         }
@@ -173,15 +161,12 @@ export const useAuthStore = create<AuthStore>()(
         const state = get();
         if (!state.isAuthenticated || !state.tokens?.accessToken) return;
 
-        // Prevent redundant refreshes if one happened in the last minute
         const oneMinuteAgo = Date.now() - 60 * 1000;
         if (state.lastActivity > oneMinuteAgo && state.tokens.accessToken.length > 500) {
-           // If we have a long token (likely V2) and it's fresh, skip
            return;
         }
 
         try {
-          // Mirror CheckTokenVersion.jsx: translate token to get fresh set
           const data = await authService.translateToken();
           
           const tokens: AuthTokens = {
@@ -196,7 +181,6 @@ export const useAuthStore = create<AuthStore>()(
 
           get().setTokens(tokens);
 
-          // Fetch fresh profile with new token
           await get().fetchMe();
 
           if (state.user) {
@@ -210,8 +194,6 @@ export const useAuthStore = create<AuthStore>()(
           }
         } catch (error) {
           console.error("Token translation failed", error);
-          // If translation fails, we might want to log out or just let it be
-          // Reference project just logs it.
         }
       },
 
@@ -229,11 +211,9 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       setTokens: (tokens: AuthTokens) => {
-        // Cookies for middleware
         document.cookie = `access_token=${tokens.accessToken}; path=/; max-age=${tokens.expiresIn}`;
         document.cookie = `refresh_token=${tokens.refreshToken}; path=/; max-age=${tokens.expiresIn * 2}`;
         
-        // LocalStorage for legacy/external compatibility
         if (typeof window !== "undefined") {
           localStorage.setItem("access_token", tokens.accessToken);
           if (tokens.refreshToken) {
