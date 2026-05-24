@@ -8,11 +8,10 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Loader2, Clock, ChevronLeft, ChevronRight, CheckCircle2, GraduationCap, Settings } from 'lucide-react';
+import { Loader2, Clock, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { testsService } from './services/tests-service';
-import OperatorTestsView from './components/OperatorTestsView';
-import { PageContainer } from '@/widgets/page-container/PageContainer';
+import { Badge } from '@/components/ui/badge';
 
 const QUESTION_TYPE_LABELS: Record<string, string> = {
   single_choice: 'Одиночный выбор',
@@ -21,19 +20,14 @@ const QUESTION_TYPE_LABELS: Record<string, string> = {
 };
 
 export default function TestsPage() {
-  const user = useAuthStore((state) => state.user);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   
-  const [viewMode, setViewMode] = useState<'worker' | 'operator'>('worker');
   const [allowed, setAllowed] = useState<boolean | null>(null);
   const [test, setTest] = useState<any>(null);
   const [answers, setAnswers] = useState<Record<number, any>>({});
   const [loading, setLoading] = useState(false);
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
-
-  // Check management roles: 5 (Director), 9 (Chairman), 31/32 (Admin)
-  const canManage = user?.roleIds?.some(id => [5, 9, 31, 32].includes(id)) || [5, 9, 31, 32].includes(user?.role as number);
 
   const checkAllowed = useCallback(async () => {
     const isAllowed = await testsService.checkAllowed();
@@ -43,9 +37,8 @@ export default function TestsPage() {
   useEffect(() => {
     if (isAuthenticated) {
       checkAllowed();
-      if (canManage) setViewMode('operator');
     }
-  }, [isAuthenticated, canManage, checkAllowed]);
+  }, [isAuthenticated, checkAllowed]);
 
   // Timer logic
   useEffect(() => {
@@ -134,22 +127,6 @@ export default function TestsPage() {
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  if (viewMode === 'operator' && canManage) {
-    return (
-      <PageContainer title="Управление тестами" subtitle="Создание и редактирование ежемесячных тестов">
-        <div className="mb-4 flex gap-2">
-           <Button variant={viewMode === 'operator' ? 'default' : 'ghost'} onClick={() => setViewMode('operator')} size="sm" className="gap-2">
-             <Settings className="size-4" /> Управление
-           </Button>
-           <Button variant={viewMode === 'worker' ? 'default' : 'ghost'} onClick={() => setViewMode('worker')} size="sm" className="gap-2">
-             <GraduationCap className="size-4" /> Пройти тест
-           </Button>
-        </div>
-        <OperatorTestsView />
-      </PageContainer>
-    );
-  }
-
   if (allowed === null) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -161,21 +138,16 @@ export default function TestsPage() {
   if (allowed === false) {
     return (
       <div className="flex h-full items-center justify-center p-6">
-        <Card className="max-w-md w-full text-center">
+        <Card className="max-w-md w-full text-center shadow-lg border-none">
           <CardHeader>
             <div className="mx-auto bg-emerald-50 rounded-full p-4 w-16 h-16 flex items-center justify-center mb-4">
               <CheckCircle2 className="h-8 w-8 text-emerald-600" />
             </div>
-            <CardTitle>Тест уже пройден</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-xl">Тест уже пройден</CardTitle>
+            <CardDescription className="text-base">
               Вы уже проходили тест в этом месяце. Ответить снова можно будет через месяц.
             </CardDescription>
           </CardHeader>
-          {canManage && (
-            <CardFooter className="justify-center">
-              <Button variant="outline" onClick={() => setViewMode('operator')}>Вернуться к управлению</Button>
-            </CardFooter>
-          )}
         </Card>
       </div>
     );
@@ -184,23 +156,23 @@ export default function TestsPage() {
   if (!test) {
     return (
       <div className="flex h-full items-center justify-center p-6 bg-muted/10">
-        <Card className="max-w-xl w-full">
-          <CardHeader>
-            <CardTitle className="text-2xl">Ежемесячный тест</CardTitle>
-            <CardDescription className="text-base mt-2">
+        <Card className="max-w-xl w-full shadow-lg border-none overflow-hidden">
+          <div className="h-2 bg-bank-red" />
+          <CardHeader className="pt-8 px-8">
+            <CardTitle className="text-3xl font-bold">Ежемесячный тест</CardTitle>
+            <CardDescription className="text-base mt-4 leading-relaxed">
               Тест можно пройти только один раз в месяц. 
               <br/><br/>
-              <strong>Внимание:</strong> Во время прохождения теста запрещено выходить со страницы или обновлять её — в противном случае все ответы будут утеряны.
+              <span className="p-3 rounded-lg bg-rose-50 text-rose-700 block border border-rose-100">
+                <strong>Внимание:</strong> Во время прохождения теста запрещено выходить со страницы или обновлять её — в противном случае все ответы будут утеряны.
+              </span>
             </CardDescription>
           </CardHeader>
-          <CardFooter className="gap-2">
-            <Button onClick={startTest} disabled={loading} size="lg" className="bg-bank-red hover:bg-bank-red/90">
-              {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-              Начать тест
+          <CardFooter className="p-8 pt-4">
+            <Button onClick={startTest} disabled={loading} size="lg" className="w-full h-14 text-lg bg-bank-red hover:bg-bank-red/90 text-white font-bold shadow-xl shadow-bank-red/20 transition-all active:scale-[0.98]">
+              {loading ? <Loader2 className="h-6 w-6 animate-spin mr-2" /> : null}
+              Начать прохождение теста
             </Button>
-            {canManage && (
-              <Button variant="outline" onClick={() => setViewMode('operator')} size="lg">Управление</Button>
-            )}
           </CardFooter>
         </Card>
       </div>
@@ -211,14 +183,14 @@ export default function TestsPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-8 h-full flex flex-col">
-      <div className="flex items-center justify-between mb-6 bg-white p-4 rounded-xl border shadow-sm">
-        <div>
-          <h2 className="text-xl font-bold">{test.Title}</h2>
-          <p className="text-sm text-muted-foreground">{test.description}</p>
+      <div className="flex items-center justify-between mb-6 bg-white p-6 rounded-xl border shadow-sm border-slate-100">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-bold text-slate-900">{test.Title}</h2>
+          <p className="text-sm text-slate-500 font-medium">{test.description}</p>
         </div>
         {timeLeft !== null && (
-          <div className="flex items-center gap-2 text-lg font-mono font-medium bg-primary/10 text-primary px-4 py-2 rounded-md">
-            <Clock className="h-5 w-5" />
+          <div className="flex items-center gap-3 text-xl font-mono font-bold bg-slate-50 text-slate-900 px-5 py-3 rounded-xl border border-slate-200">
+            <Clock className="h-6 w-6 text-bank-red" />
             <span className={timeLeft < 60 ? "text-destructive animate-pulse" : ""}>
               {formatTime(timeLeft)}
             </span>
@@ -226,22 +198,22 @@ export default function TestsPage() {
         )}
       </div>
 
-      <Card className="flex-1 flex flex-col overflow-hidden shadow-md">
-        <CardHeader className="bg-slate-50 border-b">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
+      <Card className="flex-1 flex flex-col overflow-hidden shadow-xl border-none">
+        <CardHeader className="bg-slate-50/80 border-b border-slate-100 pt-8 px-8 pb-6">
+          <div className="flex items-center justify-between mb-4">
+            <Badge className="bg-white text-slate-600 border-slate-200 py-1.5 px-4 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">
               Вопрос {currentQuestionIdx + 1} из {test.Questions?.length || 0}
-            </span>
-            <Badge variant="outline" className="bg-white">
+            </Badge>
+            <Badge variant="outline" className="bg-white/50 text-bank-red border-bank-red/20">
               {QUESTION_TYPE_LABELS[currentQuestion?.type] || currentQuestion?.type}
             </Badge>
           </div>
-          <CardTitle className="text-2xl mt-4 leading-relaxed font-bold text-slate-900">
+          <CardTitle className="text-2xl leading-relaxed font-black text-slate-900">
             {currentQuestion?.text}
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="flex-1 overflow-y-auto p-8">
+        <CardContent className="flex-1 overflow-y-auto p-8 bg-white">
           {currentQuestion?.type === 'single_choice' && (
             <RadioGroup
               value={answers[currentQuestion.ID]?.SelectedOptions[0]?.option_id?.toString()}
@@ -253,9 +225,9 @@ export default function TestsPage() {
               className="space-y-4"
             >
               {currentQuestion.Options?.map((opt: any) => (
-                <div key={opt.ID} className="flex items-center space-x-3 p-4 rounded-xl hover:bg-bank-active border border-slate-100 hover:border-bank-red/20 transition-all">
-                  <RadioGroupItem value={opt.ID.toString()} id={`opt-${opt.ID}`} className="border-slate-300 text-bank-red" />
-                  <Label htmlFor={`opt-${opt.ID}`} className="flex-1 cursor-pointer text-base font-medium leading-relaxed text-slate-700">
+                <div key={opt.ID} className="flex items-center space-x-3 p-5 rounded-2xl hover:bg-bank-active border border-slate-100 hover:border-bank-red/20 transition-all group">
+                  <RadioGroupItem value={opt.ID.toString()} id={`opt-${opt.ID}`} className="border-slate-300 text-bank-red size-5" />
+                  <Label htmlFor={`opt-${opt.ID}`} className="flex-1 cursor-pointer text-lg font-semibold leading-relaxed text-slate-700 group-hover:text-slate-900">
                     {opt.text}
                   </Label>
                 </div>
@@ -270,7 +242,7 @@ export default function TestsPage() {
                 const isChecked = currentSelections.some((o: any) => o.option_id === opt.ID);
                 
                 return (
-                  <div key={opt.ID} className="flex items-center space-x-3 p-4 rounded-xl hover:bg-bank-active border border-slate-100 hover:border-bank-red/20 transition-all">
+                  <div key={opt.ID} className="flex items-center space-x-3 p-5 rounded-2xl hover:bg-bank-active border border-slate-100 hover:border-bank-red/20 transition-all group">
                     <Checkbox 
                       id={`opt-${opt.ID}`} 
                       checked={isChecked}
@@ -283,9 +255,9 @@ export default function TestsPage() {
                         }
                         handleAnswer(currentQuestion.ID, { SelectedOptions: newSelected });
                       }}
-                      className="border-slate-300 data-[state=checked]:bg-bank-red"
+                      className="border-slate-300 data-[state=checked]:bg-bank-red size-6 rounded-md"
                     />
-                    <Label htmlFor={`opt-${opt.ID}`} className="flex-1 cursor-pointer text-base font-medium leading-relaxed text-slate-700">
+                    <Label htmlFor={`opt-${opt.ID}`} className="flex-1 cursor-pointer text-lg font-semibold leading-relaxed text-slate-700 group-hover:text-slate-900">
                       {opt.text}
                     </Label>
                   </div>
@@ -298,7 +270,7 @@ export default function TestsPage() {
             <div className="mt-2">
               <Textarea 
                 placeholder="Введите ваш ответ здесь..."
-                className="min-h-[200px] text-lg resize-none p-6 border-slate-200 focus:border-bank-red/50 focus:ring-bank-red/20"
+                className="min-h-[250px] text-xl font-medium resize-none p-8 border-slate-200 focus:border-bank-red/50 focus:ring-bank-red/20 rounded-2xl shadow-inner bg-slate-50/30"
                 value={answers[currentQuestion.ID]?.text_answer || ''}
                 onChange={(e) => handleAnswer(currentQuestion.ID, { text_answer: e.target.value })}
               />
@@ -306,33 +278,33 @@ export default function TestsPage() {
           )}
         </CardContent>
 
-        <CardFooter className="border-t p-6 flex justify-between bg-slate-50">
+        <CardFooter className="border-t border-slate-100 p-8 flex justify-between bg-slate-50/50">
           <Button
             variant="outline"
             size="lg"
             onClick={() => setCurrentQuestionIdx(prev => Math.max(0, prev - 1))}
             disabled={currentQuestionIdx === 0}
-            className="px-8"
+            className="px-10 h-14 text-lg font-bold rounded-xl border-slate-200"
           >
-            <ChevronLeft className="h-5 w-5 mr-2" /> Назад
+            <ChevronLeft className="h-6 w-6 mr-2" /> Назад
           </Button>
           
           {currentQuestionIdx < (test.Questions?.length || 0) - 1 ? (
             <Button
               size="lg"
               onClick={() => setCurrentQuestionIdx(prev => Math.min((test.Questions?.length || 0) - 1, prev + 1))}
-              className="px-8"
+              className="px-10 h-14 text-lg font-bold rounded-xl bg-slate-900 text-white hover:bg-slate-800"
             >
-              Дальше <ChevronRight className="h-5 w-5 ml-2" />
+              Дальше <ChevronRight className="h-6 w-6 ml-2" />
             </Button>
           ) : (
             <Button
               size="lg"
               onClick={() => handleSubmit()}
               disabled={!isAllAnswered()}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-10"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-12 h-14 text-lg font-bold rounded-xl shadow-xl shadow-emerald-600/20 transition-all active:scale-[0.98]"
             >
-              Отправить ответы
+              Отправить все ответы
             </Button>
           )}
         </CardFooter>

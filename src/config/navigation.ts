@@ -536,7 +536,7 @@ export function getPathFromPageId(id: string): string {
     case "operator-data":
       return "/operator/data";
     case "operator-tests":
-      return "/tests";
+      return "/operator/tests";
     case "operator-manage-kb":
       return "/operator/manage-kb";
 
