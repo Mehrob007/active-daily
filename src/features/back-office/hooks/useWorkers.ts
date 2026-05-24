@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { operatorPremieService, Worker } from "../services/operator-premie-service";
+import { operatorPremieService, Worker } from "../../../services/operator-premie-service";
 
 export const useWorkers = (month: number, year: number) => {
   const [workers, setWorkers] = useState<Worker[]>([]);

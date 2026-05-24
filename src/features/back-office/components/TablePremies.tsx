@@ -4,7 +4,7 @@ import React, { useState, useRef, useCallback, useMemo } from "react";
 import { DownloadCloud, RefreshCw, FileSpreadsheet, ArrowUpAZ, ArrowDownAz, Search } from "lucide-react";
 import { useWorkers } from "../hooks/useWorkers";
 import { calculateTotalPremia } from "@/lib/calculate-premia";
-import { operatorPremieService, Worker } from "../services/operator-premie-service";
+import { operatorPremieService, Worker } from "../../../services/operator-premie-service";
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
