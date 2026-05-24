@@ -18,7 +18,7 @@ import {
   MessageCircle,
   FileCheck
 } from 'lucide-react';
-import { workerPremieService, WorkerPremieData } from '../services/worker-premie-service';
+import { workerPremieService, WorkerPremieData } from '../../services/worker-premie-service';
 import { calculateTotalPremia } from '@/lib/calculate-premia';
 import { toast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';

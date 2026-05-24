@@ -79,8 +79,9 @@ export default function OperatorTestsView() {
   const loadTests = async () => {
     setIsLoading(true);
     try {
-      const data = await testsService.getTests();
-      setTests(data);
+      const result = await testsService.getTests();
+      const data = (result as any).data || result;
+      setTests(Array.isArray(data) ? data : []);
     } catch (err) {
       toast({ title: "Ошибка", description: "Не удалось загрузить тесты", variant: "destructive" });
     } finally {
@@ -90,7 +91,8 @@ export default function OperatorTestsView() {
 
   const loadTestDetail = async (id: number) => {
     try {
-      const data = await testsService.getTestDetail(id);
+      const result = await testsService.getTestDetail(id);
+      const data = (result as any).data || result;
       setTestDetail(data);
     } catch (err) {
       toast({ title: "Ошибка", description: "Не удалось загрузить детали теста", variant: "destructive" });
@@ -99,8 +101,9 @@ export default function OperatorTestsView() {
 
   const loadAnswers = async (id: number) => {
     try {
-      const data = await testsService.getTestAnswers(id);
-      setAnswers(data);
+      const result = await testsService.getTestAnswers(id);
+      const data = (result as any).data || result;
+      setAnswers(Array.isArray(data) ? data : []);
     } catch (err) {
       toast({ title: "Ошибка", description: "Не удалось загрузить ответы", variant: "destructive" });
     }
@@ -234,7 +237,7 @@ export default function OperatorTestsView() {
                 </div>
                 <div className="flex items-center gap-4 text-xs">
                   <Badge variant="secondary" className="gap-1.5 py-1">
-                    <HelpCircle className="size-3" /> {testDetail.Questions?.length || 0} вопросов
+                    <HelpCircle className="size-3" /> {(testDetail.Questions || testDetail.questions)?.length || 0} вопросов
                   </Badge>
                   <Badge variant="secondary" className="gap-1.5 py-1">
                     <Clock className="size-3" /> {testDetail.time_limit} мин.
@@ -294,7 +297,7 @@ export default function OperatorTestsView() {
               ) : (
                 /* Questions View */
                 <div className="space-y-4">
-                  {testDetail.Questions?.map((q, qIdx) => (
+                  {(testDetail.Questions || testDetail.questions)?.map((q: any, qIdx: number) => (
                     <Card key={q.ID} className="group overflow-hidden">
                       <CardHeader className="py-4 px-6 flex flex-row items-start justify-between space-y-0 bg-muted/5">
                         <div className="space-y-1 pr-10">
@@ -325,7 +328,7 @@ export default function OperatorTestsView() {
                       <CardContent className="px-6 py-4 space-y-4">
                         {/* Options */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                           {q.Options?.map((o) => (
+                           {(q.Options || q.options)?.map((o: any) => (
                              <div key={o.ID} className={`relative flex items-center justify-between p-3 rounded-lg border transition-all ${o.is_correct ? "bg-emerald-50/50 border-emerald-100" : "bg-slate-50/50"}`}>
                                 <div className="flex items-center gap-3 pr-8">
                                    {o.is_correct && <CheckCircle2 className="size-4 text-emerald-600 shrink-0" />}
@@ -343,10 +346,10 @@ export default function OperatorTestsView() {
                            ))}
                         </div>
 
-                        {q.type === 'text' && q.Options && q.Options[0]?.correct_text && (
+                        {q.type === 'text' && (q.Options || q.options) && (q.Options?.[0] || q.options?.[0])?.correct_text && (
                           <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-100">
                              <div className="text-[10px] uppercase font-bold text-emerald-600 mb-1">Эталонный ответ</div>
-                             <div className="text-sm font-bold text-emerald-900">{q.Options[0].correct_text}</div>
+                             <div className="text-sm font-bold text-emerald-900">{(q.Options?.[0] || q.options?.[0]).correct_text}</div>
                           </div>
                         )}
 

@@ -19,19 +19,56 @@ const QUESTION_TYPE_LABELS: Record<string, string> = {
   text: 'Текстовый ответ',
 };
 
+interface Option {
+  ID: number;
+  text: string;
+}
+
+interface Question {
+  ID: number;
+  type: 'single_choice' | 'multiple_choice' | 'text' | string;
+  text: string;
+  Options?: Option[];
+}
+
+interface TestData {
+  ID: number;
+  Title: string;
+  description: string;
+  time_limit?: number;
+  Questions?: Question[];
+}
+
+interface SelectedOption {
+  option_id: number;
+}
+
+interface Answer {
+  test_id: number;
+  question_id: number;
+  type: string;
+  text_answer?: string;
+  SelectedOptions: SelectedOption[];
+}
+
 export default function TestsPage() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   
   const [allowed, setAllowed] = useState<boolean | null>(null);
-  const [test, setTest] = useState<any>(null);
-  const [answers, setAnswers] = useState<Record<number, any>>({});
+  const [test, setTest] = useState<TestData | null>(null);
+  const [answers, setAnswers] = useState<Record<number, Answer>>({});
   const [loading, setLoading] = useState(false);
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
   const checkAllowed = useCallback(async () => {
-    const isAllowed = await testsService.checkAllowed();
-    setAllowed(isAllowed);
+    try {
+      const isAllowed = await testsService.checkAllowed();
+      setAllowed(isAllowed);
+    } catch (error) {
+      console.error('Failed to check if test is allowed:', error);
+      setAllowed(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -39,6 +76,19 @@ export default function TestsPage() {
       checkAllowed();
     }
   }, [isAuthenticated, checkAllowed]);
+
+  async function handleSubmit(testData: TestData | null = test) {
+    if (!testData) return;
+    const payload = testData.Questions?.map((q) => answers[q.ID]);
+    try {
+      await testsService.submitAnswers(payload);
+      toast({ title: "Успешно!", description: "Ответы успешно отправлены." });
+      setAllowed(false);
+      setTest(null);
+    } catch (err) {
+      toast({ title: "Ошибка", description: "Не удалось отправить ответы", variant: "destructive" });
+    }
+  }
 
   // Timer logic
   useEffect(() => {
@@ -64,11 +114,11 @@ export default function TestsPage() {
   const startTest = async () => {
     setLoading(true);
     try {
-      const data = await testsService.getWorkerTest();
+      const data: TestData = await testsService.getWorkerTest();
       setTest(data);
       
-      const initial: Record<number, any> = {};
-      data.Questions?.forEach((q: any) => {
+      const initial: Record<number, Answer> = {};
+      data.Questions?.forEach((q) => {
         initial[q.ID] = {
           test_id: data.ID,
           question_id: q.ID,
@@ -82,14 +132,14 @@ export default function TestsPage() {
       if (data.time_limit) {
         setTimeLeft(data.time_limit * 60);
       }
-    } catch (err: any) {
+    } catch (err) {
       toast({ title: "Ошибка", description: "Не удалось начать тест", variant: "destructive" });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAnswer = (questionId: number, payload: any) => {
+  const handleAnswer = (questionId: number, payload: Partial<Answer>) => {
     setAnswers((prev) => ({
       ...prev,
       [questionId]: { ...prev[questionId], ...payload },
@@ -98,7 +148,7 @@ export default function TestsPage() {
 
   const isAllAnswered = () => {
     if (!test) return false;
-    return test.Questions?.every((q: any) => {
+    return test.Questions?.every((q) => {
       const a = answers[q.ID];
       if (!a) return false;
       if (q.type === 'text') return a.text_answer?.trim() !== '';
@@ -106,19 +156,6 @@ export default function TestsPage() {
       if (q.type === 'multiple_choice') return a.SelectedOptions.length > 0;
       return false;
     });
-  };
-
-  const handleSubmit = async (testData = test) => {
-    if (!testData) return;
-    const payload = testData.Questions?.map((q: any) => answers[q.ID]);
-    try {
-      await testsService.submitAnswers(payload);
-      toast({ title: "Успешно!", description: "Ответы успешно отправлены." });
-      setAllowed(false);
-      setTest(null);
-    } catch (err) {
-      toast({ title: "Ошибка", description: "Не удалось отправить ответы", variant: "destructive" });
-    }
   };
 
   const formatTime = (seconds: number) => {
@@ -182,11 +219,11 @@ export default function TestsPage() {
   const currentQuestion = test.Questions?.[currentQuestionIdx];
 
   return (
-    <div className="p-4 md:p-8 md:px-0 px-0 h-full flex flex-col">
+    <div className="p-4 md:p-8 h-full flex flex-col">
       <div className="flex items-center justify-between mb-6 bg-white p-6 rounded-xl border shadow-sm border-slate-100">
         <div className="space-y-1">
-          <h2 className="text-2xl font-bold text-slate-900">{test.Title}</h2>
-          <p className="text-sm text-slate-500 font-medium">{test.description}</p>
+          <h2 className="text-2xl font-bold text-slate-900">{test?.Title}</h2>
+          <p className="text-sm text-slate-500 font-medium">{test?.description}</p>
         </div>
         {timeLeft !== null && (
           <div className="flex items-center gap-3 text-xl font-mono font-bold bg-slate-50 text-slate-900 px-5 py-3 rounded-xl border border-slate-200">
@@ -202,10 +239,10 @@ export default function TestsPage() {
         <CardHeader className="bg-slate-50/80 border-b border-slate-100 pt-8 px-8 pb-6">
           <div className="flex items-center justify-between mb-4">
             <Badge className="bg-white text-slate-600 border-slate-200 py-1.5 px-4 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">
-              Вопрос {currentQuestionIdx + 1} из {test.Questions?.length || 0}
+              Вопрос {currentQuestionIdx + 1} из {questionsCount}
             </Badge>
             <Badge variant="outline" className="bg-white/50 text-bank-red border-bank-red/20">
-              {QUESTION_TYPE_LABELS[currentQuestion?.type] || currentQuestion?.type}
+              {currentQuestion?.type ? QUESTION_TYPE_LABELS[currentQuestion.type] || currentQuestion.type : ''}
             </Badge>
           </div>
           <CardTitle className="text-2xl leading-relaxed font-black text-slate-900">
@@ -219,12 +256,12 @@ export default function TestsPage() {
               value={answers[currentQuestion.ID]?.SelectedOptions[0]?.option_id?.toString()}
               onValueChange={(val) => {
                 handleAnswer(currentQuestion.ID, {
-                  SelectedOptions: [{ option_id: parseInt(val) }]
+                  SelectedOptions: [{ option_id: parseInt(val, 10) }]
                 });
               }}
               className="space-y-4"
             >
-              {currentQuestion.Options?.map((opt: any) => (
+              {currentQuestion.Options?.map((opt) => (
                 <div key={opt.ID} className="flex items-center space-x-3 p-5 rounded-2xl hover:bg-bank-active border border-slate-100 hover:border-bank-red/20 transition-all group">
                   <RadioGroupItem value={opt.ID.toString()} id={`opt-${opt.ID}`} className="border-slate-300 text-bank-red size-5" />
                   <Label htmlFor={`opt-${opt.ID}`} className="flex-1 cursor-pointer text-lg font-semibold leading-relaxed text-slate-700 group-hover:text-slate-900">
@@ -237,9 +274,9 @@ export default function TestsPage() {
 
           {currentQuestion?.type === 'multiple_choice' && (
             <div className="space-y-4">
-              {currentQuestion.Options?.map((opt: any) => {
+              {currentQuestion.Options?.map((opt) => {
                 const currentSelections = answers[currentQuestion.ID]?.SelectedOptions || [];
-                const isChecked = currentSelections.some((o: any) => o.option_id === opt.ID);
+                const isChecked = currentSelections.some((o) => o.option_id === opt.ID);
                 
                 return (
                   <div key={opt.ID} className="flex items-center space-x-3 p-5 rounded-2xl hover:bg-bank-active border border-slate-100 hover:border-bank-red/20 transition-all group">
@@ -251,7 +288,7 @@ export default function TestsPage() {
                         if (checked) {
                           newSelected = [...currentSelections, { option_id: opt.ID }];
                         } else {
-                          newSelected = currentSelections.filter((o: any) => o.option_id !== opt.ID);
+                          newSelected = currentSelections.filter((o) => o.option_id !== opt.ID);
                         }
                         handleAnswer(currentQuestion.ID, { SelectedOptions: newSelected });
                       }}
