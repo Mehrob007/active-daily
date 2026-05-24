@@ -20,9 +20,12 @@ export const qrAgentService = {
     return response.json();
   },
 
-  async getTransactions(type: 'usOnThem' | 'themOnUs', startDate: string, endDate: string, page: number, limit: number) {
+  async getTransactions(type: 'usOnThem' | 'themOnUs', startDate: string, endDate: string, page?: number, limit?: number) {
     const endpoint = type === 'usOnThem' ? 'transactions' : 'incoming_tx';
-    const response = await fetch(`${QR_BASE_URL}/${endpoint}?start_date=${startDate}&end_date=${endDate}&page=${page}&limit=${limit}`);
+    const params = new URLSearchParams({ start_date: startDate, end_date: endDate });
+    if (page) params.append('page', String(page));
+    if (limit) params.append('limit', String(limit));
+    const response = await fetch(`${QR_BASE_URL}/${endpoint}?${params.toString()}`);
     if (!response.ok) throw new Error('Failed to fetch transactions');
     return response.json();
   },

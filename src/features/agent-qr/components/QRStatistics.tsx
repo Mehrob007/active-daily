@@ -54,7 +54,7 @@ export const QRStatistics: React.FC<QRStatisticsProps> = ({ startDate, endDate }
   const fetchData = useCallback(async (type: 'usOnThem' | 'themOnUs') => {
     try {
       setLoading(true);
-      const result = await qrAgentService.getTransactions(type, startDate, endDate, 1, 10000);
+      const result = await qrAgentService.getTransactions(type, startDate, endDate);
       
       const mapped = result.map((item: any) => {
         const date = item.created_at?.split('T')[0] || item.creation_datetime?.split('T')[0];

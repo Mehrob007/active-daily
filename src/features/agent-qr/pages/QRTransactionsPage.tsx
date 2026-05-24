@@ -45,17 +45,20 @@ import {
 } from '@/features/technical/abs-search/components/modals/GraphModal';
 import { Account, Credit } from '@/features/technical/abs-search/types';
 
+import { conversionService } from '../services/conversion-service';
+
 const PAGE_SIZE = 50;
 
 export default function QRTransactionsPage() {
-  const [startDate, setStartDate] = useState('2025-09-25T00:00');
-  const [endDate, setEndDate] = useState('2025-10-01T23:59');
+  const [startDate, setStartDate] = useState('2025-09-25');
+  const [endDate, setEndDate] = useState('2025-10-01');
   const [type, setType] = useState<'usOnThem' | 'themOnUs' | 'loans'>('themOnUs');
   
   const [transactions, setTransactions] = useState<QRTransaction[]>([]);
   const [banks, setBanks] = useState<QRBank[]>([]);
   const [merchants, setMerchants] = useState<QRMerchant[]>([]);
   const [limit, setLimit] = useState<number | null>(null);
+  const [rates, setRates] = useState<any[]>([]);
   
   const [isLoading, setIsLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
@@ -103,14 +106,16 @@ export default function QRTransactionsPage() {
 
   const fetchMetadata = useCallback(async () => {
     try {
-      const [banksData, merchantsData, limitData] = await Promise.all([
+      const [banksData, merchantsData, limitData, conversionData] = await Promise.all([
         qrAgentService.getBanks(),
         qrAgentService.getMerchants(),
         qrAgentService.getLimit(),
+        conversionService.fetchConversionRates().catch(() => []),
       ]);
       setBanks(Array.isArray(banksData) ? banksData : []);
       setMerchants(Array.isArray(merchantsData) ? merchantsData : []);
       setLimit(limitData?.limit ?? null);
+      setRates(conversionData);
     } catch (err) {
       console.error('Metadata fetch error:', err);
     }
@@ -410,9 +415,9 @@ export default function QRTransactionsPage() {
           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
             <span className="text-xs text-muted-foreground uppercase font-bold tracking-wider mb-1">Период поиска</span>
             <div className="flex items-center gap-2 mt-1">
-              <Input type="datetime-local" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-8 text-xs w-[170px]" />
+              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-8 text-xs w-[140px]" />
               <span className="text-muted-foreground">—</span>
-              <Input type="datetime-local" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-8 text-xs w-[170px]" />
+              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="h-8 text-xs w-[140px]" />
             </div>
           </div>
         </div>
