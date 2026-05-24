@@ -1,28 +1,23 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import type {
-  AuthState,
-  AuthTokens,
-  LoginCredentials,
-  User,
-} from '@/types';
-import { useNavigationStore } from '@/stores/navigation-store';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import type { AuthState, AuthTokens, LoginCredentials, User } from "@/types";
+import { useNavigationStore } from "@/stores/navigation-store";
 
 function getDefaultPageForRoles(roleIds: number[]): string {
-  if (roleIds.includes(3)) return 'premies';
-  if (roleIds.includes(6) || roleIds.includes(8)) return 'premies';
-  if (roleIds.includes(9)) return 'chairman-reports';
-  if (roleIds.includes(5)) return 'director-reports';
-  if (roleIds.includes(10)) return 'applications';
-  if (roleIds.includes(11)) return 'credits';
-  if (roleIds.includes(12)) return 'applications';
-  if (roleIds.includes(13)) return 'qr-accounts';
-  if (roleIds.includes(14)) return 'sms-service';
-  if (roleIds.includes(17)) return 'abs-search';
-  if (roleIds.includes(18)) return 'limits';
-  if (roleIds.includes(21)) return 'transactions';
-  if (roleIds.includes(27)) return 'documents';
-  return 'dashboard';
+  if (roleIds.includes(3)) return "premies";
+  if (roleIds.includes(6) || roleIds.includes(8)) return "premies";
+  if (roleIds.includes(9)) return "chairman-reports";
+  if (roleIds.includes(5)) return "director-reports";
+  if (roleIds.includes(10)) return "applications";
+  if (roleIds.includes(11)) return "credits";
+  if (roleIds.includes(12)) return "applications";
+  if (roleIds.includes(13)) return "qr-accounts";
+  if (roleIds.includes(14)) return "sms-service";
+  if (roleIds.includes(17)) return "abs-search";
+  if (roleIds.includes(18)) return "limits";
+  if (roleIds.includes(21)) return "transactions";
+  if (roleIds.includes(27)) return "documents";
+  return "dashboard";
 }
 
 const AUTO_LOGOUT_MS = 30 * 60 * 1000; // 30 minutes
@@ -57,13 +52,16 @@ export const useAuthStore = create<AuthStore>()(
       login: async (credentials: LoginCredentials) => {
         set({ isLoading: true });
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://192.168.10.150:8001'}/api/v1/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(credentials),
-          });
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_AUTH_API_URL}/auth/sign-in`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(credentials),
+            },
+          );
           const data = await res.json();
-          if (!res.ok) throw new Error(data.message || 'Ошибка авторизации');
+          if (!res.ok) throw new Error(data.message || "Ошибка авторизации");
 
           const tokens: AuthTokens = {
             accessToken: data.access_token,
@@ -85,11 +83,11 @@ export const useAuthStore = create<AuthStore>()(
             id: credentials.username,
             username: credentials.username,
             firstName: credentials.username,
-            lastName: '',
+            lastName: "",
             role: roleIds[0] || 0,
             roleIds: roleIds,
-            roleName: `Роль ${roleIds[0] || 'Unknown'}`,
-            branch: 'Головной офис',
+            roleName: `Роль ${roleIds[0] || "Unknown"}`,
+            branch: "Головной офис",
             isActive: true,
           };
 
@@ -97,10 +95,10 @@ export const useAuthStore = create<AuthStore>()(
           document.cookie = `access_token=${tokens.accessToken}; path=/; max-age=${tokens.expiresIn}`;
           document.cookie = `refresh_token=${tokens.refreshToken}; path=/; max-age=${tokens.expiresIn * 2}`;
 
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('access_token', tokens.accessToken);
+          if (typeof window !== "undefined") {
+            localStorage.setItem("access_token", tokens.accessToken);
             if (tokens.refreshToken) {
-              localStorage.setItem('refresh_token', tokens.refreshToken);
+              localStorage.setItem("refresh_token", tokens.refreshToken);
             }
           }
 
@@ -120,7 +118,9 @@ export const useAuthStore = create<AuthStore>()(
           get().startAutoLogout();
 
           // Navigate to correct dashboard based on role
-          useNavigationStore.getState().navigate(getDefaultPageForRoles(roleIds));
+          useNavigationStore
+            .getState()
+            .navigate(getDefaultPageForRoles(roleIds));
         } catch (error) {
           set({ isLoading: false });
           throw error;
@@ -130,13 +130,16 @@ export const useAuthStore = create<AuthStore>()(
       register: async (data: unknown) => {
         set({ isLoading: true });
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://192.168.10.150:8001'}/api/v1/auth/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-          });
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_AUTH_API_URL || "http://192.168.10.150:8001"}/api/v1/auth/register`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            },
+          );
           const result = await res.json();
-          if (!res.ok) throw new Error(result.message || 'Ошибка регистрации');
+          if (!res.ok) throw new Error(result.message || "Ошибка регистрации");
           set({ isLoading: false });
           return result;
         } catch (error) {
@@ -148,25 +151,30 @@ export const useAuthStore = create<AuthStore>()(
       logout: () => {
         const state = get();
         // Preserve specific keys
-        const lastPasswordChange = localStorage.getItem('last_password_change');
-        const passwordCheckDone = localStorage.getItem('password_check_done');
+        const lastPasswordChange = localStorage.getItem("last_password_change");
+        const passwordCheckDone = localStorage.getItem("password_check_done");
 
         // Call API logout
         if (state.tokens?.accessToken) {
-          fetch(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://192.168.10.150:8001'}/api/v1/auth/logout`, {
-            method: 'DELETE',
-            headers: { Authorization: `Bearer ${state.tokens.accessToken}` },
-          }).catch(() => {});
+          fetch(
+            `${process.env.NEXT_PUBLIC_AUTH_API_URL || "http://192.168.10.150:8001"}/api/v1/auth/logout`,
+            {
+              method: "DELETE",
+              headers: { Authorization: `Bearer ${state.tokens.accessToken}` },
+            },
+          ).catch(() => {});
         }
 
         // Clear cookies
-        document.cookie = 'access_token=; path=/; max-age=0';
-        document.cookie = 'refresh_token=; path=/; max-age=0';
-        document.cookie = 'v2_token=; path=/; max-age=0';
+        document.cookie = "access_token=; path=/; max-age=0";
+        document.cookie = "refresh_token=; path=/; max-age=0";
+        document.cookie = "v2_token=; path=/; max-age=0";
 
         // Restore preserved keys
-        if (lastPasswordChange) localStorage.setItem('last_password_change', lastPasswordChange);
-        if (passwordCheckDone) localStorage.setItem('password_check_done', passwordCheckDone);
+        if (lastPasswordChange)
+          localStorage.setItem("last_password_change", lastPasswordChange);
+        if (passwordCheckDone)
+          localStorage.setItem("password_check_done", passwordCheckDone);
 
         // Stop auto-logout
         get().stopAutoLogout();
@@ -181,8 +189,8 @@ export const useAuthStore = create<AuthStore>()(
         });
 
         // Redirect to login page
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
+        if (typeof window !== "undefined") {
+          window.location.href = "/login";
         }
       },
 
@@ -190,13 +198,16 @@ export const useAuthStore = create<AuthStore>()(
         const state = get();
         if (!state.tokens?.accessToken) return;
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://192.168.10.150:8001'}/api/v1/auth/v2/token-exchange`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${state.tokens.accessToken}`,
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_AUTH_API_URL || "http://192.168.10.150:8001"}/api/v1/auth/v2/token-exchange`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${state.tokens.accessToken}`,
+              },
             },
-          });
+          );
           const data = await res.json();
           if (res.ok && data.v2_token) {
             document.cookie = `v2_token=${data.v2_token}; path=/; max-age=3600`;
@@ -213,9 +224,12 @@ export const useAuthStore = create<AuthStore>()(
         const state = get();
         if (!state.tokens?.accessToken) return;
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://192.168.10.150:8001'}/api/v1/users/me`, {
-            headers: { Authorization: `Bearer ${state.tokens.accessToken}` },
-          });
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_AUTH_API_URL || "http://192.168.10.150:8001"}/roles/user/me`,
+            {
+              headers: { Authorization: `Bearer ${state.tokens.accessToken}` },
+            },
+          );
           const data = await res.json();
           if (res.ok) {
             set({ user: data as User });
@@ -228,10 +242,10 @@ export const useAuthStore = create<AuthStore>()(
       setTokens: (tokens: AuthTokens) => {
         document.cookie = `access_token=${tokens.accessToken}; path=/; max-age=${tokens.expiresIn}`;
         document.cookie = `refresh_token=${tokens.refreshToken}; path=/; max-age=${tokens.expiresIn * 2}`;
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('access_token', tokens.accessToken);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("access_token", tokens.accessToken);
           if (tokens.refreshToken) {
-            localStorage.setItem('refresh_token', tokens.refreshToken);
+            localStorage.setItem("refresh_token", tokens.refreshToken);
           }
         }
         set({ tokens, isAuthenticated: true, lastActivity: Date.now() });
@@ -272,12 +286,12 @@ export const useAuthStore = create<AuthStore>()(
       },
     }),
     {
-      name: 'premies-auth-storage',
+      name: "premies-auth-storage",
       partialize: (state) => ({
         tokens: state.tokens,
         user: state.user,
         isAuthenticated: state.isAuthenticated,
       }),
-    }
-  )
+    },
+  ),
 );
