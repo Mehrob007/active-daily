@@ -71,6 +71,11 @@ function getAccessToken(): string | undefined {
 function requestInterceptor(config: RequestInit & { skipAuth?: boolean }): RequestInit {
   const headers = new Headers(config.headers);
 
+  // Set default Accept header
+  if (!headers.has('Accept')) {
+    headers.set('Accept', 'application/json');
+  }
+
   // Set Content-Type for requests with body (skip for FormData)
   if (config.body && !(config.body instanceof FormData)) {
     if (!headers.has('Content-Type')) {
@@ -79,7 +84,7 @@ function requestInterceptor(config: RequestInit & { skipAuth?: boolean }): Reque
   }
 
   // Attach Authorization Bearer token
-  const token = getAccessToken();
+  const token = getAccessToken()?.trim();
   if (token && !(config as RequestConfig).skipAuth) {
     headers.set('Authorization', `Bearer ${token}`);
   }
@@ -97,7 +102,9 @@ async function responseInterceptor<T>(response: Response): Promise<T> {
 
     try {
       const body = await response.json();
+      console.error(`[API Error] ${response.status} ${response.url}:`, body);
       if (body.message) errorData.message = body.message;
+      if (body.error) errorData.message = body.error; // Handle {error: "..."}
       if (body.code) errorData.code = body.code;
       if (body.details) errorData.details = body.details;
     } catch {
