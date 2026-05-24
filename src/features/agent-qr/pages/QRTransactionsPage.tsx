@@ -26,7 +26,6 @@ import { QRTransaction, QRBank, QRMerchant } from '../types';
 import { toast } from '@/hooks/use-toast';
 import { ColumnDef } from '@tanstack/react-table';
 import { absService } from '@/features/technical/abs-search/services/abs-service';
-import { loanSoapService } from '@/features/technical/abs-search/services/loan-service';
 import { TYPE_SEARCH_CLIENT } from '@/features/technical/abs-search/hooks/useAbsSearch';
 import {
   Select,
@@ -35,9 +34,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import RepayModal from '@/features/technical/abs-search/components/modals/RepayModal';
-import CreditDetailsModal from '@/features/technical/abs-search/components/modals/CreditDetailsModal';
-import GraphModal from '@/features/technical/abs-search/components/modals/GraphModal';
+import {
+  RepayModal,
+} from '@/features/technical/abs-search/components/modals/RepayModal';
+import {
+  CreditDetailsModal,
+} from '@/features/technical/abs-search/components/modals/CreditDetailsModal';
+import {
+  GraphModal,
+} from '@/features/technical/abs-search/components/modals/GraphModal';
+import { Account, Credit } from '@/features/technical/abs-search/types';
 
 const PAGE_SIZE = 50;
 
@@ -69,21 +75,17 @@ export default function QRTransactionsPage() {
 
   // Loans state
   const [loanSearchValue, setLoanSearchValue] = useState("");
-  const [selectTypeSearchLoan, setSelectTypeSearchLoan] = useState(TYPE_SEARCH_CLIENT?.[0]?.value || "");
-  const [creditsData, setCreditsData] = useState<any[]>([]);
+  const [selectTypeSearchLoan, setSelectTypeSearchLoan] = useState(TYPE_SEARCH_CLIENT?.[1]?.value || "");
+  const [creditsData, setCreditsData] = useState<Credit[]>([]);
+  const [userAccounts, setUserAccounts] = useState<Account[]>([]);
   const [isLoanSearching, setIsLoanSearching] = useState(false);
   
   // Modals state
   const [repayModalOpen, setRepayModalOpen] = useState(false);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [graphModalOpen, setGraphModalOpen] = useState(false);
-  const [detailsData, setDetailsData] = useState<any>(null);
-  const [graphData, setGraphData] = useState<any[]>([]);
   const [selectedReferenceId, setSelectedReferenceId] = useState("");
-  const [selectedCreditForRepay, setSelectedCreditForRepay] = useState<any>(null);
-  const [isRepayLoading, setIsRepayLoading] = useState(false);
-  const [isDetailsLoading, setIsDetailsLoading] = useState(false);
-  const [isGraphLoading, setIsGraphLoading] = useState(false);
+  const [selectedCreditForRepay, setSelectedCreditForRepay] = useState<Credit | null>(null);
 
   const fetchData = useCallback(async () => {
     if (type === 'loans') return;
@@ -166,66 +168,53 @@ export default function QRTransactionsPage() {
     }
     setIsLoanSearching(true);
     try {
-      const data = await absService.getCredits(loanSearchValue);
-      setCreditsData(Array.isArray(data) ? data : []);
-      if (data.length === 0) {
+      const isCodeSearch = selectTypeSearchLoan.includes('clientIndex=');
+      let clientCode = loanSearchValue;
+
+      if (!isCodeSearch) {
+        const clients = await absService.searchClients(selectTypeSearchLoan, loanSearchValue);
+        const firstClient = Array.isArray(clients) ? clients[0] : clients?.data?.[0] || clients;
+        clientCode = firstClient?.client_code || firstClient?.ClientCode || firstClient?.code || firstClient?.Client?.Code;
+      }
+
+      if (!clientCode) {
+        toast({ title: "Не найдено", description: "Клиент не найден", variant: "destructive" });
+        setCreditsData([]);
+        return;
+      }
+
+      const [credits, accounts] = await Promise.all([
+        absService.getCredits(clientCode),
+        absService.getAccounts(clientCode)
+      ]);
+      
+      setCreditsData(Array.isArray(credits) ? credits : []);
+      setUserAccounts(Array.isArray(accounts) ? accounts : []);
+      
+      if (credits.length === 0) {
         toast({ title: "Информация", description: "Кредиты не найдены" });
       }
     } catch (err) {
       console.error(err);
-      toast({ title: "Ошибка", description: "Ошибка при поиске кредитов", variant: "destructive" });
+      toast({ title: "Ошибка", description: "Ошибка при поиске", variant: "destructive" });
     } finally {
       setIsLoanSearching(false);
     }
   };
 
-  const handleOpenDetails = async (referenceId: string) => {
+  const handleOpenDetails = (referenceId: string) => {
     setSelectedReferenceId(referenceId);
     setDetailsModalOpen(true);
-    setIsDetailsLoading(true);
-    try {
-      const data = await loanSoapService.getLoanDetails(referenceId);
-      setDetailsData(data);
-    } catch (err) {
-      console.error(err);
-      toast({ title: "Ошибка", description: "Не удалось загрузить детали кредита", variant: "destructive" });
-    } finally {
-      setIsDetailsLoading(false);
-    }
   };
 
-  const handleOpenGraph = async (referenceId: string) => {
+  const handleOpenGraph = (referenceId: string) => {
     setSelectedReferenceId(referenceId);
     setGraphModalOpen(true);
-    setIsGraphLoading(true);
-    try {
-      const data = await absService.getCreditGraphs(referenceId);
-      setGraphData(data);
-    } catch (err) {
-      console.error(err);
-      toast({ title: "Ошибка", description: "Не удалось загрузить график", variant: "destructive" });
-    } finally {
-      setIsGraphLoading(false);
-    }
   };
 
-  const handleOpenRepayModal = (credit: any) => {
+  const handleOpenRepayModal = (credit: Credit) => {
     setSelectedCreditForRepay(credit);
     setRepayModalOpen(true);
-  };
-
-  const handleRepaySubmit = async (repayData: any) => {
-    setIsRepayLoading(true);
-    try {
-      await loanSoapService.repayLoan(repayData);
-      toast({ title: "Успешно", description: "Заявка на погашение отправлена" });
-      setRepayModalOpen(false);
-    } catch (err) {
-      console.error(err);
-      toast({ title: "Ошибка", description: "Ошибка при погашении", variant: "destructive" });
-    } finally {
-      setIsRepayLoading(false);
-    }
   };
 
   const columns: ColumnDef<QRTransaction>[] = [
@@ -478,7 +467,7 @@ export default function QRTransactionsPage() {
                       <SelectValue placeholder="Выберите тип" />
                     </SelectTrigger>
                     <SelectContent>
-                      {(TYPE_SEARCH_CLIENT || []).filter(t => t.apiType === 'ABS').map(t => (
+                      {(TYPE_SEARCH_CLIENT || []).map(t => (
                         <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
                       ))}
                     </SelectContent>
@@ -527,10 +516,10 @@ export default function QRTransactionsPage() {
                       <td className="px-4 py-3 text-xs">{credit.productName}</td>
                       <td className="px-4 py-3">
                         <div className="flex gap-2">
-                           <Button size="sm" variant="outline" className="h-8 text-[11px] gap-1" onClick={() => handleOpenGraph(credit.referenceId)}>
+                           <Button size="sm" variant="outline" className="h-8 text-[11px] gap-1" onClick={() => credit.referenceId && handleOpenGraph(credit.referenceId)}>
                              <BarChart3 className="size-3" /> График
                            </Button>
-                           <Button size="sm" variant="outline" className="h-8 text-[11px] gap-1 border-blue-200 text-blue-700 hover:bg-blue-50" onClick={() => handleOpenDetails(credit.referenceId)}>
+                           <Button size="sm" variant="outline" className="h-8 text-[11px] gap-1 border-blue-200 text-blue-700 hover:bg-blue-50" onClick={() => credit.referenceId && handleOpenDetails(credit.referenceId)}>
                              <FileText className="size-3" /> Детали
                            </Button>
                            <Button size="sm" className="h-8 text-[11px] gap-1 bg-emerald-600 hover:bg-emerald-700 text-white" onClick={() => handleOpenRepayModal(credit)}>
@@ -563,30 +552,23 @@ export default function QRTransactionsPage() {
 
       {/* Modals */}
       <RepayModal
-        isOpen={repayModalOpen}
+        credit={selectedCreditForRepay}
+        accounts={userAccounts}
         onClose={() => setRepayModalOpen(false)}
-        onSubmit={handleRepaySubmit}
-        isLoading={isRepayLoading}
-        creditInfo={selectedCreditForRepay}
+        onRefresh={handleSearchLoans}
       />
 
       <CreditDetailsModal
-        isOpen={detailsModalOpen}
+        referenceId={detailsModalOpen ? selectedReferenceId : null}
         onClose={() => setDetailsModalOpen(false)}
-        data={detailsData}
-        isLoading={isDetailsLoading}
       />
 
       <GraphModal
-        isOpen={graphModalOpen}
+        referenceId={graphModalOpen ? selectedReferenceId : null}
         onClose={() => {
           setGraphModalOpen(false);
-          setGraphData([]);
           setSelectedReferenceId("");
         }}
-        graphData={graphData}
-        isLoading={isGraphLoading}
-        referenceId={selectedReferenceId}
       />
 
     </PageContainer>
