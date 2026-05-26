@@ -83,8 +83,10 @@ export const useAuthStore = create<AuthStore>()(
               refreshToken: translated.refresh_token,
               expiresIn: translated.expires_in || 3600,
             });
-          } catch (e) {
-            console.warn("Immediate token translation failed", e);
+          } catch (e: any) {
+            if (e?.message !== 'the given token is already a JWT token V2') {
+              console.warn("Immediate token translation failed", e);
+            }
           }
 
           set({
@@ -192,8 +194,10 @@ export const useAuthStore = create<AuthStore>()(
               }
             });
           }
-        } catch (error) {
-          console.error("Token translation failed", error);
+        } catch (error: any) {
+          if (error?.message !== 'the given token is already a JWT token V2') {
+            console.error("Token translation failed", error);
+          }
         }
       },
 
