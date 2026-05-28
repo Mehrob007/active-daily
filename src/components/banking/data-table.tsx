@@ -81,11 +81,11 @@ export function DataTable<TData, TValue>({
   className,
   emptyMessage = 'Данные не найдены',
 }: DataTableProps<TData, TValue>) {
+  'use no memo';
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
-  // eslint-disable-next-line react-compiler/react-compiler
   const table = useReactTable({
     data,
     columns,
