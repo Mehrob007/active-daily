@@ -102,7 +102,10 @@ async function responseInterceptor<T>(response: Response): Promise<T> {
 
     try {
       const body = await response.json();
-      console.error(`[API Error] ${response.status} ${response.url}:`, body);
+      const isV2TokenError = body?.error === 'the given token is already a JWT token V2';
+      if (!isV2TokenError) {
+        console.error(`[API Error] ${response.status} ${response.url}:`, body);
+      }
       if (body.message) errorData.message = body.message;
       if (body.error) errorData.message = body.error; // Handle {error: "..."}
       if (body.code) errorData.code = body.code;

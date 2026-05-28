@@ -1,4 +1,4 @@
-const ABS_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_ABS_SERVICE_URL || 'http://localhost:5000';
+const ABS_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_ABS_SERVICE_URL || 'http://10.65.10.20:7575';
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://10.65.10.20:7575';
 const SYSTEM_5012_URL = 'http://10.64.20.84:5012';
 const API_TELEGRAM_URL = process.env.NEXT_PUBLIC_API_TELEGRAM_URL || 'http://10.64.20.84:5010'; // Hypothetical based on old project structure
