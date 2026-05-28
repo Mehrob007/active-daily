@@ -199,7 +199,6 @@ export const CreditCardItem: React.FC<CreditCardItemProps> = ({ credit, onOpenDe
                   <>{formatMoney(monthlyPayment)} {credit.currency || 'TJS'}</>
                 )}
               </div>
-              <span className="text-sm font-semibold text-indigo-700">(1 пункт)</span>
             </div>
           </div>
         </div>
