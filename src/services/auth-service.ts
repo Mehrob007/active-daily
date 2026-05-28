@@ -53,15 +53,7 @@ export const authService = {
   async logout(): Promise<void> {
     return apiClient.delete<void>('/auth/logout');
   },
-
-  /**
-   * Exchange the current access token for a fresh set of tokens.
-   * Mirrors CheckTokenVersion logic from reference project.
-   */
-  async translateToken(): Promise<AuthResponse> {
-    return apiClient.get<AuthResponse>('/auth/translate-token');
-  },
-
+  
   /**
    * Fetch the currently authenticated user profile.
    */

@@ -73,13 +73,16 @@ export default function TestsPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      checkAllowed();
+      const timer = setTimeout(() => {
+        checkAllowed();
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [isAuthenticated, checkAllowed]);
 
   async function handleSubmit(testData: TestData | null = test) {
     if (!testData) return;
-    const payload = testData.Questions?.map((q) => answers[q.ID]);
+    const payload = testData.Questions?.map((q) => answers[q.ID]) || [];
     try {
       await testsService.submitAnswers(payload);
       toast({ title: "Успешно!", description: "Ответы успешно отправлены." });
@@ -107,7 +110,10 @@ export default function TestsPage() {
         description: "Ваши ответы будут отправлены автоматически.",
         variant: "destructive"
       });
-      handleSubmit(test);
+      const timer = setTimeout(() => {
+        handleSubmit(test);
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [timeLeft, test]);
 
@@ -239,7 +245,7 @@ export default function TestsPage() {
         <CardHeader className="bg-slate-50/80 border-b border-slate-100 pt-8 px-8 pb-6">
           <div className="flex items-center justify-between mb-4">
             <Badge className="bg-white text-slate-600 border-slate-200 py-1.5 px-4 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">
-              Вопрос {currentQuestionIdx + 1} из {questionsCount}
+              Вопрос {currentQuestionIdx + 1} из {test?.Questions?.length || 0}
             </Badge>
             <Badge variant="outline" className="bg-white/50 text-bank-red border-bank-red/20">
               {currentQuestion?.type ? QUESTION_TYPE_LABELS[currentQuestion.type] || currentQuestion.type : ''}

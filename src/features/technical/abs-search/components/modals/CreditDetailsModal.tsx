@@ -18,11 +18,14 @@ export const CreditDetailsModal: React.FC<CreditDetailsModalProps> = ({ referenc
 
   useEffect(() => {
     if (referenceId) {
-      setIsLoading(true);
-      loanSoapService.getLoanDetails(referenceId)
-        .then(setData)
-        .catch(console.error)
-        .finally(() => setIsLoading(false));
+      const timer = setTimeout(() => {
+        setIsLoading(true);
+        loanSoapService.getLoanDetails(referenceId)
+          .then(setData)
+          .catch(console.error)
+          .finally(() => setIsLoading(false));
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [referenceId]);
 

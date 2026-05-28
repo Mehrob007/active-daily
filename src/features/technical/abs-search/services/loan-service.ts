@@ -88,7 +88,7 @@ function parseLoanDetailsSoapResponse(xmlText: string) {
 
   const balanceAccountsRoot = findElement(loanElem, "balanceAccounts");
   const balanceNodes = balanceAccountsRoot ? balanceAccountsRoot.getElementsByTagName("*") : [];
-  const balances = [];
+  const balances: any[] = [];
   
   for (let i = 0; i < balanceNodes.length; i++) {
     const node = balanceNodes[i];

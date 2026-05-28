@@ -20,11 +20,14 @@ export const CardLimitsModal: React.FC<CardLimitsModalProps> = ({ cardId, onClos
 
   useEffect(() => {
     if (cardId) {
-      setIsLoading(true);
-      absService.getCardLimits(cardId)
-        .then(setData)
-        .catch(console.error)
-        .finally(() => setIsLoading(false));
+      const timer = setTimeout(() => {
+        setIsLoading(true);
+        absService.getCardLimits(cardId)
+          .then(setData)
+          .catch(console.error)
+          .finally(() => setIsLoading(false));
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [cardId]);
 

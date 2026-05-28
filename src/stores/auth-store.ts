@@ -25,7 +25,7 @@ const AUTO_LOGOUT_MS = 30 * 60 * 1000;
 
 interface AuthActions {
   login: (credentials: LoginCredentials) => Promise<void>;
-  register: (data: any) => Promise<void>;
+  register: (data: any) => Promise<any>;
   logout: () => void;
   checkAuth: () => Promise<void>;
   fetchMe: () => Promise<void>;
@@ -75,17 +75,6 @@ export const useAuthStore = create<AuthStore>()(
           };
 
           get().setTokens(tokens);
-
-          try {
-            const translated = await authService.translateToken();
-            get().setTokens({
-              accessToken: translated.access_token,
-              refreshToken: translated.refresh_token,
-              expiresIn: translated.expires_in || 3600,
-            });
-          } catch (e) {
-            console.warn("Immediate token translation failed", e);
-          }
 
           set({
             user: userProfile,
@@ -161,39 +150,10 @@ export const useAuthStore = create<AuthStore>()(
         const state = get();
         if (!state.isAuthenticated || !state.tokens?.accessToken) return;
 
-        const oneMinuteAgo = Date.now() - 60 * 1000;
-        if (state.lastActivity > oneMinuteAgo && state.tokens.accessToken.length > 500) {
-           return;
-        }
-
         try {
-          const data = await authService.translateToken();
-          
-          const tokens: AuthTokens = {
-            accessToken: data.access_token,
-            refreshToken: data.refresh_token,
-            expiresIn: data.expires_in || 3600,
-          };
-
-          const roleIds = Array.isArray(data.role_ids) 
-            ? data.role_ids.map(Number) 
-            : data.role_ids !== undefined ? [Number(data.role_ids)] : [];
-
-          get().setTokens(tokens);
-
           await get().fetchMe();
-
-          if (state.user) {
-            set({
-              user: {
-                ...state.user,
-                role: roleIds[0] || state.user.role,
-                roleIds: roleIds,
-              }
-            });
-          }
         } catch (error) {
-          console.error("Token translation failed", error);
+          console.error("Auth check failed", error);
         }
       },
 
