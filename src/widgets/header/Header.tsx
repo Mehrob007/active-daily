@@ -33,7 +33,6 @@ import {
   ChevronRight,
 } from 'lucide-react';
 
-// ─── Header Component ──────────────────────────────────────────
 export default function Header() {
   const { currentPage, setMobileOpen } = useNavigationStore();
   const { user, logout } = useAuthStore();
@@ -50,7 +49,7 @@ export default function Header() {
         'shadow-[0_1px_2px_rgba(0,0,0,0.03)]'
       )}
     >
-      {/* Mobile Hamburger */}
+      {}
       {isMobile && (
         <Button
           variant="ghost"
@@ -63,7 +62,7 @@ export default function Header() {
         </Button>
       )}
 
-      {/* Breadcrumb */}
+      {}
       <Breadcrumb className="flex-1">
         <BreadcrumbList>
           {breadcrumbs.map((crumb, index) => {
@@ -96,9 +95,9 @@ export default function Header() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      {/* Right Actions */}
+      {}
       <div className="flex items-center gap-2">
-        {/* Notification Bell */}
+        {}
         <Button
           variant="ghost"
           size="icon"
@@ -109,7 +108,7 @@ export default function Header() {
           <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-bank-red ring-2 ring-white" />
         </Button>
 
-        {/* User Dropdown */}
+        {}
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

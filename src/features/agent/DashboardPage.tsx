@@ -13,8 +13,6 @@ import {
 } from 'lucide-react';
 import React from 'react';
 
-// ─── Mock Data ──────────────────────────────────────────────────
-
 const monthlyData = [
   { month: 'Янв', заявки: 156, одобрено: 120 },
   { month: 'Фев', заявки: 189, одобрено: 145 },
@@ -49,8 +47,6 @@ const statusStats = [
   { label: 'В работе', value: 112, className: 'bg-blue-50 text-blue-700 border-blue-200' },
 ];
 
-// ─── Custom Tooltip ─────────────────────────────────────────────
-
 function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; name: string; color: string }>; label?: string }) {
   if (!active || !payload?.length) return null;
   return (
@@ -65,8 +61,6 @@ function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: 
   );
 }
 
-// ─── Dashboard Page ─────────────────────────────────────────────
-
 export default function DashboardPage() {
   return (
     <PageContainer
@@ -79,7 +73,7 @@ export default function DashboardPage() {
         </button>
       }
     >
-      {/* ── KPI Grid ─────────────────────────────────────────── */}
+      {}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KPICard
           title="Всего заявок"
@@ -111,9 +105,9 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* ── Activity + Status Stats ──────────────────────────── */}
+      {}
       <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {/* Recent Activity */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
@@ -147,7 +141,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Status Stats */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
@@ -169,7 +163,7 @@ export default function DashboardPage() {
                 </div>
               ))}
 
-              {/* Mini monthly summary */}
+              {}
               <div className="mt-4 rounded-lg bg-muted/40 p-4">
                 <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Выполнение плана (май)
@@ -194,9 +188,9 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* ── Charts ───────────────────────────────────────────── */}
+      {}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {/* Line Chart — Dynamics */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-semibold">Динамика заявок</CardTitle>
@@ -231,7 +225,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Pie Chart — Product Structure */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-semibold">Структура продуктов</CardTitle>

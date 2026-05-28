@@ -31,8 +31,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// ─── Types ─────────────────────────────────────────────────────
-
 type TaskStatus = 'completed' | 'in_progress' | 'pending' | 'overdue';
 type TaskPriority = 'high' | 'medium' | 'low';
 
@@ -46,8 +44,6 @@ interface Task {
   description: string;
   category: string;
 }
-
-// ─── Status config ─────────────────────────────────────────────
 
 const STATUS_CONFIG: Record<
   TaskStatus,
@@ -97,8 +93,6 @@ const PRIORITY_CONFIG: Record<
   medium: { label: 'Средний', dot: 'bg-bank-warning', bg: 'bg-bank-warning/10 text-bank-warning border-bank-warning/20' },
   low: { label: 'Низкий', dot: 'bg-muted-foreground', bg: 'bg-muted text-muted-foreground border-border/60' },
 };
-
-// ─── Mock Data ─────────────────────────────────────────────────
 
 const mockTasks: Task[] = [
   {
@@ -258,8 +252,6 @@ const assignees = [
   ...Array.from(new Set(mockTasks.map((t) => t.assignee))),
 ];
 
-// ─── Task Card ─────────────────────────────────────────────────
-
 function TaskCard({
   task,
   onComplete,
@@ -283,7 +275,7 @@ function TaskCard({
         task.status === 'overdue' && 'border-bank-red/20 bg-bank-red/5',
       )}
     >
-      {/* Top row: ID + Priority + Category */}
+      {}
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-[11px] font-mono text-muted-foreground">
@@ -315,7 +307,7 @@ function TaskCard({
         </Badge>
       </div>
 
-      {/* Task name + description */}
+      {}
       <h4
         className={cn(
           'text-sm font-semibold mb-1',
@@ -329,7 +321,7 @@ function TaskCard({
         {task.description}
       </p>
 
-      {/* Meta row */}
+      {}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
@@ -345,7 +337,7 @@ function TaskCard({
           </Badge>
         </div>
 
-        {/* Actions */}
+        {}
         {task.status !== 'completed' && (
           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <Button
@@ -373,8 +365,6 @@ function TaskCard({
   );
 }
 
-// ─── Daily Tasks Page ──────────────────────────────────────────
-
 export default function DailyTasksPage() {
   const [selectedDate, setSelectedDate] = useState(() => {
     const d = new Date();
@@ -384,7 +374,6 @@ export default function DailyTasksPage() {
   const [filterPriority, setFilterPriority] = useState('all');
   const [tasks, setTasks] = useState<Task[]>(mockTasks);
 
-  // Filter tasks
   const filteredTasks = useMemo(() => {
     return tasks.filter((t) => {
       if (filterAssignee !== 'Все сотрудники' && t.assignee !== filterAssignee)
@@ -394,7 +383,6 @@ export default function DailyTasksPage() {
     });
   }, [tasks, filterAssignee, filterPriority]);
 
-  // Count by status
   const counts = useMemo(() => {
     const c = { completed: 0, in_progress: 0, pending: 0, overdue: 0 };
     filteredTasks.forEach((t) => c[t.status]++);
@@ -406,7 +394,6 @@ export default function DailyTasksPage() {
     totalTasks > 0 ? Math.round((counts.completed / totalTasks) * 100) : 0;
   const avgCompletionTime = '2 ч 15 мин';
 
-  // Group by status
   const statusGroups: TaskStatus[] = [
     'overdue',
     'in_progress',
@@ -424,7 +411,6 @@ export default function DailyTasksPage() {
     return map;
   }, [filteredTasks]);
 
-  // Actions
   const handleComplete = (id: string) => {
     setTasks((prev) =>
       prev.map((t) => (t.id === id ? { ...t, status: 'completed' as TaskStatus } : t)),
@@ -452,7 +438,7 @@ export default function DailyTasksPage() {
         </button>
       }
     >
-      {/* ── Date + Filters Row ──────────────────────────────── */}
+      {}
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-2">
           <CalendarDays className="size-4 text-muted-foreground" />
@@ -493,9 +479,9 @@ export default function DailyTasksPage() {
         </Select>
       </div>
 
-      {/* ── Status Summary Cards ────────────────────────────── */}
+      {}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {/* Completed */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardContent className="p-4">
             <div className="flex items-center gap-3 mb-3">
@@ -519,7 +505,7 @@ export default function DailyTasksPage() {
           </CardContent>
         </Card>
 
-        {/* In Progress */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardContent className="p-4">
             <div className="flex items-center gap-3 mb-3">
@@ -546,7 +532,7 @@ export default function DailyTasksPage() {
           </CardContent>
         </Card>
 
-        {/* Pending */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardContent className="p-4">
             <div className="flex items-center gap-3 mb-3">
@@ -573,7 +559,7 @@ export default function DailyTasksPage() {
           </CardContent>
         </Card>
 
-        {/* Overdue */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardContent className="p-4">
             <div className="flex items-center gap-3 mb-3">
@@ -601,7 +587,7 @@ export default function DailyTasksPage() {
         </Card>
       </div>
 
-      {/* ── Stats Row ───────────────────────────────────────── */}
+      {}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardContent className="flex items-center gap-3 p-4">
@@ -642,7 +628,7 @@ export default function DailyTasksPage() {
         </Card>
       </div>
 
-      {/* ── Task List Grouped by Status ─────────────────────── */}
+      {}
       <div className="space-y-6">
         {statusGroups.map((status) => {
           const groupTasks = groupedTasks.get(status) ?? [];
@@ -652,7 +638,7 @@ export default function DailyTasksPage() {
 
           return (
             <div key={status}>
-              {/* Section header */}
+              {}
               <div className="mb-3 flex items-center gap-2">
                 <StatusIcon className={cn('size-4', config.color)} />
                 <h3 className={cn('text-sm font-semibold', config.color)}>
@@ -672,7 +658,7 @@ export default function DailyTasksPage() {
                 <ChevronRight className="size-3 text-muted-foreground ml-1" />
               </div>
 
-              {/* Task cards grid */}
+              {}
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
                 {groupTasks.map((task) => (
                   <TaskCard
@@ -688,7 +674,7 @@ export default function DailyTasksPage() {
         })}
       </div>
 
-      {/* ── Empty state ─────────────────────────────────────── */}
+      {}
       {filteredTasks.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
           <CircleDot className="size-10 mb-3 opacity-40" />

@@ -39,11 +39,11 @@ export default function QRWithdrawOperationsPage() {
   const today = new Date().toISOString().split('T')[0];
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
-  
+
   const [operations, setOperations] = useState<QRWithdrawOperation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [payingKeys, setPayingKeys] = useState<Set<string>>(new Set());
-  
+
   const [filterText, setFilterText] = useState('');
   const [filterPaid, setFilterPaid] = useState<'all' | 'paid' | 'unpaid'>('all');
   const [showFilters, setShowFilters] = useState(false);
@@ -57,7 +57,7 @@ export default function QRWithdrawOperationsPage() {
     try {
       const format = (d: string) => d.split('-').reverse().join('.');
       const data = await qrAgentService.getWithdrawOperations(format(startDate), format(endDate), STATEMENT_ACCOUNT_NUMBER);
-      
+
       const flat = (data || []).flatMap((day: any) =>
         (day.Transactions || []).map((tx: any) => ({
           ...tx,
@@ -70,7 +70,7 @@ export default function QRWithdrawOperationsPage() {
           _key: `${day.DOPER}__${tx.NUMDOC}__${tx.REFER}`,
         }))
       );
-      
+
       setOperations(flat);
       if (showSuccess) {
         toast({ title: 'Успешно', description: `Загружено ${flat.length} транзакций` });
@@ -113,7 +113,7 @@ export default function QRWithdrawOperationsPage() {
     return operations.filter((row) => {
       if (filterPaid === 'paid' && !row.IsPayed) return false;
       if (filterPaid === 'unpaid' && row.IsPayed) return false;
-      
+
       if (filterText) {
         const q = filterText.toLowerCase();
         return [row.NUMDOC, row.CLIENTCOR, row.TXTDSCR, row.REFER, row.ACCCOR, row.NAMEBCR].some(
@@ -144,7 +144,7 @@ export default function QRWithdrawOperationsPage() {
   const handleBulkPay = async () => {
     const toPay = filteredData.filter(row => selectedKeys.has(row._key) && !row.IsPayed);
     if (toPay.length === 0) return;
-    
+
     setShowBulkConfirm(false);
     setPayingKeys(prev => {
       const next = new Set(prev);
@@ -176,7 +176,7 @@ export default function QRWithdrawOperationsPage() {
       description: `Успешно: ${ok}, Ошибок: ${fail}`,
       variant: fail > 0 ? 'warning' : 'default' as any
     });
-    
+
     setPayingKeys(prev => {
       const next = new Set(prev);
       toPay.forEach(r => next.delete(r._key));
@@ -293,7 +293,7 @@ export default function QRWithdrawOperationsPage() {
 
   return (
     <PageContainer title="Операции QR АБС" subtitle="Список межбанковских QR операций в АБС">
-      
+
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">

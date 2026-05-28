@@ -50,7 +50,7 @@ export const DepositsTable: React.FC<DepositsTableProps> = ({ data, isLoading, o
 
   return (
     <div className="space-y-6">
-      {/* Filter Buttons */}
+      {}
       <div className="flex flex-wrap gap-2">
         {filters.map((f) => (
           <Button
@@ -69,7 +69,7 @@ export const DepositsTable: React.FC<DepositsTableProps> = ({ data, isLoading, o
         ))}
       </div>
 
-      {/* Cards List */}
+      {}
       <div className="grid grid-cols-1 gap-4">
         {filteredDeposits.map((deposit, idx) => (
           <DepositCard 
@@ -83,7 +83,7 @@ export const DepositsTable: React.FC<DepositsTableProps> = ({ data, isLoading, o
           />
         ))}
       </div>
-      
+
       {filteredDeposits.length === 0 && (
          <div className="py-20 text-center text-slate-400 border border-dashed rounded-3xl">
             По вашему фильтру ничего не найдено

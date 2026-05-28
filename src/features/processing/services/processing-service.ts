@@ -18,7 +18,7 @@ export const processingService = {
   async fetchTransactions(searchType: string, params: any) {
     let url = '';
     const q = new URLSearchParams();
-    
+
     if (searchType === 'cardId') {
       url = `${PROCESSING_URL}/api/Transactions/by-cards`;
       q.append('cardIds', params.cardId || params.cardIds);
@@ -79,7 +79,7 @@ export const processingService = {
     const finalUrl = q.toString() ? `${url}?${q.toString()}` : url;
     const response = await fetch(finalUrl, { headers: getHeaders() });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    
+
     const data = await response.json();
     return data.transactions || data;
   },

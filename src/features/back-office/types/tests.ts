@@ -2,7 +2,7 @@ export interface Test {
   ID: number;
   Title: string;
   description: string;
-  time_limit: number; // in minutes
+  time_limit: number; 
   Questions?: Question[];
 }
 
@@ -11,7 +11,7 @@ export interface Question {
   test_id: number;
   text: string;
   type: 'single_choice' | 'multiple_choice' | 'text';
-  time_limit?: number; // in milliseconds (stored as this in DB sometimes)
+  time_limit?: number; 
   Options?: Option[];
 }
 
@@ -20,7 +20,7 @@ export interface Option {
   question_id: number;
   text: string;
   is_correct: boolean;
-  correct_text?: string; // for text-type questions
+  correct_text?: string; 
 }
 
 export interface UserAnswer {

@@ -6,11 +6,6 @@ import type {
   User,
 } from '@/types';
 
-// ============================================
-// Auth Service — Authentication API
-// ============================================
-
-/** Response shape returned by sign-in and token-exchange */
 interface AuthResponse {
   access_token: string;
   refresh_token: string;
@@ -18,7 +13,6 @@ interface AuthResponse {
   role_ids?: number[];
 }
 
-/** Response shape returned by sign-up */
 interface SignUpResponse {
   id: string;
   username: string;
@@ -26,10 +20,7 @@ interface SignUpResponse {
 }
 
 export const authService = {
-  /**
-   * Sign in with username and password.
-   * Returns auth tokens on success.
-   */
+
   async signIn(credentials: LoginCredentials): Promise<AuthResponse> {
     return apiClient.post<AuthResponse>('/auth/sign-in', {
       body: credentials,
@@ -37,9 +28,6 @@ export const authService = {
     });
   },
 
-  /**
-   * Register a new user account.
-   */
   async signUp(data: RegisterData): Promise<SignUpResponse> {
     return apiClient.post<SignUpResponse>('/auth/sign-up', {
       body: data,
@@ -47,16 +35,10 @@ export const authService = {
     });
   },
 
-  /**
-   * Sign out the current user and invalidate tokens.
-   */
   async logout(): Promise<void> {
     return apiClient.delete<void>('/auth/logout');
   },
-  
-  /**
-   * Fetch the currently authenticated user profile.
-   */
+
   async getMe(): Promise<User> {
     return apiClient.get<User>('/roles/user/my');
   },

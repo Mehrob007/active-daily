@@ -28,8 +28,6 @@ import {
   Search,
 } from 'lucide-react';
 
-// ─── Types ────────────────────────────────────────────────────
-
 type CardType = 'debit' | 'credit' | 'prepaid';
 type CardBrand = 'Visa' | 'Mastercard' | 'UzCard' | 'Humo';
 type CardStatus = 'active' | 'pending' | 'blocked' | 'closed';
@@ -57,8 +55,6 @@ interface DepositItem {
   status: DepositStatus;
 }
 
-// ─── Mock Data ────────────────────────────────────────────────
-
 const mockCards: CardItem[] = [
   { id: 'CD-001', clientName: 'Каримов Алишер Р.', cardType: 'debit', brand: 'Visa', lastFour: '4521', annualFee: 0, cashbackPercent: 1.5, status: 'active' },
   { id: 'CD-002', clientName: 'Рахимова Дилноза У.', cardType: 'credit', brand: 'Mastercard', lastFour: '7832', annualFee: 15000, cashbackPercent: 2.0, status: 'active' },
@@ -84,8 +80,6 @@ const mockDeposits: DepositItem[] = [
   { id: 'DP-007', clientName: 'Жумабаева Айдана К.', productName: 'Вклад «Накопительный» 18 мес.', amount: 3000000, termMonths: 18, interestRate: 15.0, replenishable: true, status: 'pending' },
   { id: 'DP-008', clientName: 'Поляков Андрей В.', productName: 'Вклад «Пенсионный» 36 мес.', amount: 20000000, termMonths: 36, interestRate: 17.0, replenishable: true, status: 'closed' },
 ];
-
-// ─── Type Badge ───────────────────────────────────────────────
 
 function CardTypeBadge({ type }: { type: CardType }) {
   const config: Record<CardType, { label: string; className: string }> = {
@@ -127,8 +121,6 @@ function ReplenishableBadge({ value }: { value: boolean }) {
     </Badge>
   );
 }
-
-// ─── Column Definitions: Cards ────────────────────────────────
 
 const cardColumns: ColumnDef<CardItem>[] = [
   {
@@ -184,8 +176,6 @@ const cardColumns: ColumnDef<CardItem>[] = [
   },
 ];
 
-// ─── Column Definitions: Deposits ─────────────────────────────
-
 const depositColumns: ColumnDef<DepositItem>[] = [
   {
     accessorKey: 'id',
@@ -240,8 +230,6 @@ const depositColumns: ColumnDef<DepositItem>[] = [
   },
 ];
 
-// ─── Page Component ───────────────────────────────────────────
-
 export default function CardsDepositsPage() {
   const [activeTab, setActiveTab] = useState<string>('cards');
   const [cardStatusFilter, setCardStatusFilter] = useState<string>('all');
@@ -289,9 +277,9 @@ export default function CardsDepositsPage() {
           </TabsTrigger>
         </TabsList>
 
-        {/* ── Cards Tab ────────────────────────────────────── */}
+        {}
         <TabsContent value="cards" className="space-y-4">
-          {/* Filter bar */}
+          {}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <Select value={cardStatusFilter} onValueChange={setCardStatusFilter}>
               <SelectTrigger className="h-9 w-full sm:w-[200px]">
@@ -325,9 +313,9 @@ export default function CardsDepositsPage() {
           />
         </TabsContent>
 
-        {/* ── Deposits Tab ─────────────────────────────────── */}
+        {}
         <TabsContent value="deposits" className="space-y-4">
-          {/* Filter bar */}
+          {}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <Select value={depositStatusFilter} onValueChange={setDepositStatusFilter}>
               <SelectTrigger className="h-9 w-full sm:w-[200px]">

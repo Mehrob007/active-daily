@@ -13,7 +13,7 @@ interface CreditCardItemProps {
 
 const DEPARTMENTS_MAP: Record<string, string> = {
   '6100': 'Мудирияти Амалиёти ш.Душанбе',
-  // Add more mappings if needed
+
 };
 
 export const CreditCardItem: React.FC<CreditCardItemProps> = ({ credit, onOpenDetails }) => {
@@ -30,7 +30,7 @@ export const CreditCardItem: React.FC<CreditCardItemProps> = ({ credit, onOpenDe
     let timerGraph: ReturnType<typeof setTimeout>;
 
     if (credit.referenceId) {
-      // Fetch loan details
+
       timerDetails = setTimeout(() => {
         setIsLoadingDetails(true);
         loanSoapService.getLoanDetails(credit.referenceId!)
@@ -50,14 +50,13 @@ export const CreditCardItem: React.FC<CreditCardItemProps> = ({ credit, onOpenDe
           });
       }, 0);
 
-      // Fetch graphs
       timerGraph = setTimeout(() => {
         setIsLoadingGraph(true);
         absService.getCreditGraphs(credit.referenceId!)
           .then((graphs: any[]) => {
             if (ignore) return;
             if (graphs && graphs.length > 0) {
-              // Group by PaymentDate
+
               const byDate: Record<string, any[]> = {};
               graphs.forEach((g) => {
                 const date = g.PaymentDate;
@@ -132,7 +131,7 @@ export const CreditCardItem: React.FC<CreditCardItemProps> = ({ credit, onOpenDe
 
   return (
     <Card className="rounded-3xl p-6 bg-white border-none shadow-sm flex flex-col gap-6 relative overflow-hidden">
-      {/* Top Section */}
+      {}
       <div className="flex justify-between items-start">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
@@ -159,7 +158,7 @@ export const CreditCardItem: React.FC<CreditCardItemProps> = ({ credit, onOpenDe
         </div>
       </div>
 
-      {/* Progress Section */}
+      {}
       <div className="space-y-2">
         <div className="text-xs text-slate-400">Погашено</div>
         <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
@@ -170,7 +169,7 @@ export const CreditCardItem: React.FC<CreditCardItemProps> = ({ credit, onOpenDe
         </div>
       </div>
 
-      {/* Bottom Section */}
+      {}
       <div className="flex justify-between items-end pt-2">
         <div className="flex gap-16">
           <div className="space-y-1">
@@ -202,7 +201,7 @@ export const CreditCardItem: React.FC<CreditCardItemProps> = ({ credit, onOpenDe
             </div>
           </div>
         </div>
-        
+
         <Button 
           variant="link" 
           className="text-[#b91c1c] p-0 h-auto font-medium hover:no-underline hover:opacity-80"

@@ -184,7 +184,7 @@ export const CardsTable: React.FC<CardsTableProps> = ({
             >
               <Phone className="size-3 mr-1 shrink-0" /> Уведомления
             </Button>
-            
+
             <div className="grid grid-cols-2 gap-1">
               <Button
                 size="sm"
@@ -194,7 +194,7 @@ export const CardsTable: React.FC<CardsTableProps> = ({
               >
                 <History className="size-3 mr-0.5 shrink-0" /> Ист.
               </Button>
-              
+
               <Button
                 size="sm"
                 variant="secondary"

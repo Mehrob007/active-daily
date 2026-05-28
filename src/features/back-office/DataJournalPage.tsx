@@ -33,8 +33,6 @@ import {
   Copy,
 } from 'lucide-react';
 
-// ─── Types ────────────────────────────────────────────────────────────
-
 interface AuditLogEntry {
   id: string;
   timestamp: string;
@@ -45,8 +43,6 @@ interface AuditLogEntry {
   changesSummary: string;
   ip: string;
 }
-
-// ─── Mock Data ────────────────────────────────────────────────────────
 
 const mockAuditLogs: AuditLogEntry[] = [
   {
@@ -251,8 +247,6 @@ const mockAuditLogs: AuditLogEntry[] = [
   },
 ];
 
-// ─── Helpers ──────────────────────────────────────────────────────────
-
 function getActionBadgeConfig(action: string): { label: string; className: string } {
   const configs: Record<string, { label: string; className: string }> = {
     'client.created':       { label: 'Создание', className: 'bg-bank-success/10 text-bank-success border-bank-success/20' },
@@ -294,8 +288,6 @@ function getEntityTypeColor(entityType: string): string {
   };
   return map[entityType] ?? 'text-muted-foreground';
 }
-
-// ─── Column Definitions ──────────────────────────────────────────────
 
 const columns: ColumnDef<AuditLogEntry>[] = [
   {
@@ -376,8 +368,6 @@ const columns: ColumnDef<AuditLogEntry>[] = [
   },
 ];
 
-// ─── Main Page ────────────────────────────────────────────────────────
-
 export default function DataJournalPage() {
   const [dateFrom, setDateFrom] = useState('2025-06-16');
   const [dateTo, setDateTo] = useState('2025-06-16');
@@ -422,18 +412,15 @@ export default function DataJournalPage() {
   ];
 
   const filteredLogs = mockAuditLogs.filter((entry) => {
-    // Date filter
+
     const entryDate = entry.timestamp.split(' ')[0];
     if (dateFrom && entryDate < dateFrom) return false;
     if (dateTo && entryDate > dateTo) return false;
 
-    // Action type filter
     if (actionType !== 'all' && entry.action !== actionType) return false;
 
-    // Entity type filter
     if (entityType !== 'all' && entry.entityType !== entityType) return false;
 
-    // User search
     if (userSearch) {
       const search = userSearch.toLowerCase();
       if (!entry.user.toLowerCase().includes(search)) return false;
@@ -442,12 +429,10 @@ export default function DataJournalPage() {
     return true;
   });
 
-  // Compute KPI data
   const todayEntries = mockAuditLogs.filter(
     (e) => e.timestamp.startsWith('2025-06-16')
   ).length;
 
-  // Find most active user
   const userCounts = mockAuditLogs.reduce<Record<string, number>>((acc, entry) => {
     acc[entry.user] = (acc[entry.user] || 0) + 1;
     return acc;
@@ -455,7 +440,6 @@ export default function DataJournalPage() {
   const mostActiveUser =
     Object.entries(userCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? '—';
 
-  // Find most common action
   const actionCounts = mockAuditLogs.reduce<Record<string, number>>((acc, entry) => {
     const label = getActionBadgeConfig(entry.action).label;
     acc[label] = (acc[label] || 0) + 1;
@@ -469,7 +453,7 @@ export default function DataJournalPage() {
       title="Журнал данных"
       subtitle="История изменений и аудит данных"
     >
-      {/* KPI Cards */}
+      {}
       <div className="mb-6 grid gap-4 sm:grid-cols-3">
         <KPICard
           title="Записей сегодня"
@@ -494,7 +478,7 @@ export default function DataJournalPage() {
         />
       </div>
 
-      {/* Advanced Filter Bar */}
+      {}
       <div className="mb-6 rounded-lg border border-border/60 bg-muted/30 p-4">
         <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-bank-coal">
           <Filter className="size-4" />
@@ -576,7 +560,7 @@ export default function DataJournalPage() {
         </div>
       </div>
 
-      {/* Results count */}
+      {}
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Shield className="size-4 text-bank-coal" />
@@ -587,7 +571,7 @@ export default function DataJournalPage() {
         </p>
       </div>
 
-      {/* Data Table */}
+      {}
       <DataTable
         columns={columns}
         data={filteredLogs}

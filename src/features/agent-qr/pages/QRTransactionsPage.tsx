@@ -53,13 +53,13 @@ export default function QRTransactionsPage() {
   const [startDate, setStartDate] = useState('2025-09-25');
   const [endDate, setEndDate] = useState('2025-10-01');
   const [type, setType] = useState<'usOnThem' | 'themOnUs' | 'loans'>('themOnUs');
-  
+
   const [transactions, setTransactions] = useState<QRTransaction[]>([]);
   const [banks, setBanks] = useState<QRBank[]>([]);
   const [merchants, setMerchants] = useState<QRMerchant[]>([]);
   const [limit, setLimit] = useState<number | null>(null);
   const [rates, setRates] = useState<any[]>([]);
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [showChart, setShowChart] = useState(true);
@@ -76,14 +76,12 @@ export default function QRTransactionsPage() {
     amount: '',
   });
 
-  // Loans state
   const [loanSearchValue, setLoanSearchValue] = useState("");
   const [selectTypeSearchLoan, setSelectTypeSearchLoan] = useState(TYPE_SEARCH_CLIENT?.[1]?.value || "");
   const [creditsData, setCreditsData] = useState<Credit[]>([]);
   const [userAccounts, setUserAccounts] = useState<Account[]>([]);
   const [isLoanSearching, setIsLoanSearching] = useState(false);
-  
-  // Modals state
+
   const [repayModalOpen, setRepayModalOpen] = useState(false);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [graphModalOpen, setGraphModalOpen] = useState(false);
@@ -130,7 +128,7 @@ export default function QRTransactionsPage() {
     return transactions.filter((row) => {
       if (filters.status !== 'all' && row.status !== filters.status) return false;
       if (filters.amount && !String(row.amount).includes(filters.amount)) return false;
-      
+
       if (type === 'usOnThem') {
         if (filters.sender_name && !row.sender_name?.toLowerCase().includes(filters.sender_name.toLowerCase())) return false;
         if (filters.sender_phone && !row.sender_phone?.includes(filters.sender_phone)) return false;
@@ -192,10 +190,10 @@ export default function QRTransactionsPage() {
         absService.getCredits(clientCode),
         absService.getAccounts(clientCode)
       ]);
-      
+
       setCreditsData(Array.isArray(credits) ? credits : []);
       setUserAccounts(Array.isArray(accounts) ? accounts : []);
-      
+
       if (credits.length === 0) {
         toast({ title: "Информация", description: "Кредиты не найдены" });
       }
@@ -302,8 +300,8 @@ export default function QRTransactionsPage() {
 
   return (
     <PageContainer title="QR Транзакции" subtitle="Список операций по QR кодам">
-      
-      {/* Header Actions */}
+
+      {}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div className="flex bg-slate-100 p-1 rounded-lg">
           <Button 
@@ -401,7 +399,7 @@ export default function QRTransactionsPage() {
         </div>
       )}
 
-      {/* Summary Row */}
+      {}
       {type !== 'loans' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-center">
@@ -555,7 +553,7 @@ export default function QRTransactionsPage() {
         />
       )}
 
-      {/* Modals */}
+      {}
       <RepayModal
         credit={selectedCreditForRepay}
         accounts={userAccounts}

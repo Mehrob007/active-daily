@@ -20,19 +20,16 @@ export const DepositDetailsModal: React.FC<DepositDetailsModalProps> = ({ deposi
 
   const { AgreementData, BalanceAccounts, SumTypes } = deposit;
 
-  // Find specific balance accounts
   const mainAccount = BalanceAccounts?.find(acc => acc.RuleCode === 'DEPOACC');
-  
-  // Find interest rate & taxes from SumTypes
+
   const bonusRate = SumTypes?.find(s => s.Code === 'DEP_BONUS')?.Pcn || 0;
   const penaltyRate = SumTypes?.find(s => s.Code === 'DEP_PNLTY')?.Pcn || 0;
   const taxRate = SumTypes?.find(s => s.Code === 'DEP_TAX')?.Pcn || 0;
 
-  // Calculate progress
   const dateFrom = AgreementData?.DateFrom ? new Date(AgreementData.DateFrom) : null;
   const dateTo = AgreementData?.DateTo ? new Date(AgreementData.DateTo) : null;
   const now = new Date();
-  
+
   let progress = 0;
   let elapsedMonths = 0;
   const totalMonths = Math.round(Number(AgreementData?.DepoTermTU || 0));
@@ -41,11 +38,10 @@ export const DepositDetailsModal: React.FC<DepositDetailsModalProps> = ({ deposi
     const total = dateTo.getTime() - dateFrom.getTime();
     const elapsed = now.getTime() - dateFrom.getTime();
     progress = Math.min(100, Math.max(0, (elapsed / total) * 100));
-    
+
     elapsedMonths = Math.max(0, Math.round((now.getTime() - dateFrom.getTime()) / (1000 * 60 * 60 * 24 * 30.44)));
   }
 
-  // Department name (mapping or default)
   const departmentName = AgreementData?.Department?.Code === '5100' ? 'Садбарг' : (AgreementData?.Department?.Code || "Головной офис");
 
   return (
@@ -58,7 +54,7 @@ export const DepositDetailsModal: React.FC<DepositDetailsModalProps> = ({ deposi
         </DialogHeader>
 
         <div className="space-y-10">
-           {/* Top Summary Blocks */}
+           {}
            <div className="grid grid-cols-4 gap-4">
               {[
                 { label: "Подразделение", value: departmentName },
@@ -73,7 +69,7 @@ export const DepositDetailsModal: React.FC<DepositDetailsModalProps> = ({ deposi
               ))}
            </div>
 
-           {/* Main Progress Card */}
+           {}
            <div className="bg-white p-10 rounded-[40px] shadow-sm border border-slate-100 relative overflow-hidden">
               <div className="flex justify-between items-end mb-4">
                  <h3 className="text-xl font-bold text-slate-400 uppercase tracking-widest">Срок вклада</h3>
@@ -81,7 +77,7 @@ export const DepositDetailsModal: React.FC<DepositDetailsModalProps> = ({ deposi
                     {Math.min(elapsedMonths, totalMonths)} из {totalMonths} мес
                  </span>
               </div>
-              
+
               <Progress value={progress} className="h-4 bg-slate-50 [&>div]:bg-bank-red rounded-full mb-12" />
 
               <div className="grid grid-cols-3 gap-12">
@@ -100,7 +96,7 @@ export const DepositDetailsModal: React.FC<DepositDetailsModalProps> = ({ deposi
               </div>
            </div>
 
-           {/* Quick Actions / Footer */}
+           {}
            <div className="flex justify-end pt-4">
               <button 
                 onClick={onClose}

@@ -33,8 +33,6 @@ import {
   TrendingUp,
 } from 'lucide-react';
 
-// ─── Types ────────────────────────────────────────────────────────────
-
 interface ReportRecord {
   id: string;
   reportType: string;
@@ -45,8 +43,6 @@ interface ReportRecord {
   fileSize: string;
   generatedBy: string;
 }
-
-// ─── Mock Data ────────────────────────────────────────────────────────
 
 const mockReports: ReportRecord[] = [
   { id: 'RPT-001', reportType: 'Премии', period: '2025-05-01 — 2025-05-31', format: 'PDF', generatedAt: '2025-06-01 09:15', status: 'ready', fileSize: '1.2 MB', generatedBy: 'Ерманова Асель Т.' },
@@ -87,8 +83,6 @@ const employees = [
   'Нурланова Мадина А.',
   'Бекзатов Арман Р.',
 ];
-
-// ─── Column Definitions ──────────────────────────────────────────────
 
 const columns: ColumnDef<ReportRecord>[] = [
   {
@@ -181,8 +175,6 @@ const columns: ColumnDef<ReportRecord>[] = [
   },
 ];
 
-// ─── Report Type Selector ─────────────────────────────────────────────
-
 function ReportTypeSelector({
   selected,
   onSelect,
@@ -223,8 +215,6 @@ function ReportTypeSelector({
     </div>
   );
 }
-
-// ─── Main Page ────────────────────────────────────────────────────────
 
 export default function ReportsPage() {
   const [selectedType, setSelectedType] = useState('premii');
@@ -281,7 +271,7 @@ export default function ReportsPage() {
         </Button>
       }
     >
-      {/* KPI cards */}
+      {}
       <div className="mb-6 grid gap-4 sm:grid-cols-3">
         <KPICard
           title="Всего отчётов"
@@ -306,13 +296,13 @@ export default function ReportsPage() {
         />
       </div>
 
-      {/* Report Type Selector */}
+      {}
       <div className="mb-6">
         <h3 className="mb-3 text-sm font-semibold text-bank-coal">Тип отчёта</h3>
         <ReportTypeSelector selected={selectedType} onSelect={setSelectedType} />
       </div>
 
-      {/* Filters */}
+      {}
       <div className="mb-6 rounded-lg border border-border/60 bg-muted/30 p-4">
         <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-bank-coal">
           <Filter className="size-4" />
@@ -380,7 +370,7 @@ export default function ReportsPage() {
           </div>
         </div>
 
-        {/* Format Selector */}
+        {}
         <div className="mt-4">
           <Label className="mb-2 block text-xs text-muted-foreground">Формат</Label>
           <RadioGroup
@@ -421,7 +411,7 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      {/* Report History Table */}
+      {}
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-bank-coal">
           История отчётов — {reportTypes.find((t) => t.id === selectedType)?.label}

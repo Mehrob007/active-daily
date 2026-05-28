@@ -69,7 +69,7 @@ function parseLoanDetailsSoapResponse(xmlText: string) {
   if (!loanElem) return null;
 
   const agreementDataElem = findElement(loanElem, "agreementData");
-  
+
   const params = {
     referenceId: getElementValue(agreementDataElem, "colvirReferenceId"),
     contractNumber: getElementValue(agreementDataElem, "code"),
@@ -89,7 +89,7 @@ function parseLoanDetailsSoapResponse(xmlText: string) {
   const balanceAccountsRoot = findElement(loanElem, "balanceAccounts");
   const balanceNodes = balanceAccountsRoot ? balanceAccountsRoot.getElementsByTagName("*") : [];
   const balances: any[] = [];
-  
+
   const sumTypesRoot = findElement(loanElem, "sumTypes");
   const sumTypeNodes = sumTypesRoot ? sumTypesRoot.getElementsByTagName("*") : [];
   let percentRate = "0";
@@ -103,7 +103,7 @@ function parseLoanDetailsSoapResponse(xmlText: string) {
       }
     }
   }
-  
+
   for (let i = 0; i < balanceNodes.length; i++) {
     const node = balanceNodes[i];
     if (node.localName === "balanceAccount") {

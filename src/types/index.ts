@@ -1,25 +1,21 @@
-// ============================================
-// Active Daily — Core Type Definitions
-// ============================================
 
-/** User roles in the banking portal */
 export type RoleId =
-  | 5 // Директор
-  | 9 // Председатель
-  | 10 // Агент Карты
-  | 11 // Агент Кредиты
-  | 12 // Агент Депозиты
-  | 13 // Агент QR & Accounts
-  | 14 // SMS Сервис
-  | 17 // Frontovik (ABS Search)
-  | 18 // Frontovik (Limits)
-  | 21 // Frontovik (Transactions)
-  | 22 // Продукты (Dynamic Catalog)
-  | 23 // Cashback
-  | 26 // Агент (операции)
-  | 27 // Frontovik (Documents)
-  | 31 // Admin (System Logs)
-  | 32; // Admin (Daily Tasks)
+  | 5 
+  | 9 
+  | 10 
+  | 11 
+  | 12 
+  | 13 
+  | 14 
+  | 17 
+  | 18 
+  | 21 
+  | 22 
+  | 23 
+  | 26 
+  | 27 
+  | 31 
+  | 32; 
 
 export interface User {
   id: string;
@@ -68,10 +64,6 @@ export interface RegisterData {
   role: RoleId;
 }
 
-// ============================================
-// API Response Types
-// ============================================
-
 export interface ApiResponse<T> {
   success: boolean;
   data: T;
@@ -93,10 +85,6 @@ export interface ApiError {
   code?: string;
   details?: Record<string, string[]>;
 }
-
-// ============================================
-// Application / Product Types
-// ============================================
 
 export type ApplicationStatus =
   | "draft"
@@ -156,10 +144,6 @@ export interface DepositProduct {
   isActive: boolean;
 }
 
-// ============================================
-// Transaction Types
-// ============================================
-
 export interface Transaction {
   id: string;
   type: "credit" | "debit" | "transfer";
@@ -171,10 +155,6 @@ export interface Transaction {
   accountId?: string;
   counterparty?: string;
 }
-
-// ============================================
-// Client Types
-// ============================================
 
 export interface Client {
   id: string;
@@ -198,10 +178,6 @@ export interface ClientAccount {
   status: "active" | "blocked" | "closed";
 }
 
-// ============================================
-// Analytics / KPI Types
-// ============================================
-
 export interface KPIData {
   totalApplications: number;
   approvedApplications: number;
@@ -224,10 +200,6 @@ export interface DailyTaskStats {
   overdue: number;
 }
 
-// ============================================
-// Premie (Bonus) Types
-// ============================================
-
 export interface PremieRecord {
   id: string;
   employeeId: string;
@@ -240,10 +212,6 @@ export interface PremieRecord {
   status: "calculated" | "approved" | "paid";
 }
 
-// ============================================
-// System Log Types
-// ============================================
-
 export interface SystemLog {
   id: string;
   userId: string;
@@ -254,10 +222,6 @@ export interface SystemLog {
   ip: string;
   timestamp: string;
 }
-
-// ============================================
-// Menu & Navigation
-// ============================================
 
 export interface MenuItem {
   id: string;

@@ -41,10 +41,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-/* ------------------------------------------------------------------ */
-/*  Nav groups & items                                                 */
-/* ------------------------------------------------------------------ */
-
 interface SidebarItem {
   slug: string;
   label: string;
@@ -104,10 +100,6 @@ const NAV_GROUPS: SidebarGroup[] = [
   },
 ];
 
-/* ------------------------------------------------------------------ */
-/*  Sidebar                                                            */
-/* ------------------------------------------------------------------ */
-
 function SidebarNav() {
   const { currentPage, setCurrentPage, sidebarOpen, toggleSidebar } = useNavigationStore();
   const { user, logout } = useAuthStore();
@@ -119,7 +111,7 @@ function SidebarNav() {
         sidebarOpen ? 'w-64' : 'w-16'
       )}
     >
-      {/* Logo area */}
+      {}
       <div className="flex items-center h-14 px-3 border-b border-border shrink-0">
         <div className="flex items-center gap-3 overflow-hidden">
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#C8102E] shrink-0">
@@ -144,7 +136,7 @@ function SidebarNav() {
         )}
       </div>
 
-      {/* Navigation */}
+      {}
       <ScrollArea className="flex-1 py-2">
         <nav className="flex flex-col px-2 gap-1">
           {NAV_GROUPS.map((group, gi) => (
@@ -192,7 +184,7 @@ function SidebarNav() {
         </nav>
       </ScrollArea>
 
-      {/* User area */}
+      {}
       <div className="border-t border-border p-2 shrink-0">
         {sidebarOpen ? (
           <div className="flex items-center gap-3 px-2 py-2">
@@ -238,16 +230,11 @@ function SidebarNav() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Header                                                             */
-/* ------------------------------------------------------------------ */
-
 function TopHeader() {
   const { sidebarOpen, toggleSidebar } = useNavigationStore();
   const currentPage = useNavigationStore((s) => s.currentPage);
   const user = useAuthStore((s) => s.user);
 
-  // Find the current page label from nav groups
   const allItems = NAV_GROUPS.flatMap((g) => g.items);
   const currentLabel = allItems.find((i) => i.slug === currentPage)?.label || '';
 
@@ -272,10 +259,6 @@ function TopHeader() {
     </header>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/*  AppShell                                                           */
-/* ------------------------------------------------------------------ */
 
 interface AppShellProps {
   children: ReactNode;

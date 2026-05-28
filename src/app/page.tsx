@@ -8,7 +8,6 @@ import { useAuthStore } from '@/stores/auth-store';
 import { Construction } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
-// ─── Lazy-loaded feature pages ─────────────────────────────────
 const LoginPage = lazy(() => import('@/features/auth/login-page'));
 const DashboardPage = lazy(() => import('@/features/agent/DashboardPage'));
 const ApplicationsPage = lazy(() => import('@/features/agent/ApplicationsPage'));
@@ -56,7 +55,6 @@ const pageComponents: Record<string, React.LazyExoticComponent<React.ComponentTy
   'knowledge-base': KnowledgeBasePage,
 };
 
-// ─── Loading Fallback ───────────────────────────────────────────
 function PageLoader() {
   return (
     <div className="flex-1 bg-background p-4 md:p-6">
@@ -76,7 +74,6 @@ function PageLoader() {
   );
 }
 
-// ─── Placeholder for unbuilt pages ──────────────────────────────
 function PlaceholderPage({ pageId }: { pageId: string }) {
   return (
     <div className="flex-1 bg-background p-4 md:p-6">
@@ -95,12 +92,10 @@ function PlaceholderPage({ pageId }: { pageId: string }) {
   );
 }
 
-// ─── Main Page ──────────────────────────────────────────────────
 export default function Home() {
   const { currentPage } = useNavigationStore();
   const { isAuthenticated, user, resetActivityTimer } = useAuthStore();
 
-  // Reset auto-logout timer on user activity
   const handleActivity = useCallback(() => {
     if (isAuthenticated) {
       resetActivityTimer();
@@ -115,7 +110,6 @@ export default function Home() {
     };
   }, [handleActivity]);
 
-  // ── Portal Layout ───────────────────────────────────────────
   const PageComponent = pageComponents[currentPage];
 
   return PageComponent ? (

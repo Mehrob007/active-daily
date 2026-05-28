@@ -54,7 +54,6 @@ export const ServicesModal: React.FC<ServicesModalProps> = ({
 
     const actions = [];
 
-    // SMS
     if (smsService && !servicesSmsEnabled) {
       actions.push({
         serviceType: '7',
@@ -84,7 +83,6 @@ export const ServicesModal: React.FC<ServicesModalProps> = ({
       });
     }
 
-    // 3DS
     if (tdsService && !servicesTdsEnabled) {
       actions.push({
         serviceType: '27',

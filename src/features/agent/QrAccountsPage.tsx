@@ -28,8 +28,6 @@ import {
   Filter,
 } from 'lucide-react';
 
-// ─── Types ────────────────────────────────────────────────────
-
 type QrStatus = 'completed' | 'pending' | 'failed' | 'reversed';
 type WithdrawStatus = 'completed' | 'pending' | 'rejected';
 
@@ -51,8 +49,6 @@ interface WithdrawRequest {
   requestedDate: string;
   processedDate: string | null;
 }
-
-// ─── Mock Data ────────────────────────────────────────────────
 
 const mockQrTransactions: QrTransaction[] = [
   { id: 'QR-001', merchant: 'КазМунайГаз АЗС', amount: 15000, commission: 75, status: 'completed', dateTime: '2025-05-15 14:32' },
@@ -79,8 +75,6 @@ const mockWithdrawals: WithdrawRequest[] = [
   { id: 'WD-007', clientName: 'Назаров Тимур С.', account: 'KZ00****4410', amount: 450000, status: 'pending', requestedDate: '2025-05-15 12:00', processedDate: null },
   { id: 'WD-008', clientName: 'Жумабаева Айдана К.', account: 'KZ00****9935', amount: 250000, status: 'completed', requestedDate: '2025-05-14 09:30', processedDate: '2025-05-14 10:45' },
 ];
-
-// ─── Column Definitions: QR Transactions ─────────────────────
 
 const qrColumns: ColumnDef<QrTransaction>[] = [
   {
@@ -124,8 +118,6 @@ const qrColumns: ColumnDef<QrTransaction>[] = [
     ),
   },
 ];
-
-// ─── Column Definitions: Withdrawals ─────────────────────────
 
 const withdrawColumns: ColumnDef<WithdrawRequest>[] = [
   {
@@ -181,8 +173,6 @@ const withdrawColumns: ColumnDef<WithdrawRequest>[] = [
   },
 ];
 
-// ─── Page Component ───────────────────────────────────────────
-
 export default function QrAccountsPage() {
   const [activeTab, setActiveTab] = useState<string>('qr');
   const [qrStatusFilter, setQrStatusFilter] = useState<string>('all');
@@ -198,7 +188,6 @@ export default function QrAccountsPage() {
     return mockWithdrawals.filter((w) => w.status === wdStatusFilter);
   }, [wdStatusFilter]);
 
-  // KPI calculations
   const totalQrVolume = mockQrTransactions.reduce((s, t) => s + t.amount, 0);
   const totalQrCommission = mockQrTransactions.reduce((s, t) => s + t.commission, 0);
   const todayWithdrawals = mockWithdrawals.filter(
@@ -210,7 +199,7 @@ export default function QrAccountsPage() {
       title="QR и счета"
       subtitle="QR-платежи и управление счетами"
     >
-      {/* ── KPI Row ──────────────────────────────────────── */}
+      {}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <KPICard
           title="Объём QR-транзакций"
@@ -235,7 +224,7 @@ export default function QrAccountsPage() {
         />
       </div>
 
-      {/* ── Tabs ─────────────────────────────────────────── */}
+      {}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="grid w-full max-w-md grid-cols-2">
           <TabsTrigger value="qr" className="gap-2">
@@ -248,7 +237,7 @@ export default function QrAccountsPage() {
           </TabsTrigger>
         </TabsList>
 
-        {/* ── QR Tab ─────────────────────────────────────── */}
+        {}
         <TabsContent value="qr" className="space-y-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <Select value={qrStatusFilter} onValueChange={setQrStatusFilter}>
@@ -283,7 +272,7 @@ export default function QrAccountsPage() {
           />
         </TabsContent>
 
-        {/* ── Withdraw Tab ───────────────────────────────── */}
+        {}
         <TabsContent value="withdraw" className="space-y-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <Select value={wdStatusFilter} onValueChange={setWdStatusFilter}>

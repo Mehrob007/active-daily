@@ -21,8 +21,6 @@ import {
   Filter,
 } from 'lucide-react';
 
-// ─── Mock Data ──────────────────────────────────────────────────
-
 const mockTransactions: Transaction[] = [
   { id: 'TXN-001', type: 'credit', amount: 250000, currency: 'KZT', status: 'completed', description: 'Зачисление зарплаты', createdAt: '2025-05-15 14:32', accountId: 'KZT-001-001' },
   { id: 'TXN-002', type: 'debit', amount: 45000, currency: 'KZT', status: 'completed', description: 'Оплата коммунальных услуг', createdAt: '2025-05-15 13:18', accountId: 'KZT-001-001' },
@@ -46,8 +44,6 @@ const mockTransactions: Transaction[] = [
   { id: 'TXN-020', type: 'credit', amount: 68000, currency: 'KZT', status: 'completed', description: 'Проценты по депозиту', createdAt: '2025-05-08 09:00', accountId: 'KZT-003-001' },
 ];
 
-// ─── Type Badge ─────────────────────────────────────────────────
-
 function TypeBadge({ type }: { type: Transaction['type'] }) {
   const config: Record<string, { label: string; icon: React.ElementType; className: string }> = {
     credit:   { label: 'Зачисление', icon: ArrowDownLeft,   className: 'bg-bank-success/10 text-bank-success border-bank-success/20' },
@@ -63,8 +59,6 @@ function TypeBadge({ type }: { type: Transaction['type'] }) {
     </Badge>
   );
 }
-
-// ─── Column Definitions ─────────────────────────────────────────
 
 const columns: ColumnDef<Transaction>[] = [
   { accessorKey: 'id', header: 'ID', cell: ({ row }) => <span className="font-mono text-xs text-muted-foreground">{row.getValue('id')}</span> },
@@ -83,8 +77,6 @@ const columns: ColumnDef<Transaction>[] = [
   { accessorKey: 'description', header: 'Описание', cell: ({ row }) => <span className="max-w-[200px] truncate text-muted-foreground">{row.getValue('description')}</span> },
   { accessorKey: 'createdAt', header: 'Дата', cell: ({ row }) => <span className="text-muted-foreground whitespace-nowrap">{row.getValue('createdAt')}</span> },
 ];
-
-// ─── Page Component ─────────────────────────────────────────────
 
 export default function TransactionsPage() {
   const [accountNumber, setAccountNumber] = useState<string>('');
@@ -108,7 +100,7 @@ export default function TransactionsPage() {
 
   return (
     <PageContainer title="Поиск транзакций" subtitle="Универсальный поиск и фильтрация транзакций">
-      {/* Search Form */}
+      {}
       <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
@@ -145,7 +137,7 @@ export default function TransactionsPage() {
         </Select>
       </div>
 
-      {/* Data Table */}
+      {}
       <DataTable
         columns={columns}
         data={filteredData}

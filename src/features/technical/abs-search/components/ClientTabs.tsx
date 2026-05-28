@@ -39,7 +39,7 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
   isLoading,
   onRefresh,
 }) => {
-  // Modal states
+
   const [activeCardForServices, setActiveCardForServices] = useState<Card | null>(null);
   const [activeCardForPin, setActiveCardForPin] = useState<Card | null>(null);
   const [activeCardForLimits, setActiveCardForLimits] = useState<string | null>(null);
@@ -49,8 +49,6 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
   const [activeCreditForRepay, setActiveCreditForRepay] = useState<Credit | null>(null);
   const [activeInnForDocs, setActiveInnForDocs] = useState<string | null>(null);
   const [activeCardForBlock, setActiveCardForBlock] = useState<string | null>(null);
-
-  // Handle block card moved to BlockCardModal
 
   const handleUnblockCard = async (cardId: string) => {
     try {
@@ -165,7 +163,7 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
         </div>
       </Tabs>
 
-      {/* Modals */}
+      {}
       <ServicesModal 
         card={activeCardForServices} 
         onClose={() => setActiveCardForServices(null)} 

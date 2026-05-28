@@ -33,7 +33,7 @@ export default function OperatorPremiesPage() {
       subtitle="Просмотр и корректировка ежемесячных премий персонала"
     >
       <div className="space-y-6">
-        {/* Selection Card */}
+        {}
         <Card className="border-none shadow-sm bg-slate-50/50">
           <CardContent className="pt-6">
             <div className="flex flex-wrap items-end gap-4">
@@ -76,7 +76,7 @@ export default function OperatorPremiesPage() {
           </CardContent>
         </Card>
 
-        {/* Results Table */}
+        {}
         <TablePremies month={month} year={year} />
       </div>
     </PageContainer>

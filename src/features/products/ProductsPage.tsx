@@ -19,8 +19,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// ─── Mock Data — Cards ──────────────────────────────────────────
-
 const mockCards: CardProduct[] = [
   { id: 'CRD-001', name: 'Visa Classic', type: 'debit', brand: 'visa', annualFee: 0, cashbackPercent: 0.5, isActive: true },
   { id: 'CRD-002', name: 'Visa Gold', type: 'debit', brand: 'visa', annualFee: 15000, cashbackPercent: 1.0, isActive: true },
@@ -34,8 +32,6 @@ const mockCards: CardProduct[] = [
   { id: 'CRD-010', name: 'Mastercard Prepaid', type: 'prepaid', brand: 'mastercard', annualFee: 5000, cashbackPercent: 0, isActive: false },
 ];
 
-// ─── Mock Data — Credits ────────────────────────────────────────
-
 const mockCredits: CreditProduct[] = [
   { id: 'CRT-001', name: 'Экспресс-кредит', minAmount: 100000, maxAmount: 2000000, minTerm: 3, maxTerm: 36, interestRate: 18.5, isActive: true },
   { id: 'CRT-002', name: 'Потребительский кредит', minAmount: 300000, maxAmount: 10000000, minTerm: 6, maxTerm: 60, interestRate: 14.0, isActive: true },
@@ -47,8 +43,6 @@ const mockCredits: CreditProduct[] = [
   { id: 'CRT-008', name: 'Кредитная карта (овердрафт)', minAmount: 50000, maxAmount: 3000000, minTerm: 1, maxTerm: 12, interestRate: 22.0, isActive: false },
 ];
 
-// ─── Mock Data — Deposits ───────────────────────────────────────
-
 const mockDeposits: DepositProduct[] = [
   { id: 'DPS-001', name: 'Вклад «Надёжный»', minAmount: 100000, maxAmount: 50000000, minTerm: 3, maxTerm: 24, interestRate: 10.5, isReplenishable: false, isActive: true },
   { id: 'DPS-002', name: 'Вклад «Рост»', minAmount: 50000, maxAmount: 30000000, minTerm: 1, maxTerm: 12, interestRate: 12.0, isReplenishable: true, isActive: true },
@@ -57,8 +51,6 @@ const mockDeposits: DepositProduct[] = [
   { id: 'DPS-005', name: 'Вклад «Пенсионный»', minAmount: 50000, maxAmount: 20000000, minTerm: 12, maxTerm: 60, interestRate: 13.5, isReplenishable: false, isActive: true },
   { id: 'DPS-006', name: 'Вклад «Детский»', minAmount: 10000, maxAmount: 5000000, minTerm: 12, maxTerm: 216, interestRate: 14.0, isReplenishable: true, isActive: true },
 ];
-
-// ─── Shared Helpers ─────────────────────────────────────────────
 
 function BrandBadge({ brand }: { brand: string }) {
   const config: Record<string, string> = {
@@ -100,8 +92,6 @@ function EditButton() {
   );
 }
 
-// ─── Card Columns ───────────────────────────────────────────────
-
 const cardColumns: ColumnDef<CardProduct>[] = [
   { accessorKey: 'id', header: 'ID', cell: ({ row }) => <span className="font-mono text-xs text-muted-foreground">{row.getValue('id')}</span> },
   { accessorKey: 'name', header: 'Название', cell: ({ row }) => <span className="font-medium">{row.getValue('name')}</span> },
@@ -126,8 +116,6 @@ const cardColumns: ColumnDef<CardProduct>[] = [
   { accessorKey: 'isActive', header: 'Статус', cell: ({ row }) => <ActiveToggle active={row.getValue('isActive')} /> },
   { id: 'actions', header: '', cell: () => <EditButton /> },
 ];
-
-// ─── Credit Columns ─────────────────────────────────────────────
 
 const creditColumns: ColumnDef<CreditProduct>[] = [
   { accessorKey: 'id', header: 'ID', cell: ({ row }) => <span className="font-mono text-xs text-muted-foreground">{row.getValue('id')}</span> },
@@ -155,8 +143,6 @@ const creditColumns: ColumnDef<CreditProduct>[] = [
   { accessorKey: 'isActive', header: 'Статус', cell: ({ row }) => <ActiveToggle active={row.getValue('isActive')} /> },
   { id: 'actions', header: '', cell: () => <EditButton /> },
 ];
-
-// ─── Deposit Columns ────────────────────────────────────────────
 
 const depositColumns: ColumnDef<DepositProduct>[] = [
   { accessorKey: 'id', header: 'ID', cell: ({ row }) => <span className="font-mono text-xs text-muted-foreground">{row.getValue('id')}</span> },
@@ -188,8 +174,6 @@ const depositColumns: ColumnDef<DepositProduct>[] = [
   { accessorKey: 'isActive', header: 'Статус', cell: ({ row }) => <ActiveToggle active={row.getValue('isActive')} /> },
   { id: 'actions', header: '', cell: () => <EditButton /> },
 ];
-
-// ─── Page Component ─────────────────────────────────────────────
 
 export default function ProductsPage() {
   return (

@@ -44,10 +44,6 @@ import {
   Inbox,
 } from 'lucide-react';
 
-// ------------------------------------------------------------------
-// Types
-// ------------------------------------------------------------------
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -61,10 +57,6 @@ interface DataTableProps<TData, TValue> {
   emptyMessage?: string;
 }
 
-// ------------------------------------------------------------------
-// Skeleton row renderer
-// ------------------------------------------------------------------
-
 function SkeletonRow({ colCount }: { colCount: number }) {
   return (
     <TableRow>
@@ -76,10 +68,6 @@ function SkeletonRow({ colCount }: { colCount: number }) {
     </TableRow>
   );
 }
-
-// ------------------------------------------------------------------
-// DataTable Component
-// ------------------------------------------------------------------
 
 export function DataTable<TData, TValue>({
   columns,
@@ -97,6 +85,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
+  // eslint-disable-next-line react-compiler/react-compiler
   const table = useReactTable({
     data,
     columns,
@@ -117,7 +106,6 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  // Sync global filter when searchKey column filter changes, and vice-versa
   const handleSearch = (value: string) => {
     if (searchKey) {
       table.getColumn(searchKey)?.setFilterValue(value);
@@ -139,7 +127,7 @@ export function DataTable<TData, TValue>({
         className,
       )}
     >
-      {/* ---- Toolbar ---- */}
+      {}
       <div className="flex flex-col gap-3 border-b border-border/60 p-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex-1 max-w-sm">
           <Search className="text-muted-foreground absolute left-3 top-1/2 size-4 -translate-y-1/2" />
@@ -163,7 +151,7 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
 
-      {/* ---- Table ---- */}
+      {}
       <div className="overflow-x-auto">
         <Table>
           <TableHeader className="sticky top-0 bg-muted/40 backdrop-blur-sm z-10">
@@ -225,9 +213,9 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      {/* ---- Pagination ---- */}
+      {}
       <div className="flex flex-col gap-3 border-t border-border/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-        {/* "Показано X из Y" */}
+        {}
         <p className="text-muted-foreground text-sm">
           Показано{' '}
           <span className="font-medium text-foreground">
@@ -247,7 +235,7 @@ export function DataTable<TData, TValue>({
         </p>
 
         <div className="flex items-center gap-3">
-          {/* Page size selector */}
+          {}
           <div className="flex items-center gap-2">
             <span className="text-muted-foreground text-sm whitespace-nowrap">
               Строк:
@@ -269,7 +257,7 @@ export function DataTable<TData, TValue>({
             </Select>
           </div>
 
-          {/* Page navigation */}
+          {}
           <div className="flex items-center gap-1">
             <Button
               variant="outline"
@@ -281,7 +269,7 @@ export function DataTable<TData, TValue>({
               <ChevronLeft className="size-4" />
             </Button>
 
-            <span className="text-sm tabular-nums min-w-[3rem] text-center">
+            <span className="text-sm tabular-nums min-w-12 text-center">
               {table.getState().pagination.pageIndex + 1} /{' '}
               {table.getPageCount()}
             </span>
@@ -301,10 +289,6 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
-
-// ------------------------------------------------------------------
-// Sort indicator icon
-// ------------------------------------------------------------------
 
 function SortIcon({ sort }: { sort: false | 'asc' | 'desc' }) {
   if (sort === 'asc') {

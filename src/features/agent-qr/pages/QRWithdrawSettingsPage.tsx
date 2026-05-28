@@ -73,7 +73,7 @@ export default function QRWithdrawSettingsPage() {
   const [items, setItems] = useState<QRWithdrawSetting[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState('');
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<QRWithdrawSetting | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
@@ -195,7 +195,7 @@ export default function QRWithdrawSettingsPage() {
 
   return (
     <PageContainer title="Настройки QR АБС" subtitle="Управление реквизитами для межбанковских QR переводов">
-      
+
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div className="relative w-full max-w-sm">
           <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />

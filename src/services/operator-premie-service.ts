@@ -41,7 +41,7 @@ export interface Worker {
   ServiceQuality: ServiceQuality[];
   MobileBank: MobileBank[];
   user: WorkerUser;
-  totalPremia?: number; // Enhanced value
+  totalPremia?: number; 
 }
 
 export const operatorPremieService = {

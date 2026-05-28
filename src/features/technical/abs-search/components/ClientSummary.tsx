@@ -20,7 +20,7 @@ export const ClientSummary: React.FC<ClientSummaryProps> = ({
   const name = client.first_name 
     ? `${client.last_name || ''} ${client.first_name} ${client.middle_name || ''}` 
     : (client.Client?.Name || 'Неизвестно');
-  
+
   const code = client.client_code || client.ClientCode || client.Client?.Code || client.code;
   const phone = client.phone_number || client.Phone || client.phone || 'Неизвестно';
   const inn = client.tax_code || client.Inn || 'Неизвестно';
@@ -38,7 +38,7 @@ export const ClientSummary: React.FC<ClientSummaryProps> = ({
           </div>
         </div>
 
-        {/* Telegram Section */}
+        {}
         <div className="flex items-center gap-2 p-2 rounded-lg bg-slate-50 border border-slate-100">
           <div className="size-8 rounded-full bg-sky-100 flex items-center justify-center">
             <Send className="size-4 text-sky-600" />

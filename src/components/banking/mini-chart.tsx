@@ -3,20 +3,12 @@
 import { useMemo } from 'react';
 import { AreaChart, Area, ResponsiveContainer, YAxis } from 'recharts';
 
-// ------------------------------------------------------------------
-// Types
-// ------------------------------------------------------------------
-
 interface MiniChartProps {
   data: { label: string; value: number }[];
   color?: string;
   height?: number;
   className?: string;
 }
-
-// ------------------------------------------------------------------
-// Component
-// ------------------------------------------------------------------
 
 const DEFAULT_COLOR = '#C8102E';
 
@@ -26,7 +18,7 @@ export function MiniChart({
   height = 40,
   className,
 }: MiniChartProps) {
-  // Build a unique gradient ID so multiple charts on one page don't clash
+
   const gradientId = useMemo(
     () => `mini-chart-gradient-${Math.random().toString(36).slice(2, 9)}`,
     [],
@@ -42,7 +34,7 @@ export function MiniChart({
               <stop offset="95%" stopColor={color} stopOpacity={0.02} />
             </linearGradient>
           </defs>
-          {/* Hidden YAxis so the chart auto-scales to data */}
+          {}
           <YAxis domain={['dataMin', 'dataMax']} hide />
           <Area
             type="monotone"

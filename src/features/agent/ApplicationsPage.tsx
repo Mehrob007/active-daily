@@ -24,8 +24,6 @@ import {
   Landmark,
 } from 'lucide-react';
 
-// ─── Mock Data ──────────────────────────────────────────────────
-
 const mockApplications: Application[] = [
   { id: 'APP-001', type: 'card', status: 'approved', clientId: 'CL-1042', clientName: 'Каримов Алишер Р.', productName: 'Visa Platinum', amount: 0, currency: 'KZT', createdAt: '2025-05-14', updatedAt: '2025-05-15', createdBy: 'agent01', notes: 'Премиальная карта' },
   { id: 'APP-002', type: 'credit', status: 'pending', clientId: 'CL-1098', clientName: 'Рахимова Дилноза У.', productName: 'Потребительский кредит', amount: 3500000, currency: 'KZT', createdAt: '2025-05-15', updatedAt: '2025-05-15', createdBy: 'agent02' },
@@ -44,8 +42,6 @@ const mockApplications: Application[] = [
   { id: 'APP-015', type: 'deposit', status: 'closed', clientId: 'CL-1089', clientName: 'Исаева Гулнора Х.', productName: 'Вклад «Рост» 3 мес.', amount: 1000000, currency: 'KZT', createdAt: '2025-02-01', updatedAt: '2025-05-01', createdBy: 'agent02', notes: 'Срок истёк' },
 ];
 
-// ─── Type Badge ─────────────────────────────────────────────────
-
 function TypeBadge({ type }: { type: Application['type'] }) {
   const config: Record<string, { label: string; className: string }> = {
     card:    { label: 'Карта',    className: 'bg-bank-red/10 text-bank-red border-bank-red/20' },
@@ -55,8 +51,6 @@ function TypeBadge({ type }: { type: Application['type'] }) {
   const c = config[type];
   return <Badge variant="outline" className={`text-xs font-medium border ${c.className}`}>{c.label}</Badge>;
 }
-
-// ─── Column Definitions ─────────────────────────────────────────
 
 const columns: ColumnDef<Application>[] = [
   { accessorKey: 'id', header: 'ID', cell: ({ row }) => <span className="font-mono text-xs text-muted-foreground">{row.getValue('id')}</span> },
@@ -74,8 +68,6 @@ const columns: ColumnDef<Application>[] = [
   { accessorKey: 'status', header: 'Статус', cell: ({ row }) => <StatusBadge status={row.getValue('status')} /> },
   { accessorKey: 'createdAt', header: 'Дата', cell: ({ row }) => <span className="text-muted-foreground">{row.getValue('createdAt')}</span> },
 ];
-
-// ─── Page Component ─────────────────────────────────────────────
 
 export default function ApplicationsPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -101,7 +93,7 @@ export default function ApplicationsPage() {
         </button>
       }
     >
-      {/* Filter Bar */}
+      {}
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="h-9 w-full sm:w-[200px]">
@@ -141,7 +133,7 @@ export default function ApplicationsPage() {
         </div>
       </div>
 
-      {/* Data Table */}
+      {}
       <DataTable
         columns={columns}
         data={filteredData}

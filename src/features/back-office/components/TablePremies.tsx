@@ -167,7 +167,7 @@ const TablePremies: React.FC<TablePremiesProps> = ({ month, year }) => {
                 const isLast = idx === enhancedWorkers.length - 1;
                 const sales = w.CardSales?.[0] || {};
                 const quality = w.ServiceQuality?.[0] || {};
-                
+
                 return (
                   <tr key={w.ID} ref={isLast ? (lastRowRef as any) : null} className="hover:bg-slate-50/50 transition-colors group">
                     <td className="px-4 py-4">
@@ -226,7 +226,7 @@ const TablePremies: React.FC<TablePremiesProps> = ({ month, year }) => {
         )}
       </div>
 
-      {/* Download Modal */}
+      {}
       <Dialog open={showDownloadModal} onOpenChange={setShowDownloadModal}>
          <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -263,7 +263,7 @@ const TablePremies: React.FC<TablePremiesProps> = ({ month, year }) => {
          </DialogContent>
       </Dialog>
 
-      {/* Edit Modal (Placeholder for full edit functionality) */}
+      {}
       <Dialog open={!!edit.ID} onOpenChange={() => setEdit({ ID: null, data: {} })}>
          <DialogContent>
             <DialogHeader>
@@ -299,5 +299,5 @@ const TablePremies: React.FC<TablePremiesProps> = ({ month, year }) => {
 export default TablePremies;
 
 function openDownloadModal(user: any) {
-  // Logic is handled via state in the component, this is just to keep the type check happy
+
 }

@@ -26,8 +26,6 @@ import {
   TrendingUp,
 } from 'lucide-react';
 
-// ─── Types ────────────────────────────────────────────────────
-
 interface CashbackCategory {
   id: string;
   name: string;
@@ -44,8 +42,6 @@ interface CashbackConfig {
   maxMonthlyLimit: number;
 }
 
-// ─── Mock Data ────────────────────────────────────────────────
-
 const mockCategories: CashbackCategory[] = [
   { id: 'cat-1', name: 'Рестораны',      icon: '🍽️', percent: 5.0, active: true,  spentThisMonth: 2450000, limitThisMonth: 5000000 },
   { id: 'cat-2', name: 'Супермаркеты',   icon: '🛒', percent: 3.0, active: true,  spentThisMonth: 4200000, limitThisMonth: 5000000 },
@@ -57,14 +53,10 @@ const mockCategories: CashbackCategory[] = [
   { id: 'cat-8', name: 'Аптеки',          icon: '💊', percent: 2.5, active: true,  spentThisMonth: 1200000, limitThisMonth: 2000000 },
 ];
 
-// ─── Stats calculations ───────────────────────────────────────
-
 const totalCashbackPaid = 2_850_000;
 const activeUsers = 3_847;
 const avgCashbackPerUser = Math.round(totalCashbackPaid / activeUsers);
 const topCategory = 'Супермаркеты';
-
-// ─── Page Component ───────────────────────────────────────────
 
 export default function CashbackPage() {
   const [config, setConfig] = useState<CashbackConfig>({
@@ -88,7 +80,7 @@ export default function CashbackPage() {
       title="Кэшбэк"
       subtitle="Программы кэшбэка и вознаграждения"
     >
-      {/* ── Stats Cards ──────────────────────────────────── */}
+      {}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KPICard
           title="Выплачено кэшбэка"
@@ -121,7 +113,7 @@ export default function CashbackPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* ── Config Section ─────────────────────────────── */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
@@ -130,7 +122,7 @@ export default function CashbackPage() {
             </div>
           </CardHeader>
           <CardContent className="pt-0 space-y-6">
-            {/* Enabled toggle */}
+            {}
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label className="text-sm font-medium">Программа кэшбэка</Label>
@@ -146,7 +138,7 @@ export default function CashbackPage() {
               />
             </div>
 
-            {/* Default percent */}
+            {}
             <div className="space-y-2">
               <Label className="text-sm font-medium">
                 Кэшбэк по умолчанию (%)
@@ -170,7 +162,7 @@ export default function CashbackPage() {
               </p>
             </div>
 
-            {/* Max monthly limit */}
+            {}
             <div className="space-y-2">
               <Label className="text-sm font-medium">
                 Максимальный кэшбэк в месяц (₸)
@@ -195,7 +187,7 @@ export default function CashbackPage() {
           </CardContent>
         </Card>
 
-        {/* ── Monthly Limits Section ─────────────────────── */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
@@ -248,7 +240,7 @@ export default function CashbackPage() {
         </Card>
       </div>
 
-      {/* ── Categories Table ─────────────────────────────── */}
+      {}
       <Card className="mt-6 border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">

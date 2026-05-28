@@ -27,8 +27,6 @@ import {
   Filter,
 } from 'lucide-react';
 
-// ─── Types ────────────────────────────────────────────────────
-
 type SmsStatus = 'sent' | 'failed' | 'pending' | 'scheduled';
 
 interface SmsTemplate {
@@ -44,8 +42,6 @@ interface SmsHistoryItem {
   status: SmsStatus;
   sentAt: string;
 }
-
-// ─── Mock Data ────────────────────────────────────────────────
 
 const smsTemplates: SmsTemplate[] = [
   { id: 'tpl-1', name: 'Уведомление об одобрении', content: 'Уважаемый(ая) {name}, ваша заявка #{app_id} одобрена. Обратитесь в отделение для подписания документов.' },
@@ -68,8 +64,6 @@ const mockSmsHistory: SmsHistoryItem[] = [
   { id: 'SMS-009', template: 'Кэшбэк зачислен', recipientsCount: 890, status: 'pending', sentAt: '2025-05-15 18:00' },
   { id: 'SMS-010', template: 'Новый продукт', recipientsCount: 3200, status: 'scheduled', sentAt: '2025-05-17 09:00' },
 ];
-
-// ─── Column Definitions ───────────────────────────────────────
 
 const columns: ColumnDef<SmsHistoryItem>[] = [
   {
@@ -106,8 +100,6 @@ const columns: ColumnDef<SmsHistoryItem>[] = [
   },
 ];
 
-// ─── Page Component ───────────────────────────────────────────
-
 export default function SmsServicePage() {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
   const [recipientGroup, setRecipientGroup] = useState<string>('all');
@@ -123,7 +115,6 @@ export default function SmsServicePage() {
     return mockSmsHistory.filter((h) => h.status === statusFilter);
   }, [statusFilter]);
 
-  // Stats
   const totalSent = mockSmsHistory
     .filter((h) => h.status === 'sent')
     .reduce((s, h) => s + h.recipientsCount, 0);
@@ -147,7 +138,7 @@ export default function SmsServicePage() {
         </button>
       }
     >
-      {/* ── Stats Cards ──────────────────────────────────── */}
+      {}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KPICard
           title="Всего отправлено"
@@ -179,9 +170,9 @@ export default function SmsServicePage() {
         />
       </div>
 
-      {/* ── Template Preview Section ─────────────────────── */}
+      {}
       <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {/* Template selector */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
@@ -217,7 +208,7 @@ export default function SmsServicePage() {
           </CardContent>
         </Card>
 
-        {/* Bulk SMS form */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
@@ -280,7 +271,7 @@ export default function SmsServicePage() {
         </Card>
       </div>
 
-      {/* ── History Filter ───────────────────────────────── */}
+      {}
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="h-9 w-full sm:w-[200px]">
@@ -305,7 +296,7 @@ export default function SmsServicePage() {
         </div>
       </div>
 
-      {/* ── History Table ────────────────────────────────── */}
+      {}
       <DataTable
         columns={columns}
         data={filteredHistory}

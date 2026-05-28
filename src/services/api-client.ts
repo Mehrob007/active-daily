@@ -1,13 +1,8 @@
 import Cookies from 'js-cookie';
 import type { ApiResponse, ApiError, PaginatedResponse } from '@/types';
 
-// ============================================
-// API Client — Typed Fetch Wrapper
-// ============================================
-
 const BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || '').trim();
 
-/** Custom error class for typed API error handling */
 export class ApiException extends Error {
   public status: number;
   public code?: string;
@@ -22,22 +17,19 @@ export class ApiException extends Error {
   }
 }
 
-/** Generic query parameter type for GET requests */
 export type QueryParams = Record<string, string | number | boolean | undefined | null>;
 
-/** Request configuration options */
 interface RequestConfig extends Omit<RequestInit, 'body'> {
-  /** Query parameters appended to the URL */
+
   params?: QueryParams;
-  /** Request body (will be JSON-stringified) */
+
   body?: unknown;
-  /** Skip adding the Authorization header */
+
   skipAuth?: boolean;
-  /** Custom timeout in milliseconds */
+
   timeout?: number;
 }
 
-/** Build a URL with query parameters */
 function buildUrl(endpoint: string, params?: QueryParams): string {
   const url = new URL(endpoint, BASE_URL ? `${BASE_URL}/` : window.location.origin);
 
@@ -49,7 +41,6 @@ function buildUrl(endpoint: string, params?: QueryParams): string {
     });
   }
 
-  // When BASE_URL is empty, return just the path + query
   if (!BASE_URL) {
     const query = url.search.toString();
     return `${endpoint}${query ? `?${query}` : ''}`;
@@ -58,7 +49,6 @@ function buildUrl(endpoint: string, params?: QueryParams): string {
   return url.toString();
 }
 
-/** Read the access token from localStorage or cookies */
 function getAccessToken(): string | undefined {
   if (typeof window !== 'undefined') {
     const localToken = localStorage.getItem('access_token');
@@ -67,23 +57,19 @@ function getAccessToken(): string | undefined {
   return Cookies.get('access_token');
 }
 
-/** Request interceptor — adds auth headers and content type */
 function requestInterceptor(config: RequestInit & { skipAuth?: boolean }): RequestInit {
   const headers = new Headers(config.headers);
 
-  // Set default Accept header
   if (!headers.has('Accept')) {
     headers.set('Accept', 'application/json');
   }
 
-  // Set Content-Type for requests with body (skip for FormData)
   if (config.body && !(config.body instanceof FormData)) {
     if (!headers.has('Content-Type')) {
       headers.set('Content-Type', 'application/json');
     }
   }
 
-  // Attach Authorization Bearer token
   const token = getAccessToken()?.trim();
   if (token && !(config as RequestConfig).skipAuth) {
     headers.set('Authorization', `Bearer ${token}`);
@@ -92,7 +78,6 @@ function requestInterceptor(config: RequestInit & { skipAuth?: boolean }): Reque
   return { ...config, headers };
 }
 
-/** Response interceptor — parses JSON and handles errors */
 async function responseInterceptor<T>(response: Response): Promise<T> {
   if (!response.ok) {
     let errorData: ApiError = {
@@ -107,17 +92,16 @@ async function responseInterceptor<T>(response: Response): Promise<T> {
         console.error(`[API Error] ${response.status} ${response.url}:`, body);
       }
       if (body.message) errorData.message = body.message;
-      if (body.error) errorData.message = body.error; // Handle {error: "..."}
+      if (body.error) errorData.message = body.error; 
       if (body.code) errorData.code = body.code;
       if (body.details) errorData.details = body.details;
     } catch {
-      // Response body is not JSON — keep default error
+
     }
 
     throw new ApiException(errorData);
   }
 
-  // Handle 204 No Content
   if (response.status === 204) {
     return undefined as unknown as T;
   }
@@ -126,7 +110,6 @@ async function responseInterceptor<T>(response: Response): Promise<T> {
   return json as T;
 }
 
-/** Logging interceptor for request debugging (dev only) */
 function logRequest(method: string, url: string, config: RequestInit): void {
   if (process.env.NODE_ENV === 'development') {
     console.groupCollapsed(`[API] ${method} ${url}`);
@@ -142,7 +125,6 @@ function logRequest(method: string, url: string, config: RequestInit): void {
   }
 }
 
-/** Logging interceptor for response debugging (dev only) */
 function logResponse(method: string, url: string, status: number): void {
   if (process.env.NODE_ENV === 'development') {
     const color = status >= 200 && status < 300 ? '#4ade80' : '#f87171';
@@ -150,14 +132,9 @@ function logResponse(method: string, url: string, status: number): void {
   }
 }
 
-/** Create an abort signal with a timeout */
 function createTimeoutSignal(ms: number): AbortSignal {
   return AbortSignal.timeout(ms);
 }
-
-// ============================================
-// API Client Class
-// ============================================
 
 class ApiClient {
   private readonly defaultTimeout: number;
@@ -166,7 +143,6 @@ class ApiClient {
     this.defaultTimeout = timeout;
   }
 
-  /** Perform a GET request */
   async get<T>(endpoint: string, config?: RequestConfig): Promise<T> {
     const url = buildUrl(endpoint, config?.params);
     const requestInit = requestInterceptor({
@@ -183,7 +159,6 @@ class ApiClient {
     return responseInterceptor<T>(response);
   }
 
-  /** Perform a POST request */
   async post<T>(endpoint: string, config?: RequestConfig): Promise<T> {
     const url = buildUrl(endpoint, config?.params);
     const body = config?.body instanceof FormData
@@ -207,7 +182,6 @@ class ApiClient {
     return responseInterceptor<T>(response);
   }
 
-  /** Perform a PUT request */
   async put<T>(endpoint: string, config?: RequestConfig): Promise<T> {
     const url = buildUrl(endpoint, config?.params);
     const body = config?.body instanceof FormData
@@ -231,7 +205,6 @@ class ApiClient {
     return responseInterceptor<T>(response);
   }
 
-  /** Perform a PATCH request */
   async patch<T>(endpoint: string, config?: RequestConfig): Promise<T> {
     const url = buildUrl(endpoint, config?.params);
     const body = config?.body instanceof FormData
@@ -255,7 +228,6 @@ class ApiClient {
     return responseInterceptor<T>(response);
   }
 
-  /** Perform a DELETE request */
   async delete<T>(endpoint: string, config?: RequestConfig): Promise<T> {
     const url = buildUrl(endpoint, config?.params);
     const requestInit = requestInterceptor({
@@ -273,7 +245,6 @@ class ApiClient {
   }
 }
 
-/** Singleton API client instance */
 export const apiClient = new ApiClient();
 
 export type {

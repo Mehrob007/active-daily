@@ -22,7 +22,6 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-// ─── Demo users for preview ─────────────────────────────────────
 const DEMO_USERS: Record<string, { password: string; user: User }> = {
   admin: {
     password: 'admin',
@@ -89,28 +88,28 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      // Demo mode: check against demo users, fallback to real API
+
       const demoUser = DEMO_USERS[data.username];
       if (demoUser && demoUser.password === data.password) {
-        // Simulate API delay
+
         await new Promise((resolve) => setTimeout(resolve, 600));
         setTokens({
           accessToken: 'demo-access-token-' + Date.now(),
           refreshToken: 'demo-refresh-token-' + Date.now(),
           expiresIn: 3600,
         });
-        // Directly set user in store
+
         useAuthStore.setState({ 
           user: { ...demoUser.user, roleIds: [demoUser.user.role as number] }, 
           isAuthenticated: true 
         });
-        
+
         let targetPage = 'dashboard';
         const r = demoUser.user.role;
         if (r === 9) targetPage = 'chairman-reports';
         else if (r === 10) targetPage = 'applications';
         else if (r === 17) targetPage = 'abs-search';
-        
+
         useNavigationStore.getState().navigate(targetPage);
 
         toast({
@@ -120,7 +119,6 @@ export default function LoginPage() {
         return;
       }
 
-      // Try real API login
       await login(data);
       toast({
         title: 'Добро пожаловать',
@@ -146,7 +144,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
-        {/* Bank branding */}
+        {}
         <div className="flex flex-col items-center mb-8">
           <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-[#C8102E] mb-4">
             <Shield className="h-8 w-8 text-white" />
@@ -235,7 +233,6 @@ export default function LoginPage() {
               </form>
             </Form>
 
-          
             <div className="mt-5 pt-3 border-t border-border text-center">
               <p className="text-xs text-muted-foreground">
                 © {new Date().getFullYear()} ActivBank. Все права защищены.

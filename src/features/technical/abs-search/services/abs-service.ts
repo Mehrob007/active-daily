@@ -1,7 +1,7 @@
 const ABS_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_ABS_SERVICE_URL || 'http://10.65.10.20:7575';
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://10.65.10.20:7575';
 const SYSTEM_5012_URL = 'http://10.64.20.84:5012';
-const API_TELEGRAM_URL = process.env.NEXT_PUBLIC_API_TELEGRAM_URL || 'http://10.64.20.84:5010'; // Hypothetical based on old project structure
+const API_TELEGRAM_URL = process.env.NEXT_PUBLIC_API_TELEGRAM_URL || 'http://10.64.20.84:5010'; 
 
 const getHeaders = () => {
   const token = localStorage.getItem('access_token');
@@ -155,7 +155,6 @@ export const absService = {
     return response.json();
   },
 
-  // Missing features from old project
   async getTelegramUser(phone: string) {
     const response = await fetch(`${API_TELEGRAM_URL}/api/Users/get-users-by-phone?phone=${phone}`);
     if (!response.ok) return null;
@@ -180,7 +179,7 @@ export const absService = {
   },
 
   async getLoanDetails(referenceId: string) {
-    // This might need a different base URL or endpoint in the new backend
+
     const response = await fetch(`${BACKEND_URL}/api/abs/loan-details?referenceId=${referenceId}`, {
       headers: getHeaders(),
     });

@@ -443,7 +443,6 @@ const menuTree: MenuItem[] = [
   },
 ];
 
-// ─── Filter helpers ────────────────────────────────────────────
 function filterMenuItems(items: MenuItem[], roleIds: number[]): MenuItem[] {
   const result: MenuItem[] = [];
 
@@ -463,12 +462,10 @@ function filterMenuItems(items: MenuItem[], roleIds: number[]): MenuItem[] {
   return result;
 }
 
-// ─── Public API ────────────────────────────────────────────────
 export function getFilteredMenu(roleIds: number[]): MenuItem[] {
   return filterMenuItems(menuTree, roleIds);
 }
 
-/** Get breadcrumbs for a page: [group, page] */
 export function getBreadcrumbsForPath(
   pageId: string,
 ): { label: string; path?: string }[] {
@@ -496,7 +493,6 @@ export function getBreadcrumbsForPath(
   return crumbs;
 }
 
-/** Get a flat list of all visible page IDs for quick lookup */
 export function getAllowedPages(roleIds: number[]): string[] {
   const flat: string[] = [];
   const walk = (items: MenuItem[]) => {
@@ -512,7 +508,6 @@ export function getAllowedPages(roleIds: number[]): string[] {
   return flat;
 }
 
-/** Map custom navigation/Zustand page IDs to standard next.js route paths */
 export function getPathFromPageId(id: string): string {
   switch (id) {
     case "dashboard":
@@ -528,7 +523,6 @@ export function getPathFromPageId(id: string): string {
     case "bank-stats":
       return "/bank-stats";
 
-    // Operator
     case "operator-premies":
       return "/operator/premies";
     case "operator-reports":
@@ -540,13 +534,11 @@ export function getPathFromPageId(id: string): string {
     case "operator-manage-kb":
       return "/operator/manage-kb";
 
-    // Card apps
     case "card-create":
       return "/card-apps/create";
     case "card-list":
       return "/card-apps/list";
 
-    // Bank products
     case "products-cards":
       return "/products/cards";
     case "products-credits":
@@ -558,19 +550,16 @@ export function getPathFromPageId(id: string): string {
     case "products-transfers":
       return "/products/transfers";
 
-    // Credit apps
     case "credit-create":
       return "/credit-apps/create";
     case "credit-list":
       return "/credit-apps/list";
 
-    // Deposit apps
     case "deposit-create":
       return "/deposit-apps/create";
     case "deposit-list":
       return "/deposit-apps/list";
 
-    // QR agent
     case "qr-transactions":
       return "/agent-qr/transactions/list";
     case "qr-other-bank-create":
@@ -578,31 +567,25 @@ export function getPathFromPageId(id: string): string {
     case "qr-other-bank-settings":
       return "/accounts-qr/settings";
 
-    // PVN
     case "pvn-transactions":
       return "/pvn/transactions";
     case "pvn-settings":
       return "/pvn/settings";
 
-    // SMS agent
     case "sms-send":
       return "/sms-agent/send";
 
-    // Transaction agent
     case "transaction-update":
       return "/transaction-agent/update";
     case "terminal-assign":
       return "/transaction-agent/terminal-assign";
 
-    // Customs agent
     case "customs-pay":
       return "/customs-agent/pay";
 
-    // Frontovik
     case "abs-search":
       return "/frontovik/abs-search";
 
-    // Processing
     case "processing-limits":
       return "/processing/limits";
     case "processing-transactions":
@@ -612,25 +595,20 @@ export function getPathFromPageId(id: string): string {
     case "transactions":
       return "/processing/transactions";
 
-    // Processing search
     case "processing-search-transactions":
       return "/processing-search/transactions";
 
-    // Client documents
     case "client-documents":
       return "/client-documents";
     case "documents":
       return "/client-documents";
 
-    // ATM
     case "atm-table":
       return "/atm/table";
 
-    // Account statements
     case "view-statements":
       return "/account-statements/view";
 
-    // Cashback
     case "cashback-settings":
       return "/cashback/settings";
     case "cashback-cards":
@@ -640,7 +618,6 @@ export function getPathFromPageId(id: string): string {
     case "cashback-qr":
       return "/cashback/qr";
 
-    // Payments
     case "payments-list":
       return "/payments/list";
 
@@ -649,9 +626,8 @@ export function getPathFromPageId(id: string): string {
   }
 }
 
-/** Map pathname to custom navigation/Zustand page ID */
 export function getPageIdFromPath(pathname: string): string {
-  const p = pathname.replace(/\/$/, ""); // strip trailing slash
+  const p = pathname.replace(/\/$/, ""); 
   if (p === "" || p === "/dashboard") return "dashboard";
   if (p === "/knowledge-base") return "knowledge-base";
   if (p === "/tests") return "tests";

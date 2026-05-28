@@ -27,7 +27,6 @@ export const metadata: Metadata = {
     icon: "/logo.svg",
   },
 
-  
 };
 
 import PortalLayout from "@/components/layout/PortalLayout";

@@ -14,19 +14,16 @@ interface DepositCardProps {
 
 export const DepositCard: React.FC<DepositCardProps> = ({ deposit, onClick, isSelected }) => {
   const { AgreementData, BalanceAccounts, SumTypes } = deposit;
-  
-  // Find specific balance accounts
+
   const mainAccount = BalanceAccounts?.find(acc => acc.RuleCode === 'DEPOACC');
   const incomeAccount = BalanceAccounts?.find(acc => acc.RuleCode === 'CLIACC');
-  
-  // Find interest rate
+
   const interestRate = SumTypes?.find(s => s.Code === 'DEP_BONUS')?.Pcn || 0;
 
-  // Calculate progress
   const dateFrom = AgreementData?.DateFrom ? new Date(AgreementData.DateFrom) : null;
   const dateTo = AgreementData?.DateTo ? new Date(AgreementData.DateTo) : null;
   const now = new Date();
-  
+
   let progress = 0;
   let termInfo = "";
 
@@ -34,8 +31,7 @@ export const DepositCard: React.FC<DepositCardProps> = ({ deposit, onClick, isSe
     const total = dateTo.getTime() - dateFrom.getTime();
     const elapsed = now.getTime() - dateFrom.getTime();
     progress = Math.min(100, Math.max(0, (elapsed / total) * 100));
-    
-    // Calculate months if type is 'M'
+
     if (AgreementData?.DepoTermTimeType === 'M') {
        const totalMonths = Math.round(Number(AgreementData.DepoTermTU));
        const elapsedMonths = Math.max(0, Math.round((now.getTime() - dateFrom.getTime()) / (1000 * 60 * 60 * 24 * 30.44)));
@@ -80,7 +76,7 @@ export const DepositCard: React.FC<DepositCardProps> = ({ deposit, onClick, isSe
               <span>Счет {mainAccount?.AccCode || "-"}</span>
             </div>
           </div>
-          
+
           <div className="text-right">
              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">Сумма депозита</p>
              <div className="text-2xl font-black text-slate-900">

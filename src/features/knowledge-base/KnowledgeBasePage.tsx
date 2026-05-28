@@ -12,7 +12,7 @@ export default function KnowledgeBasePage() {
   const [bases, setBases] = useState<any[]>([]);
   const [selectedBaseId, setSelectedBaseId] = useState<number | null>(null);
   const [baseData, setBaseData] = useState<any>(null);
-  
+
   const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://10.65.10.20:7575';
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
 
@@ -46,7 +46,7 @@ export default function KnowledgeBasePage() {
 
   return (
     <div className="flex h-[calc(100vh-4rem)] bg-background">
-      {/* Sidebar for bases */}
+      {}
       <aside className="w-64 border-r bg-card">
         <div className="p-4 border-b">
           <h3 className="font-semibold text-lg">Базы знаний</h3>
@@ -73,7 +73,7 @@ export default function KnowledgeBasePage() {
         </ScrollArea>
       </aside>
 
-      {/* Main content */}
+      {}
       <main className="flex-1 overflow-hidden">
         {baseData ? (
           <KnowledgeBaseDetail data={baseData} baseURL={baseURL} token={token} />
@@ -90,8 +90,7 @@ export default function KnowledgeBasePage() {
 function KnowledgeBaseDetail({ data, baseURL, token }: { data: any, baseURL: string, token: string | null }) {
   const [filter, setFilter] = useState('');
   const [selectedKnowledgeId, setSelectedKnowledgeId] = useState<number | null>(null);
-  
-  // Set default selected knowledge
+
   useEffect(() => {
     if (data?.knowledge?.length > 0 && selectedKnowledgeId === null) {
       setSelectedKnowledgeId(data.knowledge[0].ID);
@@ -128,7 +127,7 @@ function KnowledgeBaseDetail({ data, baseURL, token }: { data: any, baseURL: str
       </div>
 
       <div className="flex-1 flex overflow-hidden">
-        {/* Docs list */}
+        {}
         <div className="w-80 border-r bg-card flex flex-col">
           <div className="p-4 border-b">
             <Input
@@ -145,7 +144,7 @@ function KnowledgeBaseDetail({ data, baseURL, token }: { data: any, baseURL: str
           </ScrollArea>
         </div>
 
-        {/* Selected doc viewer */}
+        {}
         <div className="flex-1 bg-muted/20" id="pdf-viewer-container">
           <div className="flex h-full items-center justify-center text-muted-foreground">
             Выберите документ из списка для просмотра
@@ -182,11 +181,10 @@ function KnowledgeDocsList({ docs, baseURL, token }: { docs: any[], baseURL: str
   const handleSelectDoc = (doc: any) => {
     setSelectedDocId(doc.ID);
     const url = `${baseURL}/${doc.file_path.replace(/\\/g, '/')}`;
-    
-    // Using iframe for PDF viewing instead of react-pdf-viewer to reduce dependencies
+
     const container = document.getElementById('pdf-viewer-container');
     if (container) {
-      // Need to fetch and create object URL because it might need auth headers
+
       fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
       })

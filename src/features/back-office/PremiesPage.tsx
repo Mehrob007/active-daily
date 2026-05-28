@@ -19,8 +19,6 @@ import {
   TrendingUp,
 } from 'lucide-react';
 
-// ─── Mock Data ──────────────────────────────────────────────────
-
 const mockPremies: PremieRecord[] = [
   { id: 'PRM-001', employeeId: 'EMP-101', employeeName: 'Каримов Алишер Р.', period: 'Май 2025', kpiScore: 92, bonusAmount: 450000, deductions: 25000, totalAmount: 425000, status: 'approved' },
   { id: 'PRM-002', employeeId: 'EMP-102', employeeName: 'Рахимова Дилноза У.', period: 'Май 2025', kpiScore: 88, bonusAmount: 380000, deductions: 15000, totalAmount: 365000, status: 'approved' },
@@ -33,8 +31,6 @@ const mockPremies: PremieRecord[] = [
   { id: 'PRM-009', employeeId: 'EMP-109', employeeName: 'Назаров Тимур С.', period: 'Май 2025', kpiScore: 85, bonusAmount: 370000, deductions: 18000, totalAmount: 352000, status: 'calculated' },
   { id: 'PRM-010', employeeId: 'EMP-110', employeeName: 'Касымова Мухаббат Ж.', period: 'Май 2025', kpiScore: 70, bonusAmount: 220000, deductions: 45000, totalAmount: 175000, status: 'calculated' },
 ];
-
-// ─── Column Definitions ─────────────────────────────────────────
 
 const columns: ColumnDef<PremieRecord>[] = [
   { accessorKey: 'id', header: 'ID', cell: ({ row }) => <span className="font-mono text-xs text-muted-foreground">{row.getValue('id')}</span> },
@@ -70,8 +66,6 @@ const columns: ColumnDef<PremieRecord>[] = [
   { accessorKey: 'status', header: 'Статус', cell: ({ row }) => <StatusBadge status={row.getValue('status')} /> },
 ];
 
-// ─── Page Component ─────────────────────────────────────────────
-
 export default function PremiesPage() {
   const [periodFilter, setPeriodFilter] = useState<string>('all');
   const [branchFilter, setBranchFilter] = useState<string>('all');
@@ -90,7 +84,7 @@ export default function PremiesPage() {
 
   return (
     <PageContainer title="Расчёт премий" subtitle="Управление премиями и бонусами сотрудников">
-      {/* Summary KPI Cards */}
+      {}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <KPICard
           label="Всего к выплате"
@@ -115,7 +109,7 @@ export default function PremiesPage() {
         />
       </div>
 
-      {/* Filter Bar */}
+      {}
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
         <Select value={periodFilter} onValueChange={setPeriodFilter}>
           <SelectTrigger className="h-9 w-full sm:w-[180px]">
@@ -141,7 +135,7 @@ export default function PremiesPage() {
         </Select>
       </div>
 
-      {/* Data Table */}
+      {}
       <DataTable
         columns={columns}
         data={filteredData}

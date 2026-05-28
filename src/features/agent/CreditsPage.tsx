@@ -23,8 +23,6 @@ import {
   Search,
 } from 'lucide-react';
 
-// ─── Types ────────────────────────────────────────────────────
-
 type CreditStatus = 'active' | 'approved' | 'pending' | 'rejected' | 'closed';
 type CreditType = 'consumer' | 'auto' | 'mortgage' | 'education' | 'express';
 
@@ -40,16 +38,12 @@ interface CreditItem {
   date: string;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────
-
 function calcMonthlyPayment(amount: number, annualRate: number, termMonths: number): number {
   if (annualRate === 0) return amount / termMonths;
   const r = annualRate / 100 / 12;
   const pow = Math.pow(1 + r, termMonths);
   return (amount * r * pow) / (pow - 1);
 }
-
-// ─── Mock Data ────────────────────────────────────────────────
 
 const mockCredits: CreditItem[] = [
   { id: 'CR-001', clientName: 'Каримов Алишер Р.', product: 'Потребительский кредит', creditType: 'consumer', amount: 3500000, termMonths: 36, rate: 18.5, status: 'active', date: '2025-03-15' },
@@ -69,8 +63,6 @@ const mockCredits: CreditItem[] = [
   { id: 'CR-015', clientName: 'Нурланова Мадина Е.', product: 'Экспресс-кредит', creditType: 'express', amount: 750000, termMonths: 12, rate: 21.0, status: 'rejected', date: '2025-05-09' },
 ];
 
-// ─── Type Badge ───────────────────────────────────────────────
-
 function CreditTypeBadge({ type }: { type: CreditType }) {
   const config: Record<CreditType, { label: string; className: string }> = {
     consumer:  { label: 'Потребительский', className: 'bg-bank-coal/10 text-bank-coal border-bank-coal/20' },
@@ -86,8 +78,6 @@ function CreditTypeBadge({ type }: { type: CreditType }) {
     </Badge>
   );
 }
-
-// ─── Column Definitions ───────────────────────────────────────
 
 const columns: ColumnDef<CreditItem>[] = [
   {
@@ -154,8 +144,6 @@ const columns: ColumnDef<CreditItem>[] = [
   },
 ];
 
-// ─── Page Component ───────────────────────────────────────────
-
 export default function CreditsPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
@@ -168,7 +156,6 @@ export default function CreditsPage() {
     });
   }, [statusFilter, typeFilter]);
 
-  // KPI calculations
   const activeCredits = mockCredits.filter((c) => c.status === 'active').length;
   const totalPortfolio = mockCredits
     .filter((c) => c.status === 'active')
@@ -192,7 +179,7 @@ export default function CreditsPage() {
         </button>
       }
     >
-      {/* ── KPI Cards ─────────────────────────────────────── */}
+      {}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KPICard
           title="Активные кредиты"
@@ -224,7 +211,7 @@ export default function CreditsPage() {
         />
       </div>
 
-      {/* ── Filter Bar ────────────────────────────────────── */}
+      {}
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="h-9 w-full sm:w-[200px]">
@@ -266,7 +253,7 @@ export default function CreditsPage() {
         </div>
       </div>
 
-      {/* ── Data Table ────────────────────────────────────── */}
+      {}
       <DataTable
         columns={columns}
         data={filteredData}

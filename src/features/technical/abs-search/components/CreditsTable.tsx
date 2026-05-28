@@ -32,7 +32,7 @@ export const CreditsTable: React.FC<CreditsTableProps> = ({
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Filters */}
+      {}
       <div className="flex flex-wrap gap-2">
         {STATUS_FILTERS.map((f) => (
           <button
@@ -49,7 +49,7 @@ export const CreditsTable: React.FC<CreditsTableProps> = ({
         ))}
       </div>
 
-      {/* Cards List */}
+      {}
       {filteredData.length === 0 ? (
         <div className="py-10 text-center text-muted-foreground bg-white rounded-3xl">
           У клиента нет кредитов {filter !== 'Все' ? `со статусом "${filter}"` : ''}

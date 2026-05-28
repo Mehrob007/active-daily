@@ -31,8 +31,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// ─── Types ─────────────────────────────────────────────────────
-
 interface Employee {
   rank: number;
   name: string;
@@ -51,8 +49,6 @@ interface DepartmentMetric {
   satisfaction: number;
   trend: 'up' | 'down' | 'neutral';
 }
-
-// ─── Mock Data ─────────────────────────────────────────────────
 
 const departments = [
   'Все подразделения',
@@ -106,8 +102,6 @@ const departmentMetrics: DepartmentMetric[] = [
   { name: 'Цифровые продукты', applications: 215, conversion: 87.9, avgTime: '58 мин', satisfaction: 91, trend: 'up' },
 ];
 
-// ─── Custom Tooltips ───────────────────────────────────────────
-
 function BarTooltip({
   active,
   payload,
@@ -152,8 +146,6 @@ function AreaTooltip({
   );
 }
 
-// ─── Rank badge ────────────────────────────────────────────────
-
 function RankBadge({ rank }: { rank: number }) {
   if (rank === 1) {
     return (
@@ -183,8 +175,6 @@ function RankBadge({ rank }: { rank: number }) {
   );
 }
 
-// ─── Director Reports Page ─────────────────────────────────────
-
 export default function DirectorReportsPage() {
   const [selectedDepartment, setSelectedDepartment] = useState('Все подразделения');
 
@@ -211,7 +201,7 @@ export default function DirectorReportsPage() {
         </button>
       }
     >
-      {/* ── Department Selector ──────────────────────────────── */}
+      {}
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <Building2 className="size-4 text-muted-foreground" />
         <Select
@@ -231,7 +221,7 @@ export default function DirectorReportsPage() {
         </Select>
       </div>
 
-      {/* ── KPI Cards ───────────────────────────────────────── */}
+      {}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KPICard
           title="Заявки сегодня"
@@ -263,9 +253,9 @@ export default function DirectorReportsPage() {
         />
       </div>
 
-      {/* ── Charts Row ──────────────────────────────────────── */}
+      {}
       <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {/* Horizontal Bar Chart — Team Performance */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-semibold">
@@ -321,7 +311,7 @@ export default function DirectorReportsPage() {
           </CardContent>
         </Card>
 
-        {/* Area Chart — Application Flow */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-semibold">
@@ -401,7 +391,7 @@ export default function DirectorReportsPage() {
         </Card>
       </div>
 
-      {/* ── Top Performers Table ─────────────────────────────── */}
+      {}
       <Card className="mb-6 border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
@@ -488,7 +478,7 @@ export default function DirectorReportsPage() {
         </CardContent>
       </Card>
 
-      {/* ── Department Metrics Grid ──────────────────────────── */}
+      {}
       <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">

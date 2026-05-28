@@ -14,15 +14,15 @@ export function useAbsSearch() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-  
+
   const [clients, setClients] = useState<Client[]>([]);
   const [selectedClientIndex, setSelectedClientIndex] = useState(0);
-  
+
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [cards, setCards] = useState<Card[]>([]);
   const [credits, setCredits] = useState<Credit[]>([]);
   const [deposits, setDeposits] = useState<Deposit[]>([]);
-  
+
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [telegramData, setTelegramData] = useState<TelegramUser | null>(null);
   const [isTelegramLoading, setIsTelegramLoading] = useState(false);
@@ -40,7 +40,6 @@ export function useAbsSearch() {
 
       let cardData = Array.isArray(cardDataRaw) ? cardDataRaw : [];
 
-      // Enriched Card details & services
       if (cardData.length > 0) {
         cardData = await Promise.all(
           cardData.map(async (card: any) => {
@@ -50,7 +49,6 @@ export function useAbsSearch() {
                 absService.getCardServices(card.cardId),
               ]);
 
-              // Convert dirams to somoni
               if (details?.accounts && Array.isArray(details.accounts)) {
                 details.accounts = details.accounts.map((acc: any) => ({
                   ...acc,
@@ -58,7 +56,6 @@ export function useAbsSearch() {
                 }));
               }
 
-              // ABS + PC type display
               const absType = details?.cardTypeName || card.CardTypeName || "";
               const pcType = card.type || "";
               const displayType = pcType ? `${absType} (${pcType})` : absType;
@@ -81,7 +78,7 @@ export function useAbsSearch() {
       setCards(cardData);
       setCredits(Array.isArray(credData) ? credData : []);
       setDeposits(Array.isArray(depData) ? depData : []);
-      
+
     } catch (err) {
       console.error("Error fetching client details", err);
       toast({ title: 'Ошибка', description: 'Не удалось загрузить детальную информацию', variant: 'destructive' });
@@ -104,9 +101,9 @@ export function useAbsSearch() {
     try {
       const formattedQuery = searchQuery.trim().replace(/\D/g, "");
       const data = await absService.searchClients(searchType, formattedQuery);
-      
+
       let normalizedData: Client[] = [];
-      
+
       if (Array.isArray(data)) {
         normalizedData = data;
       } else if (data && typeof data === 'object') {
@@ -118,11 +115,11 @@ export function useAbsSearch() {
           normalizedData = data.clients;
         }
       }
-      
+
       if (normalizedData.length > 0) {
         setClients(normalizedData);
         setSelectedClientIndex(0);
-        
+
         const firstClient = normalizedData[0];
         const phone = firstClient.phone_number || firstClient.Phone || firstClient.phone;
         if (phone) {
@@ -140,7 +137,6 @@ export function useAbsSearch() {
     }
   }, [searchQuery, searchType]);
 
-  // Effect to fetch details when client selection changes
   useEffect(() => {
     const activeClient = clients[selectedClientIndex];
     if (activeClient) {
@@ -148,7 +144,7 @@ export function useAbsSearch() {
       if (code) {
         fetchClientData(code);
       }
-      
+
       const phone = activeClient.phone_number || activeClient.Phone || activeClient.phone;
       if (phone) {
         fetchTelegramData(phone);

@@ -164,7 +164,7 @@ export default function OperatorTestsView() {
 
   return (
     <div className="flex h-[calc(100vh-8rem)] gap-6 overflow-hidden">
-      {/* Sidebar */}
+      {}
       <Card className="w-80 flex flex-col shrink-0 overflow-hidden border-none shadow-sm bg-muted/20">
         <CardHeader className="px-4 py-4 flex flex-row items-center justify-between space-y-0">
           <CardTitle className="text-lg font-bold flex items-center gap-2">
@@ -210,12 +210,12 @@ export default function OperatorTestsView() {
         </ScrollArea>
       </Card>
 
-      {/* Main Content */}
+      {}
       <div className="flex-1 flex flex-col overflow-hidden">
         {testDetail ? (
           <ScrollArea className="flex-1">
             <div className="space-y-6 pb-20">
-              {/* Test Header */}
+              {}
               <div className="bg-white p-6 rounded-xl border shadow-sm space-y-4">
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
@@ -246,7 +246,7 @@ export default function OperatorTestsView() {
               </div>
 
               {showAnswers ? (
-                /* Answers View */
+
                 <div className="space-y-4">
                   <h3 className="text-lg font-bold flex items-center gap-2 px-1">
                     <User className="size-5 text-bank-red" />
@@ -295,7 +295,7 @@ export default function OperatorTestsView() {
                   </div>
                 </div>
               ) : (
-                /* Questions View */
+
                 <div className="space-y-4">
                   {(testDetail.Questions || testDetail.questions)?.map((q: any, qIdx: number) => (
                     <Card key={q.ID} className="group overflow-hidden">
@@ -326,7 +326,7 @@ export default function OperatorTestsView() {
                         </DropdownMenu>
                       </CardHeader>
                       <CardContent className="px-6 py-4 space-y-4">
-                        {/* Options */}
+                        {}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                            {(q.Options || q.options)?.map((o: any) => (
                              <div key={o.ID} className={`relative flex items-center justify-between p-3 rounded-lg border transition-all ${o.is_correct ? "bg-emerald-50/50 border-emerald-100" : "bg-slate-50/50"}`}>
@@ -380,7 +380,7 @@ export default function OperatorTestsView() {
         )}
       </div>
 
-      {/* CRUD Modal */}
+      {}
       <Dialog open={modal.open} onOpenChange={closeModal}>
         <DialogContent>
           <DialogHeader>
@@ -409,9 +409,7 @@ function CrudForm({ entity, mode, initialData, onSave, onCancel }: any) {
     e.preventDefault();
     const payload = { ...form };
     if (entity === 'question' && payload.time_limit) {
-      // In reference project it's multiplied by 60 * 1000
-      // but let's see if the backend expects minutes or ms.
-      // Usually it's minutes for UI.
+
     }
     onSave(payload);
   };
@@ -477,7 +475,7 @@ function CrudForm({ entity, mode, initialData, onSave, onCancel }: any) {
                </Select>
             </div>
           )}
-          {/* For text-type questions sometimes correct_text is used */}
+          {}
           <div className="space-y-1.5">
             <Label>Эталонный текст (для текстовых вопросов)</Label>
             <Input value={form.correct_text || ""} onChange={e => setForm({...form, correct_text: e.target.value})} />

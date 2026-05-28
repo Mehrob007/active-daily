@@ -5,10 +5,6 @@ import { cn } from '@/lib/utils';
 import type { LucideIcon } from 'lucide-react';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
-// ------------------------------------------------------------------
-// Types
-// ------------------------------------------------------------------
-
 interface KPICardProps {
   title: string;
   value: string | number;
@@ -17,10 +13,6 @@ interface KPICardProps {
   icon: LucideIcon;
   className?: string;
 }
-
-// ------------------------------------------------------------------
-// Component
-// ------------------------------------------------------------------
 
 export function KPICard({
   title,
@@ -41,19 +33,19 @@ export function KPICard({
       )}
     >
       <CardContent className="flex items-start gap-4 p-5">
-        {/* Icon container */}
+        {}
         <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-bank-active">
           <Icon className="size-5 text-bank-red" />
         </div>
 
-        {/* Content */}
+        {}
         <div className="flex flex-1 flex-col gap-1 min-w-0">
           <p className="text-muted-foreground truncate text-sm">{title}</p>
           <p className="text-foreground text-2xl font-bold tracking-tight">
             {value}
           </p>
 
-          {/* Change indicator */}
+          {}
           {change && (
             <div className="flex items-center gap-1">
               {isPositive && <TrendingUp className="size-3.5 text-bank-success" />}

@@ -34,7 +34,7 @@ export default function MyPremiePage() {
   const now = new Date();
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [year, setYear] = useState(now.getFullYear());
-  
+
   const [data, setData] = useState<WorkerPremieData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -87,16 +87,16 @@ export default function MyPremiePage() {
   const cardSales = data?.CardSales?.[0]?.cards_prem || 0;
   const mobileBank = (data?.MobileBank?.[0]?.mobile_bank_connects || 0) * 10;
   const salaryProject = data?.salary_project || 0;
-  
+
   const cardTurnover = data?.CardTurnovers?.[0]?.card_turnovers_prem || 0;
   const activeCards = data?.CardTurnovers?.[0]?.active_cards_perms || 0;
-  
+
   const quality = data?.ServiceQuality?.[0] || { call_center: 0, complaint: 0, tests: 0 };
 
   return (
     <PageContainer title="Моя премия" subtitle="Расчет и статистика вашей ежемесячной премии">
-      
-      {/* Controls & Summary */}
+
+      {}
       <div className="flex flex-wrap items-center justify-between gap-6 mb-8">
         <div className="flex items-center gap-3 bg-white p-1 rounded-xl border shadow-sm">
           <Button variant="ghost" size="icon" onClick={handlePrev} disabled={isLoading} className="rounded-lg">
@@ -144,8 +144,8 @@ export default function MyPremiePage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          
-          {/* Section 1: Sales */}
+
+          {}
           <Card className="border-none shadow-sm overflow-hidden group hover:shadow-md transition-all">
             <div className="h-1.5 bg-emerald-500" />
             <CardHeader className="bg-slate-50/50">
@@ -184,7 +184,7 @@ export default function MyPremiePage() {
             </CardContent>
           </Card>
 
-          {/* Section 2: Turnovers */}
+          {}
           <Card className="border-none shadow-sm overflow-hidden group hover:shadow-md transition-all">
             <div className="h-1.5 bg-blue-500" />
             <CardHeader className="bg-slate-50/50">
@@ -216,7 +216,7 @@ export default function MyPremiePage() {
             </CardContent>
           </Card>
 
-          {/* Section 3: Quality */}
+          {}
           <Card className="border-none shadow-sm overflow-hidden group hover:shadow-md transition-all">
             <div className="h-1.5 bg-amber-500" />
             <CardHeader className="bg-slate-50/50">
@@ -254,7 +254,7 @@ export default function MyPremiePage() {
         </div>
       )}
 
-      {/* Footer Info */}
+      {}
       <div className="mt-8 p-6 bg-slate-50 rounded-2xl border border-slate-100 text-slate-500 text-xs leading-relaxed max-w-2xl">
          <p className="font-bold mb-2 uppercase tracking-wider text-slate-400 flex items-center gap-2">
             <Star className="size-3" /> Особенности расчета

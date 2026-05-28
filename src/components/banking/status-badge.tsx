@@ -3,9 +3,8 @@
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
-/** Mapping of status keys to Russian display labels */
 const STATUS_LABELS: Record<string, string> = {
-  // Common statuses
+
   active: 'Активен',
   approved: 'Одобрено',
   completed: 'Выполнено',
@@ -21,16 +20,16 @@ const STATUS_LABELS: Record<string, string> = {
   cancelled: 'Отменено',
   draft: 'Черновик',
   reversed: 'Возвращено',
-  // Application-specific
+
   debit: 'Дебет',
   credit: 'Кредит',
   transfer: 'Перевод',
-  // Account types
+
   current: 'Текущий',
   savings: 'Сберегательный',
   card: 'Картовый',
   deposit: 'Депозитный',
-  // Product types
+
   debit_card: 'Дебетовая карта',
   credit_card: 'Кредитная карта',
   prepaid: 'Предоплаченная',
@@ -44,24 +43,24 @@ type StatusColorVariant =
   | 'info';
 
 const STATUS_VARIANT_MAP: Record<string, StatusColorVariant> = {
-  // Success / positive
+
   active: 'success',
   approved: 'success',
   completed: 'success',
   paid: 'success',
   calculated: 'success',
-  // Warning / in-flight
+
   pending: 'warning',
   in_progress: 'warning',
   inProgress: 'warning',
-  // Danger / negative
+
   rejected: 'danger',
   failed: 'danger',
   blocked: 'danger',
   closed: 'danger',
   cancelled: 'danger',
   reversed: 'danger',
-  // Neutral
+
   draft: 'neutral',
 };
 

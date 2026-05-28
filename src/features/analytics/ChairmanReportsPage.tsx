@@ -25,8 +25,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// ─── Types ─────────────────────────────────────────────────────
-
 type Period = 'day' | 'week' | 'month' | 'quarter' | 'year';
 
 interface ComparisonRow {
@@ -37,8 +35,6 @@ interface ComparisonRow {
   trend: 'up' | 'down' | 'neutral';
 }
 
-// ─── Period selector config ────────────────────────────────────
-
 const periods: { key: Period; label: string }[] = [
   { key: 'day', label: 'День' },
   { key: 'week', label: 'Неделя' },
@@ -46,8 +42,6 @@ const periods: { key: Period; label: string }[] = [
   { key: 'quarter', label: 'Квартал' },
   { key: 'year', label: 'Год' },
 ];
-
-// ─── Mock Data ─────────────────────────────────────────────────
 
 const revenueExpenseData = [
   { month: 'Янв', revenue: 1850, expenses: 1420 },
@@ -95,8 +89,6 @@ const comparisonData: ComparisonRow[] = [
 ];
 
 const barColors = ['#C8102E', '#1A1A1A', '#F59E0B', '#0EA5E9', '#16A34A', '#8B5CF6'];
-
-// ─── Custom Tooltip ────────────────────────────────────────────
 
 function ChartTooltip({
   active,
@@ -160,8 +152,6 @@ function PieTooltip({
   );
 }
 
-// ─── Trend Icon ────────────────────────────────────────────────
-
 function TrendIcon({ trend }: { trend: 'up' | 'down' | 'neutral' }) {
   if (trend === 'up') {
     return <ArrowUpRight className="size-4 text-bank-success" />;
@@ -171,8 +161,6 @@ function TrendIcon({ trend }: { trend: 'up' | 'down' | 'neutral' }) {
   }
   return <Minus className="size-4 text-muted-foreground" />;
 }
-
-// ─── Chairman Reports Page ─────────────────────────────────────
 
 export default function ChairmanReportsPage() {
   const [activePeriod, setActivePeriod] = useState<Period>('year');
@@ -201,7 +189,7 @@ export default function ChairmanReportsPage() {
         </Button>
       }
     >
-      {/* ── Period Selector ─────────────────────────────────── */}
+      {}
       <div className="mb-6 flex flex-wrap items-center gap-2">
         <Calendar className="size-4 text-muted-foreground mr-1" />
         {periods.map((p) => (
@@ -221,7 +209,7 @@ export default function ChairmanReportsPage() {
         ))}
       </div>
 
-      {/* ── KPI Cards ───────────────────────────────────────── */}
+      {}
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <KPICard
           title="Общий доход"
@@ -253,7 +241,7 @@ export default function ChairmanReportsPage() {
         />
       </div>
 
-      {/* ── Revenue vs Expenses Line Chart ──────────────────── */}
+      {}
       <Card className="mb-6 border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
@@ -315,9 +303,9 @@ export default function ChairmanReportsPage() {
         </CardContent>
       </Card>
 
-      {/* ── Bar + Pie charts side by side ────────────────────── */}
+      {}
       <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {/* Bar Chart — Revenue by Department */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-semibold">
@@ -360,7 +348,7 @@ export default function ChairmanReportsPage() {
           </CardContent>
         </Card>
 
-        {/* Pie Chart — Product Portfolio */}
+        {}
         <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-semibold">
@@ -412,7 +400,7 @@ export default function ChairmanReportsPage() {
         </Card>
       </div>
 
-      {/* ── Comparison Table ─────────────────────────────────── */}
+      {}
       <Card className="border-border/60 shadow-[0_2px_4px_rgba(0,0,0,0.05)]">
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-semibold">

@@ -52,9 +52,7 @@ export function calculateTotalPremia(worker: WorkerPremieData): number {
     const totalCoef = (callPercent + testPercent) / 100;
     const calculatedPremia = basePremia * (1 + totalCoef);
 
-    // Получаем максимально допустимую премию (1.5 от оклада)
     const maxAllowedPremia = worker.salary * 1.5;
 
-    // Возвращаем меньшую из двух величин: рассчитанную премию или максимально допустимую
     return Math.min(calculatedPremia, maxAllowedPremia);
 }

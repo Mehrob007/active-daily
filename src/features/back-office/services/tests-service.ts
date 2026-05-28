@@ -2,7 +2,7 @@ import { apiClient } from '@/services/api-client';
 import { Test, Question, Option, UserAnswer } from '../types/tests';
 
 export const testsService = {
-  // --- Tests ---
+
   async getTests(): Promise<Test[]> {
     return apiClient.get<Test[]>('/tests');
   },
@@ -23,7 +23,6 @@ export const testsService = {
     return apiClient.delete<void>(`/tests/${id}`);
   },
 
-  // --- Questions ---
   async createQuestion(data: Partial<Question>): Promise<Question> {
     return apiClient.post<Question>(`/tests/questions/${data.test_id}`, { body: data });
   },
@@ -36,7 +35,6 @@ export const testsService = {
     return apiClient.delete<void>(`/tests/questions/${id}`);
   },
 
-  // --- Options ---
   async createOption(data: Partial<Option>): Promise<Option> {
     return apiClient.post<Option>(`/tests/questions/options/${data.question_id}`, { body: data });
   },
@@ -49,7 +47,6 @@ export const testsService = {
     return apiClient.delete<void>(`/tests/questions/options/${id}`);
   },
 
-  // --- Answers & Participation ---
   async checkAllowed(): Promise<boolean> {
     try {
       await apiClient.get('/tests/answers/allow');

@@ -53,7 +53,7 @@ interface Answer {
 
 export default function TestsPage() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  
+
   const [allowed, setAllowed] = useState<boolean | null>(null);
   const [test, setTest] = useState<TestData | null>(null);
   const [answers, setAnswers] = useState<Record<number, Answer>>({});
@@ -93,7 +93,6 @@ export default function TestsPage() {
     }
   }
 
-  // Timer logic
   useEffect(() => {
     if (timeLeft === null || timeLeft <= 0 || !test) return;
     const intervalId = setInterval(() => {
@@ -102,7 +101,6 @@ export default function TestsPage() {
     return () => clearInterval(intervalId);
   }, [timeLeft, test]);
 
-  // Handle timeout
   useEffect(() => {
     if (timeLeft === 0 && test) {
       toast({
@@ -122,7 +120,7 @@ export default function TestsPage() {
     try {
       const data: TestData = await testsService.getWorkerTest();
       setTest(data);
-      
+
       const initial: Record<number, Answer> = {};
       data.Questions?.forEach((q) => {
         initial[q.ID] = {
@@ -133,7 +131,7 @@ export default function TestsPage() {
           SelectedOptions: [],
         };
       });
-      
+
       setAnswers(initial);
       if (data.time_limit) {
         setTimeLeft(data.time_limit * 60);
@@ -283,7 +281,7 @@ export default function TestsPage() {
               {currentQuestion.Options?.map((opt) => {
                 const currentSelections = answers[currentQuestion.ID]?.SelectedOptions || [];
                 const isChecked = currentSelections.some((o) => o.option_id === opt.ID);
-                
+
                 return (
                   <div key={opt.ID} className="flex items-center space-x-3 p-5 rounded-2xl hover:bg-bank-active border border-slate-100 hover:border-bank-red/20 transition-all group">
                     <Checkbox 
@@ -331,7 +329,7 @@ export default function TestsPage() {
           >
             <ChevronLeft className="h-6 w-6 mr-2" /> Назад
           </Button>
-          
+
           {currentQuestionIdx < (test.Questions?.length || 0) - 1 ? (
             <Button
               size="lg"

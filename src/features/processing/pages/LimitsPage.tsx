@@ -82,7 +82,7 @@ export default function ProcessingLimitsPage() {
   const [limitData, setLimitData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  
+
   const [editingLimit, setEditingLimit] = useState<any>(null);
   const [newValue, setNewValue] = useState("");
 
@@ -120,17 +120,16 @@ export default function ProcessingLimitsPage() {
 
   const handleUpdateLimit = async () => {
     if (!editingLimit || !newValue) return;
-    
+
     setIsSaving(true);
     const rawNum = displayCardNumber.replace(/\s/g, "");
     try {
       await processingService.updateLimit(rawNum, editingLimit.name, newValue);
-      
-      // Update local state
+
       setLimitData(prev => prev.map(l => 
         l.name === editingLimit.name ? { ...l, value: Number(newValue) } : l
       ));
-      
+
       toast({ title: 'Успешно', description: `Лимит ${editingLimit.name} обновлен` });
       setEditingLimit(null);
     } catch (err: any) {
@@ -142,7 +141,7 @@ export default function ProcessingLimitsPage() {
 
   return (
     <PageContainer title="Лимиты карт" subtitle="Поиск и изменение лимитов по номеру карты в ПЦ">
-      
+
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 mb-6">
         <div className="flex flex-wrap items-end gap-4">
           <div className="flex-1 min-w-[300px] space-y-1.5">
@@ -238,7 +237,7 @@ export default function ProcessingLimitsPage() {
         </div>
       )}
 
-      {/* Edit Modal */}
+      {}
       <Dialog open={!!editingLimit} onOpenChange={() => !isSaving && setEditingLimit(null)}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -250,7 +249,7 @@ export default function ProcessingLimitsPage() {
               <div className="font-bold text-slate-700">{editingLimit?.description}</div>
               <div className="text-[10px] font-mono text-slate-400 mt-0.5">ID: {editingLimit?.name}</div>
             </div>
-            
+
             <div className="space-y-1.5">
               <Label htmlFor="limitVal">Новое значение ({editingLimit ? getCurrencyCode(editingLimit.currency) : ''})</Label>
               <Input

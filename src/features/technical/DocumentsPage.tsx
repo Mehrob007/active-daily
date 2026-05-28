@@ -27,8 +27,6 @@ import {
   Filter,
 } from 'lucide-react';
 
-// ─── Types ──────────────────────────────────────────────────────
-
 type DocumentCategory = 'passport' | 'contract' | 'application' | 'statement';
 type FileExtension = 'PDF' | 'DOC' | 'XLS' | 'IMG';
 
@@ -42,8 +40,6 @@ interface ClientDocument {
   uploadedBy: string;
   verified: boolean;
 }
-
-// ─── Mock Data ──────────────────────────────────────────────────
 
 const MOCK_DOCUMENTS: ClientDocument[] = [
   { id: 'DOC-001', name: 'Паспорт гражданина РК (разворот)', category: 'passport', fileType: 'IMG', fileSize: '2.4 МБ', uploadDate: '2025-05-14', uploadedBy: 'Каримова Г.А.', verified: true },
@@ -62,8 +58,6 @@ const MOCK_DOCUMENTS: ClientDocument[] = [
   { id: 'DOC-014', name: 'Выписка по депозитному счёту', category: 'statement', fileType: 'PDF', fileSize: '380 КБ', uploadDate: '2025-05-01', uploadedBy: 'Система', verified: true },
   { id: 'DOC-015', name: 'Справка о доходах 2-НДФЛ', category: 'passport', fileType: 'PDF', fileSize: '720 КБ', uploadDate: '2025-05-12', uploadedBy: 'Каримова Г.А.', verified: false },
 ];
-
-// ─── File Type Config ───────────────────────────────────────────
 
 const FILE_TYPE_CONFIG: Record<FileExtension, { label: string; icon: React.ReactNode; colorClass: string; bgClass: string }> = {
   PDF: {
@@ -99,8 +93,6 @@ const CATEGORY_CONFIG: Record<DocumentCategory, { label: string; badgeClass: str
   statement: { label: 'Выписка', badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
 };
 
-// ─── Document Card ──────────────────────────────────────────────
-
 function DocumentCard({ doc }: { doc: ClientDocument }) {
   const fileConfig = FILE_TYPE_CONFIG[doc.fileType];
   const categoryConfig = CATEGORY_CONFIG[doc.category];
@@ -108,14 +100,14 @@ function DocumentCard({ doc }: { doc: ClientDocument }) {
   return (
     <div className="group rounded-lg border border-border/60 bg-white p-4 shadow-sm hover:shadow-md transition-all hover:border-border">
       <div className="flex items-start gap-3 mb-3">
-        {/* File type icon */}
+        {}
         <div
           className={`flex size-10 items-center justify-center rounded-lg shrink-0 ${fileConfig.bgClass} ${fileConfig.colorClass}`}
         >
           {fileConfig.icon}
         </div>
 
-        {/* Document info */}
+        {}
         <div className="flex-1 min-w-0">
           <h4 className="text-sm font-semibold text-foreground truncate leading-tight">
             {doc.name}
@@ -136,7 +128,7 @@ function DocumentCard({ doc }: { doc: ClientDocument }) {
           </div>
         </div>
 
-        {/* Verified status */}
+        {}
         {doc.verified ? (
           <CheckCircle2 className="size-4 text-bank-success shrink-0 mt-0.5" />
         ) : (
@@ -144,7 +136,7 @@ function DocumentCard({ doc }: { doc: ClientDocument }) {
         )}
       </div>
 
-      {/* Meta info */}
+      {}
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground mb-3">
         <span className="flex items-center gap-1">
           <HardDrive className="size-3" />
@@ -160,7 +152,7 @@ function DocumentCard({ doc }: { doc: ClientDocument }) {
         </span>
       </div>
 
-      {/* Actions */}
+      {}
       <div className="flex items-center gap-2 pt-3 border-t border-border/40">
         <Button
           variant="outline"
@@ -185,8 +177,6 @@ function DocumentCard({ doc }: { doc: ClientDocument }) {
   );
 }
 
-// ─── Placeholder State ──────────────────────────────────────────
-
 function PlaceholderState() {
   return (
     <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
@@ -202,8 +192,6 @@ function PlaceholderState() {
     </div>
   );
 }
-
-// ─── Page Component ─────────────────────────────────────────────
 
 export default function DocumentsPage() {
   const [clientId, setClientId] = useState('');
@@ -257,7 +245,7 @@ export default function DocumentsPage() {
       title="Документы"
       subtitle="Просмотр и управление документами клиентов"
     >
-      {/* ── Client Selector ── */}
+      {}
       <div className="mb-6">
         <div className="flex flex-col sm:flex-row gap-3 items-end">
           <div className="flex-1 w-full">
@@ -291,7 +279,7 @@ export default function DocumentsPage() {
         <PlaceholderState />
       ) : (
         <div className="space-y-6">
-          {/* ── Stats KPIs ── */}
+          {}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <KPICard
               title="Всего документов"
@@ -317,7 +305,7 @@ export default function DocumentsPage() {
 
           <Separator />
 
-          {/* ── Document Tabs ── */}
+          {}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
               <TabsList className="h-10">
@@ -366,7 +354,7 @@ export default function DocumentsPage() {
               </div>
             </div>
 
-            {/* All tabs share same content via filtered list */}
+            {}
             <TabsContent value={activeTab} className="mt-0">
               {filteredDocuments.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">

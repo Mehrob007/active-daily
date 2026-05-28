@@ -38,7 +38,7 @@ export const workerPremieService = {
       loadServiceQuality: 'true',
       loadMobileBank: 'true',
     };
-    
+
     return apiClient.get<WorkerPremieData>('/worker', { params });
   }
 };

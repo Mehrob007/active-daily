@@ -5,11 +5,6 @@ import type {
   PremieRecord,
 } from '@/types';
 
-// ============================================
-// Back-Office Service — Operator & Worker API
-// ============================================
-
-/** Parameters for calculating premies (bonuses) */
 interface CalculatePremiesParams extends QueryParams {
   period: string;
   departmentId?: string;
@@ -17,7 +12,6 @@ interface CalculatePremiesParams extends QueryParams {
   includeDetails?: boolean;
 }
 
-/** Report generation parameters */
 interface ReportParams extends QueryParams {
   dateFrom: string;
   dateTo: string;
@@ -26,10 +20,8 @@ interface ReportParams extends QueryParams {
   employeeId?: string;
 }
 
-/** Report type for generation */
 type ReportType = 'premies' | 'applications' | 'transactions' | 'kpi';
 
-/** Active test for workers */
 interface ActiveTest {
   id: string;
   title: string;
@@ -41,13 +33,11 @@ interface ActiveTest {
   completedAt?: string;
 }
 
-/** Test answer submission */
 interface TestAnswer {
   questionId: string;
   answerId: string;
 }
 
-/** Test submission result */
 interface TestResult {
   testId: string;
   score: number;
@@ -57,7 +47,6 @@ interface TestResult {
   completedAt: string;
 }
 
-/** Data log entry */
 interface DataLogEntry {
   id: string;
   action: string;
@@ -69,7 +58,6 @@ interface DataLogEntry {
   timestamp: string;
 }
 
-/** Parameters for data logs */
 interface DataLogParams extends QueryParams {
   page?: number;
   pageSize?: number;
@@ -81,18 +69,11 @@ interface DataLogParams extends QueryParams {
 }
 
 export const backOfficeService = {
-  /**
-   * Calculate premies (bonus payments) for a given period.
-   * Returns a list of calculated bonus records.
-   */
+
   async calculatePremies(params: CalculatePremiesParams): Promise<ApiResponse<PremieRecord[]>> {
     return apiClient.get<ApiResponse<PremieRecord[]>>('/operator/premies/calculate', { params });
   },
 
-  /**
-   * Generate a report of the specified type.
-   * Returns a blob URL for downloading the generated file.
-   */
   async generateReport(
     type: ReportType,
     params: ReportParams,
@@ -103,16 +84,10 @@ export const backOfficeService = {
     );
   },
 
-  /**
-   * Get list of active tests available for workers.
-   */
   async getActiveTests(): Promise<ApiResponse<ActiveTest[]>> {
     return apiClient.get<ApiResponse<ActiveTest[]>>('/worker/tests/active');
   },
 
-  /**
-   * Submit answers for a specific test.
-   */
   async submitTestAnswers(
     testId: string,
     answers: TestAnswer[],
@@ -122,10 +97,6 @@ export const backOfficeService = {
     });
   },
 
-  /**
-   * Get data audit logs with filtering and pagination.
-   * Used by operators to track changes in the system.
-   */
   async getDataLogs(params?: DataLogParams): Promise<ApiResponse<PaginatedResponse<DataLogEntry>>> {
     return apiClient.get<ApiResponse<PaginatedResponse<DataLogEntry>>>('/operator/data/logs', { params });
   },

@@ -30,8 +30,6 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 
-// ─── Types ──────────────────────────────────────────────────────
-
 interface LimitEntry {
   dailyTransfer: number;
   monthlyTransfer: number;
@@ -58,8 +56,6 @@ interface LimitCardData {
   bgColor: string;
 }
 
-// ─── Mock Data ──────────────────────────────────────────────────
-
 const MOCK_CURRENT_LIMITS: LimitEntry = {
   dailyTransfer: 5_000_000,
   monthlyTransfer: 30_000_000,
@@ -80,8 +76,6 @@ const MOCK_LIMIT_HISTORY: LimitHistoryEntry[] = [
   { id: 'LH-012', date: '2025-03-10 14:05', changedBy: 'Рахимова Д.У.', field: 'Месячное снятие', oldValue: '2 000 000 ₸', newValue: '3 000 000 ₸', reason: 'Начальная установка лимитов для нового клиента' },
 ];
 
-// ─── Helpers ────────────────────────────────────────────────────
-
 function formatKZT(value: number): string {
   return value.toLocaleString('ru-RU') + ' ₸';
 }
@@ -89,8 +83,6 @@ function formatKZT(value: number): string {
 function parseKZT(value: string): number {
   return parseInt(value.replace(/\D/g, ''), 10) || 0;
 }
-
-// ─── Limit Card ─────────────────────────────────────────────────
 
 function LimitCard({ title, value, icon, color, bgColor }: LimitCardData) {
   return (
@@ -112,8 +104,6 @@ function LimitCard({ title, value, icon, color, bgColor }: LimitCardData) {
     </Card>
   );
 }
-
-// ─── History Columns ────────────────────────────────────────────
 
 const historyColumns: ColumnDef<LimitHistoryEntry>[] = [
   {
@@ -174,8 +164,6 @@ const historyColumns: ColumnDef<LimitHistoryEntry>[] = [
   },
 ];
 
-// ─── Page Component ─────────────────────────────────────────────
-
 export default function LimitsPage() {
   const [clientId, setClientId] = useState('');
   const [accountId, setAccountId] = useState('');
@@ -196,7 +184,7 @@ export default function LimitsPage() {
       if (currentParams.cardId || currentParams.accountId) {
         setAccountId(currentParams.cardId || currentParams.accountId);
       }
-      // If we have clientId, trigger auto-load
+
       if (currentParams.clientId) {
         setIsLoaded(true);
         setEditLimits({ ...MOCK_CURRENT_LIMITS });
@@ -293,7 +281,7 @@ export default function LimitsPage() {
         )
       }
     >
-      {/* ── Client/Account Selector ── */}
+      {}
       <div className="mb-6">
         <div className="flex flex-col sm:flex-row gap-3 items-end">
           <div className="flex-1 w-full">
@@ -338,7 +326,7 @@ export default function LimitsPage() {
       </div>
 
       {!isLoaded ? (
-        /* ── Placeholder ── */
+
         <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
           <div className="flex size-20 items-center justify-center rounded-full bg-bank-active mb-6">
             <Shield className="size-10 text-bank-red" />
@@ -351,9 +339,9 @@ export default function LimitsPage() {
           </p>
         </div>
       ) : (
-        /* ── Loaded Content ── */
+
         <div className="space-y-6">
-          {/* Current Limits Display */}
+          {}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Shield className="size-5 text-bank-coal" />
@@ -374,7 +362,7 @@ export default function LimitsPage() {
 
           <Separator />
 
-          {/* Edit Form */}
+          {}
           <div className="rounded-lg border border-border/60 bg-white p-5 shadow-sm">
             <div className="flex items-center gap-2 mb-5">
               <Wallet className="size-5 text-bank-coal" />
@@ -413,7 +401,7 @@ export default function LimitsPage() {
               ))}
             </div>
 
-            {/* Reason */}
+            {}
             <div className="mb-5">
               <Label
                 htmlFor="limit-reason"
@@ -436,7 +424,7 @@ export default function LimitsPage() {
               )}
             </div>
 
-            {/* Actions */}
+            {}
             <div className="flex flex-col sm:flex-row gap-3 justify-end">
               <Button
                 variant="outline"
@@ -468,7 +456,7 @@ export default function LimitsPage() {
 
           <Separator />
 
-          {/* History Table */}
+          {}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <History className="size-5 text-bank-coal" />

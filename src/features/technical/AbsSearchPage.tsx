@@ -48,7 +48,7 @@ export default function AbsSearchPage() {
 
       <Separator className="mb-6" />
 
-      {/* ── Initial State ── */}
+      {}
       {!hasSearched && !isSearching && (
         <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
           <div className="flex size-20 items-center justify-center rounded-full bg-bank-active mb-6">
@@ -59,7 +59,7 @@ export default function AbsSearchPage() {
         </div>
       )}
 
-      {/* ── Searching State ── */}
+      {}
       {isSearching && (
         <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
           <div className="size-10 animate-spin rounded-full border-2 border-bank-red/20 border-t-bank-red mb-4" />
@@ -67,7 +67,7 @@ export default function AbsSearchPage() {
         </div>
       )}
 
-      {/* ── Not Found State ── */}
+      {}
       {hasSearched && !isSearching && clients.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
           <div className="flex size-20 items-center justify-center rounded-full bg-muted mb-6">
@@ -78,11 +78,11 @@ export default function AbsSearchPage() {
         </div>
       )}
 
-      {/* ── Results Section ── */}
+      {}
       {clients.length > 0 && (
         <div className="space-y-6">
-          
-          {/* Multiple Clients Selection */}
+
+          {}
           {clients.length > 1 && (
             <Card>
               <CardHeader className="py-3">
@@ -103,7 +103,7 @@ export default function AbsSearchPage() {
             </Card>
           )}
 
-          {/* Client Summary & Telegram */}
+          {}
           <ClientSummary 
             client={clients[selectedClientIndex]} 
             telegramData={telegramData}
@@ -111,7 +111,7 @@ export default function AbsSearchPage() {
             onDeleteTelegram={deleteTelegramId}
           />
 
-          {/* Detailed Data Tabs */}
+          {}
           <ClientTabs 
             client={clients[selectedClientIndex]}
             accounts={accounts}

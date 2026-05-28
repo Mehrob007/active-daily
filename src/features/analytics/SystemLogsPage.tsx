@@ -27,8 +27,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// ─── Mock Data ──────────────────────────────────────────────────
-
 const mockLogs: SystemLog[] = [
   { id: 'LOG-001', userId: 'USR-001', userName: 'Каримов А.Р.', action: 'login', resource: 'auth', details: 'Вход в систему — успех', ip: '192.168.1.45', timestamp: '2025-05-15 14:32:05' },
   { id: 'LOG-002', userId: 'USR-002', userName: 'Рахимова Д.У.', action: 'create', resource: 'applications', details: 'Создана заявка APP-002', ip: '192.168.1.78', timestamp: '2025-05-15 14:28:11' },
@@ -46,8 +44,6 @@ const mockLogs: SystemLog[] = [
   { id: 'LOG-014', userId: 'USR-001', userName: 'Каримов А.Р.', action: 'logout', resource: 'auth', details: 'Выход из системы', ip: '192.168.1.45', timestamp: '2025-05-14 18:00:00' },
   { id: 'LOG-015', userId: 'USR-005', userName: 'Турсунов Ж.К.', action: 'view', resource: 'logs', details: 'Просмотр системных логов', ip: '192.168.3.56', timestamp: '2025-05-14 14:45:30' },
 ];
-
-// ─── Action Config ──────────────────────────────────────────────
 
 const actionConfig: Record<string, { label: string; icon: React.ElementType; className: string }> = {
   login:   { label: 'Вход',    icon: LogIn,    className: 'bg-green-50 text-green-700 border-green-200' },
@@ -70,8 +66,6 @@ function ActionBadge({ action }: { action: string }) {
   );
 }
 
-// ─── Column Definitions ─────────────────────────────────────────
-
 const columns: ColumnDef<SystemLog>[] = [
   {
     accessorKey: 'timestamp',
@@ -89,8 +83,6 @@ const columns: ColumnDef<SystemLog>[] = [
   { accessorKey: 'ip', header: 'IP', cell: ({ row }) => <span className="font-mono text-xs text-muted-foreground">{row.getValue('ip')}</span> },
 ];
 
-// ─── Page Component ─────────────────────────────────────────────
-
 export default function SystemLogsPage() {
   const [actionFilter, setActionFilter] = useState<string>('all');
   const [userFilter, setUserFilter] = useState<string>('all');
@@ -105,7 +97,7 @@ export default function SystemLogsPage() {
 
   return (
     <PageContainer title="Системные логи" subtitle="Журнал системных событий и действий пользователей">
-      {/* Filter Bar */}
+      {}
       <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
@@ -139,7 +131,7 @@ export default function SystemLogsPage() {
         <Input type="date" className="h-9" />
       </div>
 
-      {/* Legend */}
+      {}
       <div className="mb-4 flex flex-wrap gap-2">
         {Object.entries(actionConfig).map(([key, cfg]) => (
           <div key={key} className="flex items-center gap-1.5">
@@ -149,7 +141,7 @@ export default function SystemLogsPage() {
         ))}
       </div>
 
-      {/* Data Table */}
+      {}
       <DataTable
         columns={columns}
         data={filteredData}
