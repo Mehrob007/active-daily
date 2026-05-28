@@ -90,6 +90,20 @@ function parseLoanDetailsSoapResponse(xmlText: string) {
   const balanceNodes = balanceAccountsRoot ? balanceAccountsRoot.getElementsByTagName("*") : [];
   const balances: any[] = [];
   
+  const sumTypesRoot = findElement(loanElem, "sumTypes");
+  const sumTypeNodes = sumTypesRoot ? sumTypesRoot.getElementsByTagName("*") : [];
+  let percentRate = "0";
+  for (let i = 0; i < sumTypeNodes.length; i++) {
+    const node = sumTypeNodes[i];
+    if (node.localName === "sumType") {
+      const dmName = getElementValue(node, "name");
+      if (dmName === "Проценты по кредиту") {
+        percentRate = getElementValue(node, "pcn");
+        break;
+      }
+    }
+  }
+  
   for (let i = 0; i < balanceNodes.length; i++) {
     const node = balanceNodes[i];
     if (node.localName === "balanceAccount") {
@@ -109,7 +123,7 @@ function parseLoanDetailsSoapResponse(xmlText: string) {
     }
   }
 
-  return { ...params, balances };
+  return { ...params, balances, percentRate };
 }
 
 function buildRepayLoanSoapRequest({ referenceId, amount, sourceOrdNum }: any) {

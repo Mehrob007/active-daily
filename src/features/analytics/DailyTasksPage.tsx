@@ -511,7 +511,7 @@ export default function DailyTasksPage() {
             </div>
             <Progress
               value={completionRate}
-              className="h-2 [&>[data-slot=progress-indicator]]:bg-bank-success"
+              className="h-2 *:data-[slot=progress-indicator]:bg-bank-success"
             />
             <p className="mt-1 text-[11px] text-muted-foreground text-right">
               {completionRate}% от общего
@@ -535,7 +535,7 @@ export default function DailyTasksPage() {
             </div>
             <Progress
               value={totalTasks > 0 ? (counts.in_progress / totalTasks) * 100 : 0}
-              className="h-2 [&>[data-slot=progress-indicator]]:bg-bank-warning"
+              className="h-2 *:data-[slot=progress-indicator]:bg-bank-warning"
             />
             <p className="mt-1 text-[11px] text-muted-foreground text-right">
               {totalTasks > 0
@@ -589,7 +589,7 @@ export default function DailyTasksPage() {
             </div>
             <Progress
               value={totalTasks > 0 ? (counts.overdue / totalTasks) * 100 : 0}
-              className="h-2 [&>[data-slot=progress-indicator]]:bg-bank-red"
+              className="h-2 *:data-[slot=progress-indicator]:bg-bank-red"
             />
             <p className="mt-1 text-[11px] text-muted-foreground text-right">
               {totalTasks > 0
