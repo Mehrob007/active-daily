@@ -82,8 +82,8 @@ function parseLoanDetailsSoapResponse(xmlText: string) {
     term: getElementValue(agreementDataElem, "termTU"),
     startDate: getElementValue(agreementDataElem, "dateFrom"),
     endDate: getElementValue(agreementDataElem, "dateTo"),
-    department: getElementValue(findElement(agreementDataElem, "department"), "code"),
-    clientDea: getElementValue(findElement(agreementDataElem, "deaClient"), "code"),
+    department: getElementValue(findElement(agreementDataElem, "department"), "name"),
+    clientDea: getElementValue(findElement(agreementDataElem, "deaClient"), "name"),
   };
 
   const balanceAccountsRoot = findElement(loanElem, "balanceAccounts");
@@ -93,13 +93,16 @@ function parseLoanDetailsSoapResponse(xmlText: string) {
   const sumTypesRoot = findElement(loanElem, "sumTypes");
   const sumTypeNodes = sumTypesRoot ? sumTypesRoot.getElementsByTagName("*") : [];
   let percentRate = "0";
+  let penaltyRate = "0";
   for (let i = 0; i < sumTypeNodes.length; i++) {
     const node = sumTypeNodes[i];
     if (node.localName === "sumType") {
       const dmName = getElementValue(node, "name");
       if (dmName === "Проценты по кредиту") {
         percentRate = getElementValue(node, "pcn");
-        break;
+      }
+      if (dmName === "Штраф за просрочку основного долга") { // The image text says: <name>Штраф за просрочку основного долга</name>
+        penaltyRate = getElementValue(node, "pcn");
       }
     }
   }
@@ -139,7 +142,7 @@ function parseLoanDetailsSoapResponse(xmlText: string) {
     }
   }
 
-  return { ...params, balances, percentRate, paymentOptions };
+  return { ...params, balances, percentRate, penaltyRate, paymentOptions };
 }
 
 function buildRepayLoanSoapRequest({ referenceId, amount, sourceOrdNum }: any) {

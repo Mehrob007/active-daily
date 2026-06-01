@@ -89,19 +89,72 @@ export const CreditDetailsView: React.FC<CreditDetailsViewProps> = ({ credit, on
             {/* Блок 1: Параметры кредита */}
             <section>
               <h3 className="text-lg font-bold mb-4 text-foreground">Параметры кредита</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm bg-slate-50/50 p-6 rounded-2xl border border-slate-100">
-                <div className="flex flex-col gap-1"><span className="text-muted-foreground text-[11px] uppercase font-bold tracking-wider">Номер договора</span><span className="font-medium text-base">{credit.contractNumber || '-'}</span></div>
-                <div className="flex flex-col gap-1"><span className="text-muted-foreground text-[11px] uppercase font-bold tracking-wider">Reference ID</span><span className="font-medium text-base">{credit.referenceId || '-'}</span></div>
-                <div className="flex flex-col gap-1"><span className="text-muted-foreground text-[11px] uppercase font-bold tracking-wider">Статус</span><span className="font-medium text-base">{credit.statusName || '-'}</span></div>
-                <div className="flex flex-col gap-1"><span className="text-muted-foreground text-[11px] uppercase font-bold tracking-wider">Сумма</span><span className="font-semibold text-base text-bank-red">{credit.amount} {credit.currency}</span></div>
-                <div className="flex flex-col gap-1"><span className="text-muted-foreground text-[11px] uppercase font-bold tracking-wider">Дата начала</span><span className="font-medium text-base">{loanDetails?.startDate || '-'}</span></div>
-                <div className="flex flex-col gap-1"><span className="text-muted-foreground text-[11px] uppercase font-bold tracking-wider">Дата окончания</span><span className="font-medium text-base">{loanDetails?.endDate || '-'}</span></div>
-                <div className="flex flex-col gap-1"><span className="text-muted-foreground text-[11px] uppercase font-bold tracking-wider">Дата документа</span><span className="font-medium text-base">{credit.documentDate || loanDetails?.documentDate || '-'}</span></div>
-                <div className="flex flex-col gap-1"><span className="text-muted-foreground text-[11px] uppercase font-bold tracking-wider">Код клиента</span><span className="font-medium text-base">{credit.clientCode || '-'}</span></div>
-                <div className="flex flex-col gap-1"><span className="text-muted-foreground text-[11px] uppercase font-bold tracking-wider">Код продукта</span><span className="font-medium text-base">{credit.productCode || '-'}</span></div>
-                <div className="flex flex-col gap-1"><span className="text-muted-foreground text-[11px] uppercase font-bold tracking-wider">Название продукта</span><span className="font-medium text-base line-clamp-1" title={credit.productName}>{credit.productName || '-'}</span></div>
-                <div className="flex flex-col gap-1"><span className="text-muted-foreground text-[11px] uppercase font-bold tracking-wider">Цель кредита</span><span className="font-medium text-base line-clamp-1" title={loanDetails?.creditPurpose}>{loanDetails?.creditPurpose || '-'}</span></div>
-                <div className="flex flex-col gap-1"><span className="text-muted-foreground text-[11px] uppercase font-bold tracking-wider">Срок</span><span className="font-medium text-base">{loanDetails?.term ? `${loanDetails.term} мес.` : '-'}</span></div>
+              
+              {/* Top 4 stats */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex flex-col justify-center">
+                  <span className="text-muted-foreground text-xs font-medium">Подразделение</span>
+                  <span className="font-bold text-base mt-1">{loanDetails?.department || '-'}</span>
+                </div>
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex flex-col justify-center">
+                  <span className="text-muted-foreground text-xs font-medium">Сумма кредита</span>
+                  <span className="font-bold text-base mt-1">{credit.amount} {credit.currency}</span>
+                </div>
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex flex-col justify-center">
+                  <span className="text-muted-foreground text-xs font-medium">% Ставка</span>
+                  <span className="font-bold text-base mt-1 text-green-600">{loanDetails?.percentRate ? `${loanDetails.percentRate} %` : '-'}</span>
+                </div>
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex flex-col justify-center">
+                  <span className="text-muted-foreground text-xs font-medium">Срок</span>
+                  <span className="font-bold text-base mt-1">{loanDetails?.term ? `${loanDetails.term} мес` : '-'}</span>
+                </div>
+              </div>
+
+              {/* Main big card */}
+              <div className="bg-white rounded-[24px] shadow-sm border border-slate-100 p-6 md:p-8">
+                <h2 className="text-xl md:text-2xl font-bold text-slate-800">Цель кредита: {loanDetails?.creditPurpose || '-'}</h2>
+                <div className="text-sm text-muted-foreground mt-2 mb-8">
+                  Дата открытия: {loanDetails?.startDate || '-'} | Дата окончания: {loanDetails?.endDate || '-'}
+                </div>
+                
+                {/* Progress bar and Balance */}
+                <div className="mb-8">
+                  <div className="flex justify-between items-end mb-3">
+                    <span className="text-muted-foreground text-sm">Погашено</span>
+                    <div className="flex flex-col items-end">
+                      <span className="text-muted-foreground text-xs mb-1">Остаток задолженности</span>
+                      <span className="font-bold text-xl text-slate-900">
+                        {new Intl.NumberFormat('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+                          loanDetails?.balances?.reduce((acc: number, bal: any) => acc + parseFloat(bal.balance || 0), 0) || 0
+                        )} {credit.currency}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-bank-red rounded-full transition-all duration-1000" 
+                      style={{ 
+                        width: `${Math.max(0, Math.min(100, (1 - ((loanDetails?.balances?.reduce((acc: number, bal: any) => acc + parseFloat(bal.balance || 0), 0) || 0) / (parseFloat(String(credit.amount)) || 1))) * 100))}%` 
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Bottom row */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6">
+                  <div className="flex flex-col">
+                    <span className="text-muted-foreground text-sm mb-1.5">Код клиента</span>
+                    <span className="font-bold text-lg text-slate-800">{credit.clientCode || '-'}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-muted-foreground text-sm mb-1.5">Штраф за просрочку</span>
+                    <span className="font-bold text-lg text-bank-red">{loanDetails?.penaltyRate ? `${loanDetails.penaltyRate} %` : '0 %'}</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-muted-foreground text-sm mb-1.5">Кредитный эксперт</span>
+                    <span className="font-bold text-lg text-slate-800">{loanDetails?.clientDea || '-'}</span>
+                  </div>
+                </div>
               </div>
             </section>
 
