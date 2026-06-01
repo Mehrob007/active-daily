@@ -123,7 +123,23 @@ function parseLoanDetailsSoapResponse(xmlText: string) {
     }
   }
 
-  return { ...params, balances, percentRate };
+  const paymentOptionsRoot = findElement(loanElem, "paymentOptions");
+  const paymentOptionNodes = paymentOptionsRoot ? paymentOptionsRoot.getElementsByTagName("*") : [];
+  const paymentOptions: any[] = [];
+
+  for (let i = 0; i < paymentOptionNodes.length; i++) {
+    const node = paymentOptionNodes[i];
+    if (node.localName === "paymentOption") {
+      paymentOptions.push({
+        code: getElementValue(node, "code"),
+        name: getElementValue(node, "name"),
+        accCode: getElementValue(node, "accCode"),
+        colvirReferenceId: getElementValue(node, "colvirReferenceId"),
+      });
+    }
+  }
+
+  return { ...params, balances, percentRate, paymentOptions };
 }
 
 function buildRepayLoanSoapRequest({ referenceId, amount, sourceOrdNum }: any) {

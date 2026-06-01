@@ -44,7 +44,7 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
   const [activeCardForPin, setActiveCardForPin] = useState<Card | null>(null);
   const [activeCardForLimits, setActiveCardForLimits] = useState<string | null>(null);
   const [activeCreditForGraph, setActiveCreditForGraph] = useState<string | null>(null);
-  const [activeCreditForDetails, setActiveCreditForDetails] = useState<string | null>(null);
+  const [activeCreditForDetails, setActiveCreditForDetails] = useState<Credit | null>(null);
   const [activeDepositForDetails, setActiveDepositForDetails] = useState<Deposit | null>(null);
   const [activeCreditForRepay, setActiveCreditForRepay] = useState<Credit | null>(null);
   const [activeInnForDocs, setActiveInnForDocs] = useState<string | null>(null);
@@ -183,7 +183,7 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
         onClose={() => setActiveCreditForGraph(null)} 
       />
       <CreditDetailsModal 
-        referenceId={activeCreditForDetails} 
+        credit={activeCreditForDetails} 
         onClose={() => setActiveCreditForDetails(null)} 
       />
       <DepositDetailsModal 

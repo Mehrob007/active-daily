@@ -6,7 +6,7 @@ interface CreditsTableProps {
   data: Credit[];
   isLoading: boolean;
   onOpenGraph: (referenceId: string) => void;
-  onOpenDetails: (referenceId: string) => void;
+  onOpenDetails: (credit: Credit) => void;
   onOpenRepay: (credit: Credit) => void;
 }
 
@@ -60,7 +60,7 @@ export const CreditsTable: React.FC<CreditsTableProps> = ({
             <CreditCardItem 
               key={credit.contractNumber || idx} 
               credit={credit} 
-              onOpenDetails={onOpenDetails} 
+              onOpenDetails={() => onOpenDetails(credit)} 
             />
           ))}
         </div>
