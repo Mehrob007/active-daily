@@ -11,7 +11,7 @@ import { ServicesModal } from './modals/ServicesModal';
 import { PinChangeModal } from './modals/PinChangeModal';
 import { CardLimitsModal } from './modals/CardLimitsModal';
 import { GraphModal } from './modals/GraphModal';
-import { CreditDetailsModal } from './modals/CreditDetailsModal';
+import { CreditDetailsView } from './views/CreditDetailsView';
 import { DepositDetailsModal } from './modals/DepositDetailsModal';
 import { RepayModal } from './modals/RepayModal';
 import { DocumentsModal } from './modals/DocumentsModal';
@@ -86,6 +86,15 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
     { label: "Кем выдан", value: client.identdoc_orgname },
     { label: "SV ID", value: client.sv_id },
   ].filter(item => item.value);
+
+  if (activeCreditForDetails) {
+    return (
+      <CreditDetailsView 
+        credit={activeCreditForDetails} 
+        onBack={() => setActiveCreditForDetails(null)} 
+      />
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -181,10 +190,6 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
       <GraphModal 
         referenceId={activeCreditForGraph} 
         onClose={() => setActiveCreditForGraph(null)} 
-      />
-      <CreditDetailsModal 
-        credit={activeCreditForDetails} 
-        onClose={() => setActiveCreditForDetails(null)} 
       />
       <DepositDetailsModal 
         deposit={activeDepositForDetails} 
