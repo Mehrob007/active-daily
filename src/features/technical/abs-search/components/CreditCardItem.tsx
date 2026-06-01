@@ -20,6 +20,7 @@ export const CreditCardItem: React.FC<CreditCardItemProps> = ({ credit, onOpenDe
   const [remainingBalance, setRemainingBalance] = useState<number | null>(null);
   const [percentRate, setPercentRate] = useState<string | null>(null);
   const [monthlyPayment, setMonthlyPayment] = useState<number | null>(null);
+  const [nextPaymentDate, setNextPaymentDate] = useState<string | null>(null);
   const [isLoadingDetails, setIsLoadingDetails] = useState(true);
   const [isLoadingGraph, setIsLoadingGraph] = useState(true);
 
@@ -82,6 +83,7 @@ export const CreditCardItem: React.FC<CreditCardItemProps> = ({ credit, onOpenDe
                   }
                 });
                 setMonthlyPayment(sum);
+                setNextPaymentDate(targetDate);
               }
             }
           })
@@ -200,6 +202,17 @@ export const CreditCardItem: React.FC<CreditCardItemProps> = ({ credit, onOpenDe
               </div>
             </div>
           </div>
+          <div className="space-y-1">
+            <div className="text-xs text-slate-400">Дата платежа</div>
+            <div className="font-bold text-lg text-slate-800">
+              {isLoadingGraph ? (
+                <div className="h-7 w-24 bg-slate-100 animate-pulse rounded"></div>
+              ) : (
+                <>{nextPaymentDate ? formatDate(nextPaymentDate.split(' ')[0]) : '-'}</>
+              )}
+            </div>
+          </div>
+          
         </div>
 
         <Button 
