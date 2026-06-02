@@ -12,7 +12,7 @@ import { PinChangeModal } from './modals/PinChangeModal';
 import { CardLimitsModal } from './modals/CardLimitsModal';
 import { GraphModal } from './modals/GraphModal';
 import { CreditDetailsView } from './views/CreditDetailsView';
-import { DepositDetailsModal } from './modals/DepositDetailsModal';
+import { DepositDetailsView } from './views/DepositDetailsView';
 import { RepayModal } from './modals/RepayModal';
 import { DocumentsModal } from './modals/DocumentsModal';
 import { BlockCardModal } from './modals/BlockCardModal';
@@ -92,6 +92,15 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
       <CreditDetailsView 
         credit={activeCreditForDetails} 
         onBack={() => setActiveCreditForDetails(null)} 
+      />
+    );
+  }
+
+  if (activeDepositForDetails) {
+    return (
+      <DepositDetailsView 
+        deposit={activeDepositForDetails} 
+        onBack={() => setActiveDepositForDetails(null)} 
       />
     );
   }
@@ -190,10 +199,6 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
       <GraphModal 
         referenceId={activeCreditForGraph} 
         onClose={() => setActiveCreditForGraph(null)} 
-      />
-      <DepositDetailsModal 
-        deposit={activeDepositForDetails} 
-        onClose={() => setActiveDepositForDetails(null)} 
       />
       <RepayModal 
         credit={activeCreditForRepay} 

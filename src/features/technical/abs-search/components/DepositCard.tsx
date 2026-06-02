@@ -63,11 +63,11 @@ export const DepositCard: React.FC<DepositCardProps> = ({ deposit, onClick, isSe
                 Депозит - {AgreementData?.Product?.Name || "Без названия"}
               </h3>
               <Badge className={
-                AgreementData?.Status?.Code === 'ACTUAL' 
+                (AgreementData?.Status?.Code === 'ACTUAL' || AgreementData?.Status?.Name === 'Актуален')
                   ? "bg-emerald-600 text-white hover:bg-emerald-600 border-none shadow-sm"
                   : "bg-slate-100 text-slate-500 hover:bg-slate-100 border-none"
               }>
-                {AgreementData?.Status?.Name}
+                {AgreementData?.Status?.Name || 'Актуален'}
               </Badge>
             </div>
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] text-slate-400 font-medium uppercase tracking-wider">
@@ -78,9 +78,9 @@ export const DepositCard: React.FC<DepositCardProps> = ({ deposit, onClick, isSe
           </div>
 
           <div className="text-right">
-             <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">Сумма депозита</p>
+             <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">Текущая сумма депозита</p>
              <div className="text-2xl font-black text-slate-900">
-                {Number(mainAccount?.Balance || 0).toLocaleString('ru-RU')} <span className="text-sm font-normal text-slate-500">{mainAccount?.CurrCode || AgreementData?.Currency}</span>
+                {Number(mainAccount?.Balance || 0).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} <span className="text-sm font-normal text-slate-500">{mainAccount?.CurrCode || AgreementData?.Currency}</span>
              </div>
           </div>
         </div>
@@ -98,7 +98,7 @@ export const DepositCard: React.FC<DepositCardProps> = ({ deposit, onClick, isSe
             <div className="space-y-1">
               <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Ожидаемый доход</p>
               <p className="text-sm font-black text-emerald-600">
-                {Number(incomeAccount?.Balance || 0).toLocaleString('ru-RU')} <span className="text-[10px] font-normal">{incomeAccount?.CurrCode || AgreementData?.Currency}</span>
+                {Number(incomeAccount?.Balance || 0).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} <span className="text-[10px] font-normal">{incomeAccount?.CurrCode || AgreementData?.Currency}</span>
               </p>
             </div>
             <div className="space-y-1">
