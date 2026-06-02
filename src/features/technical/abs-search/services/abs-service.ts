@@ -203,5 +203,21 @@ export const absService = {
     });
     if (!response.ok) return [];
     return response.json();
+  },
+
+  async getCardsDataList(payload: any) {
+    const response = await fetch(`${BACKEND_URL}/api/Transactions/card-data`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(payload),
+    });
+    return response.ok ? response.json() : null;
+  },
+
+  async getMainAccount(phone: string) {
+    const response = await fetch(`${BACKEND_URL}/account/user/${phone}`, {
+      headers: getHeaders(),
+    });
+    return response.ok ? response.json() : null;
   }
 };

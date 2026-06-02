@@ -27,6 +27,8 @@ export default function AbsSearchPage() {
     cards,
     credits,
     deposits,
+    mainAccount,
+    linkedCards,
     isLoadingDetails,
     telegramData,
     isTelegramLoading,
@@ -118,6 +120,8 @@ export default function AbsSearchPage() {
             cards={cards}
             credits={credits}
             deposits={deposits}
+            mainAccount={mainAccount}
+            linkedCards={linkedCards}
             isLoading={isLoadingDetails}
             onRefresh={refreshClientData}
           />

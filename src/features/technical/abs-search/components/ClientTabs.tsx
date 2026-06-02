@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card as CardUI, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, Download } from 'lucide-react';
-import { AccountsTable } from './AccountsTable';
+import { AccountsView } from './views/AccountsView';
 import { CardsTable } from './CardsTable';
 import { CreditsTable } from './CreditsTable';
 import { DepositsTable } from './DepositsTable';
@@ -26,6 +26,8 @@ interface ClientTabsProps {
   cards: Card[];
   credits: Credit[];
   deposits: Deposit[];
+  linkedCards?: any[];
+  mainAccount?: any;
   isLoading: boolean;
   onRefresh: () => void;
 }
@@ -36,6 +38,8 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
   cards,
   credits,
   deposits,
+  linkedCards,
+  mainAccount,
   isLoading,
   onRefresh,
 }) => {
@@ -131,7 +135,13 @@ export const ClientTabs: React.FC<ClientTabsProps> = ({
           ) : (
             <>
               <TabsContent value="accounts">
-                <AccountsTable data={accounts} isLoading={isLoading} />
+                <AccountsView 
+                  accounts={accounts} 
+                  linkedCards={linkedCards || []} 
+                  mainAccount={mainAccount} 
+                  credits={credits} 
+                  isLoading={isLoading} 
+                />
               </TabsContent>
               <TabsContent value="cards">
                 <CardsTable 

@@ -22,20 +22,24 @@ export function useAbsSearch() {
   const [cards, setCards] = useState<Card[]>([]);
   const [credits, setCredits] = useState<Credit[]>([]);
   const [deposits, setDeposits] = useState<Deposit[]>([]);
+  const [mainAccount, setMainAccount] = useState<any>(null);
+  const [linkedCards, setLinkedCards] = useState<any[]>([]);
 
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [telegramData, setTelegramData] = useState<TelegramUser | null>(null);
   const [isTelegramLoading, setIsTelegramLoading] = useState(false);
 
-  const fetchClientData = useCallback(async (clientCode: string) => {
+  const fetchClientData = useCallback(async (clientCode: string, phone?: string) => {
     if (!clientCode) return;
     setIsLoadingDetails(true);
     try {
-      const [accData, cardDataRaw, credData, depData] = await Promise.all([
+      const [accData, cardDataRaw, credData, depData, cardsDataList, mainAccData] = await Promise.all([
         absService.getAccounts(clientCode),
         absService.getCards(clientCode),
         absService.getCredits(clientCode),
         absService.getDeposits(clientCode),
+        absService.getCardsDataList({ clientIndex: clientCode }).catch(() => null),
+        phone ? absService.getMainAccount(phone).catch(() => null) : Promise.resolve(null),
       ]);
 
       let cardData = Array.isArray(cardDataRaw) ? cardDataRaw : [];
@@ -78,6 +82,8 @@ export function useAbsSearch() {
       setCards(cardData);
       setCredits(Array.isArray(credData) ? credData : []);
       setDeposits(Array.isArray(depData) ? depData : []);
+      setLinkedCards(cardsDataList?.cards || []);
+      setMainAccount(mainAccData?.mainAccount || null);
 
     } catch (err) {
       console.error("Error fetching client details", err);
@@ -141,11 +147,12 @@ export function useAbsSearch() {
     const activeClient = clients[selectedClientIndex];
     if (activeClient) {
       const code = activeClient.client_code || activeClient.ClientCode || activeClient.Client?.Code || activeClient.code;
+      const phone = activeClient.phone_number || activeClient.Phone || activeClient.phone;
+
       if (code) {
-        fetchClientData(code);
+        fetchClientData(code, phone);
       }
 
-      const phone = activeClient.phone_number || activeClient.Phone || activeClient.phone;
       if (phone) {
         fetchTelegramData(phone);
       }
@@ -178,7 +185,8 @@ export function useAbsSearch() {
     const activeClient = clients[selectedClientIndex];
     if (!activeClient) return;
     const code = activeClient.client_code || activeClient.ClientCode || activeClient.Client?.Code || activeClient.code;
-    if (code) fetchClientData(code);
+    const phone = activeClient.phone_number || activeClient.Phone || activeClient.phone;
+    if (code) fetchClientData(code, phone);
   }, [clients, selectedClientIndex, fetchClientData]);
 
   return {
@@ -195,6 +203,8 @@ export function useAbsSearch() {
     cards,
     credits,
     deposits,
+    linkedCards,
+    mainAccount,
     isLoadingDetails,
     telegramData,
     isTelegramLoading,

@@ -154,7 +154,6 @@ export const CreditCardItem: React.FC<CreditCardItemProps> = ({
 
   return (
     <Card className="rounded-3xl p-6 bg-white border-none shadow-sm flex flex-col gap-6 relative overflow-hidden">
-      {}
       <div className="flex justify-between items-start">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
