@@ -26,7 +26,7 @@ export const CreditDetailsModal: React.FC<CreditDetailsModalProps> = ({ credit, 
         try {
           const [detailsRes, graphsRes] = await Promise.all([
             loanSoapService.getLoanDetails(credit.referenceId!),
-            absService.getCreditGraphs(credit.referenceId!).catch(() => []), // fallback to empty array if fails
+            absService.getCreditGraphs(credit.referenceId!).catch(() => []), 
           ]);
           setLoanDetails(detailsRes);
           setGraphs(Array.isArray(graphsRes) ? graphsRes : (graphsRes?.data || []));
@@ -42,7 +42,7 @@ export const CreditDetailsModal: React.FC<CreditDetailsModalProps> = ({ credit, 
 
   if (!credit) return null;
 
-  // Process graphs
+  
   const groupedGraphs = graphs.reduce((acc: any, item: any) => {
     const date = item.PaymentDate?.split(' ')[0] || item.PaymentDate;
     if (!acc[date]) {
@@ -60,7 +60,7 @@ export const CreditDetailsModal: React.FC<CreditDetailsModalProps> = ({ credit, 
     } else if (item.Code === 'CR_INTER' || item.LongName === 'Проценты по кредиту') {
       acc[date].interest += amount;
     }
-    // Update status/type if they were missing
+    
     if (!acc[date].status && item.Status) acc[date].status = item.Status;
     if (!acc[date].type && item.Type) acc[date].type = item.Type;
 
@@ -81,7 +81,7 @@ export const CreditDetailsModal: React.FC<CreditDetailsModalProps> = ({ credit, 
         ) : (
           <div className="space-y-8 mt-4">
             
-            {/* Блок 1: Параметры кредита */}
+            {}
             <div>
               <h3 className="text-lg font-bold mb-4">Параметры кредита</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm bg-slate-50 p-4 rounded-xl border border-slate-100">
@@ -101,7 +101,7 @@ export const CreditDetailsModal: React.FC<CreditDetailsModalProps> = ({ credit, 
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Блок 2: Счета кредитов */}
+              {}
               <div>
                 <h3 className="text-lg font-bold mb-4">Счета кредита</h3>
                 <div className="bg-white border rounded-xl overflow-hidden">
@@ -130,7 +130,7 @@ export const CreditDetailsModal: React.FC<CreditDetailsModalProps> = ({ credit, 
                 </div>
               </div>
 
-              {/* Блок 3: Остатки кредитов */}
+              {}
               <div>
                 <h3 className="text-lg font-bold mb-4">Остатки кредита</h3>
                 <div className="bg-white border rounded-xl overflow-hidden">
@@ -162,7 +162,7 @@ export const CreditDetailsModal: React.FC<CreditDetailsModalProps> = ({ credit, 
               </div>
             </div>
 
-            {/* Блок 4: График платежей */}
+            {}
             <div>
               <h3 className="text-lg font-bold mb-4">График платежей</h3>
               <div className="bg-white border rounded-xl overflow-hidden">

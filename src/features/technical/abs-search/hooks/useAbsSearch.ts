@@ -3,10 +3,22 @@ import { absService } from '../services/abs-service';
 import { Client, Account, Card, Credit, Deposit, TelegramUser } from '../types';
 import { toast } from '@/hooks/use-toast';
 
-export const TYPE_SEARCH_CLIENT = [
-  { value: "client/info?phoneNumber=", label: "Поиск по Номеру телефона", type: "phone" },
-  { value: "client/info/client-index?clientIndex=", label: "Поиск по Коду клиента", type: "code" },
-  { value: "client/info/inn?inn=", label: "Поиск по ИНН", type: "inn" },
+export interface SearchClientType {
+  value: string;
+  label: string;
+  type: string;
+  placeholder: string;
+  disabled?: boolean;
+}
+
+export const TYPE_SEARCH_CLIENT: SearchClientType[] = [
+  { value: "client/info?phoneNumber=", label: "Поиск по Номеру телефона", type: "phone", placeholder: "Введите номер телефона (например: 992973794747)" },
+  { value: "client/info/client-index?clientIndex=", label: "Поиск по Коду клиента", type: "code", placeholder: "Введите код клиента (например: 5100.045870)" },
+  { value: "client/info/inn?inn=", label: "Поиск по ИНН", type: "inn", placeholder: "Введите ИНН (например: 576063935)" },
+  { value: "account", label: "Номеру счета", type: "account", placeholder: "Введите 20-значный номер счета (например: 20216972581304443134)" },
+  { value: "card4", label: "4- последние цифры карты", type: "card4", placeholder: "Поиск по 4 последним цифрам карты (API не предоставлено)", disabled: true },
+  { value: "cardId", label: "ID карты", type: "cardId", placeholder: "Поиск по ID карты (API не предоставлено)", disabled: true },
+  { value: "fullName", label: "По Фамилии и Имени", type: "fullName", placeholder: "Поиск по Фамилии и Имени (API не предоставлено)", disabled: true },
 ];
 
 export function useAbsSearch() {
@@ -105,7 +117,18 @@ export function useAbsSearch() {
     setTelegramData(null);
 
     try {
-      const formattedQuery = searchQuery.trim().replace(/\D/g, "");
+      const selectedOption = TYPE_SEARCH_CLIENT.find(opt => opt.value === searchType);
+      const searchTypeVal = selectedOption?.type || 'phone';
+
+      let formattedQuery = searchQuery.trim();
+      if (searchTypeVal === 'code') {
+        formattedQuery = formattedQuery.replace(/[^0-9.]/g, "");
+      } else if (searchTypeVal === 'fullName') {
+        formattedQuery = formattedQuery;
+      } else {
+        formattedQuery = formattedQuery.replace(/\D/g, "");
+      }
+
       const data = await absService.searchClients(searchType, formattedQuery);
 
       let normalizedData: Client[] = [];
@@ -132,7 +155,7 @@ export function useAbsSearch() {
           fetchTelegramData(phone);
         }
       } else {
-        toast({ title: "Не найдено", description: "Клиенты не найдены", variant: "destructive" });
+        toast({ title: "Не найдено", description: "По заданным критериям клиент не найден", variant: "destructive" });
       }
       setHasSearched(true);
     } catch (err) {

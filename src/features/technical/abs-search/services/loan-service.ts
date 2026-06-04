@@ -101,7 +101,7 @@ function parseLoanDetailsSoapResponse(xmlText: string) {
       if (dmName === "Проценты по кредиту") {
         percentRate = getElementValue(node, "pcn");
       }
-      if (dmName === "Штраф за просрочку основного долга") { // The image text says: <name>Штраф за просрочку основного долга</name>
+      if (dmName === "Штраф за просрочку основного долга") { 
         penaltyRate = getElementValue(node, "pcn");
       }
     }

@@ -22,7 +22,7 @@ export const CreditDetailsView: React.FC<CreditDetailsViewProps> = ({ credit, on
         try {
           const [detailsRes, graphsRes] = await Promise.all([
             loanSoapService.getLoanDetails(credit.referenceId!),
-            absService.getCreditGraphs(credit.referenceId!).catch(() => []), // fallback to empty array if fails
+            absService.getCreditGraphs(credit.referenceId!).catch(() => []), 
           ]);
           setLoanDetails(detailsRes);
           setGraphs(Array.isArray(graphsRes) ? graphsRes : (graphsRes?.data || []));
@@ -38,7 +38,7 @@ export const CreditDetailsView: React.FC<CreditDetailsViewProps> = ({ credit, on
 
   if (!credit) return null;
 
-  // Process graphs
+  
   const groupedGraphs = graphs.reduce((acc: any, item: any) => {
     const date = item.PaymentDate?.split(' ')[0] || item.PaymentDate;
     if (!acc[date]) {
@@ -56,7 +56,7 @@ export const CreditDetailsView: React.FC<CreditDetailsViewProps> = ({ credit, on
     } else if (item.Code === 'CR_INTER' || item.LongName === 'Проценты по кредиту') {
       acc[date].interest += amount;
     }
-    // Update status/type if they were missing
+    
     if (!acc[date].status && item.Status) acc[date].status = item.Status;
     if (!acc[date].type && item.Type) acc[date].type = item.Type;
 
@@ -86,11 +86,11 @@ export const CreditDetailsView: React.FC<CreditDetailsViewProps> = ({ credit, on
         ) : (
           <div className="space-y-10">
             
-            {/* Блок 1: Параметры кредита */}
+            {}
             <section>
               <h3 className="text-lg font-bold mb-4 text-foreground">Параметры кредита</h3>
               
-              {/* Top 4 stats */}
+              {}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex flex-col justify-center">
                   <span className="text-muted-foreground text-xs font-medium">Подразделение</span>
@@ -110,14 +110,14 @@ export const CreditDetailsView: React.FC<CreditDetailsViewProps> = ({ credit, on
                 </div>
               </div>
 
-              {/* Main big card */}
+              {}
               <div className="bg-white rounded-[24px] shadow-sm border border-slate-100 p-6 md:p-8">
                 <h2 className="text-xl md:text-2xl font-bold text-slate-800">Цель кредита: {loanDetails?.creditPurpose || '-'}</h2>
                 <div className="text-sm text-muted-foreground mt-2 mb-8">
                   Дата открытия: {loanDetails?.startDate || '-'} | Дата окончания: {loanDetails?.endDate || '-'}
                 </div>
                 
-                {/* Progress bar and Balance */}
+                {}
                 <div className="mb-8">
                   <div className="flex justify-between items-end mb-3">
                     <span className="text-muted-foreground text-sm">Погашено</span>
@@ -140,7 +140,7 @@ export const CreditDetailsView: React.FC<CreditDetailsViewProps> = ({ credit, on
                   </div>
                 </div>
 
-                {/* Bottom row */}
+                {}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6">
                   <div className="flex flex-col">
                     <span className="text-muted-foreground text-sm mb-1.5">Код клиента</span>
@@ -159,7 +159,7 @@ export const CreditDetailsView: React.FC<CreditDetailsViewProps> = ({ credit, on
             </section>
 
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-              {/* Блок 2: Счета кредитов */}
+              {}
               <section>
                 <h3 className="text-lg font-bold mb-4 text-foreground">Счета кредита</h3>
                 <div className="bg-white border rounded-2xl overflow-hidden shadow-sm">
@@ -188,7 +188,7 @@ export const CreditDetailsView: React.FC<CreditDetailsViewProps> = ({ credit, on
                 </div>
               </section>
 
-              {/* Блок 3: Остатки кредитов */}
+              {}
               <section>
                 <h3 className="text-lg font-bold mb-4 text-foreground">Остатки кредита</h3>
                 <div className="bg-white border rounded-2xl overflow-hidden shadow-sm">
@@ -220,7 +220,7 @@ export const CreditDetailsView: React.FC<CreditDetailsViewProps> = ({ credit, on
               </section>
             </div>
 
-            {/* Блок 4: График платежей */}
+            {}
             <section>
               <h3 className="text-lg font-bold mb-4 text-foreground">График платежей</h3>
               <div className="bg-white border rounded-2xl overflow-hidden shadow-sm">

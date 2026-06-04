@@ -41,10 +41,10 @@ export const AccountsView: React.FC<AccountsViewProps> = ({ accounts, linkedCard
   }, [credits]);
 
   const handleHistoryClick = async (accountNumber: string) => {
-    // 5. История по счетам (Выписка)
-    // GET /api/Transactions/search-transactions
-    // account = accountNumber
-    // fromDate = month ago, toDate = today
+    
+    
+    
+    
     const toDate = new Date();
     const fromDate = new Date();
     fromDate.setMonth(fromDate.getMonth() - 1);
@@ -52,9 +52,9 @@ export const AccountsView: React.FC<AccountsViewProps> = ({ accounts, linkedCard
     const fromDateStr = fromDate.toISOString().split('T')[0];
     const toDateStr = toDate.toISOString().split('T')[0];
     
-    // In a real implementation this would open a modal or redirect
+    
     console.log(`Fetching history for ${accountNumber} from ${fromDateStr} to ${toDateStr}`);
-    // Example: await processingService.fetchTransactions('universal', { account: accountNumber, fromDate: fromDateStr, toDate: toDateStr });
+    
   };
 
   if (isLoading) {
@@ -76,7 +76,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({ accounts, linkedCard
         let creditDetails = null;
         if (matchedCredit && loanDetailsMap[accNumber]) {
           const details = loanDetailsMap[accNumber];
-          // use debtAmount if available, or compute from balances
+          
           let debtAmount = details.debtAmount;
           if (debtAmount === undefined && details.balances) {
             debtAmount = details.balances.reduce((sum: number, b: any) => sum + Number(b.balance || 0), 0);

@@ -37,7 +37,7 @@ export const DepositDetailsView: React.FC<DepositDetailsViewProps> = ({ deposit,
     elapsedMonths = Math.max(0, Math.round((now.getTime() - dateFrom.getTime()) / (1000 * 60 * 60 * 24 * 30.44)));
   }
 
-  // Assuming 5100 -> Садбарг, otherwise fallback
+  
   const departmentName = (AgreementData as any)?.Department?.Code === '5100' ? 'Садбарг' : ((AgreementData as any)?.Department?.Name || "Садбарг");
 
   return (
@@ -55,7 +55,7 @@ export const DepositDetailsView: React.FC<DepositDetailsViewProps> = ({ deposit,
       <div className="p-6">
         <div className="space-y-10">
           
-          {/* Верхний ряд параметров */}
+          {}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-slate-50/50 p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center">
                <p className="text-[11px] uppercase font-bold text-muted-foreground tracking-wider mb-1">Подразделение</p>
@@ -75,7 +75,7 @@ export const DepositDetailsView: React.FC<DepositDetailsViewProps> = ({ deposit,
             </div>
           </div>
 
-          {/* Основной блок детализации */}
+          {}
           <div className="bg-white p-8 rounded-[24px] shadow-sm border border-slate-100 relative overflow-hidden">
              
             <div className="mb-10">

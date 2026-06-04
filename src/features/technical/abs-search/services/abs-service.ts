@@ -13,7 +13,23 @@ const getHeaders = () => {
 
 export const absService = {
   async searchClients(searchType: string, query: string) {
-    const response = await fetch(`${ABS_BASE_URL}/${searchType}${query}`, {
+    let url = '';
+    if (searchType === 'account') {
+      const response = await fetch(`http://10.65.10.20:3000/api/atm/services/clientcode.php?acc=${query}`, {
+        headers: getHeaders(),
+      });
+      if (!response.ok) throw new Error('Account search failed');
+      const atmData = await response.json();
+      const clicode = atmData?.clicode;
+      if (!clicode) {
+        return [];
+      }
+      url = `${ABS_BASE_URL}/client/info/client-index?clientIndex=${clicode}`;
+    } else {
+      url = `${ABS_BASE_URL}/${searchType}${query}`;
+    }
+
+    const response = await fetch(url, {
       headers: getHeaders(),
     });
     if (!response.ok) throw new Error('Search failed');

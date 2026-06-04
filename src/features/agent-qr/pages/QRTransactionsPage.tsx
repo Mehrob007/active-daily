@@ -471,7 +471,7 @@ export default function QRTransactionsPage() {
                     </SelectTrigger>
                     <SelectContent>
                       {(TYPE_SEARCH_CLIENT || []).map(t => (
-                        <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                        <SelectItem key={t.value} value={t.value} disabled={t.disabled}>{t.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>

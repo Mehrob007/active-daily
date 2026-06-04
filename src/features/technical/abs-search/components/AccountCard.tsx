@@ -9,7 +9,7 @@ interface AccountCardProps {
   account: any;
   cardData?: any;
   isMain?: boolean;
-  creditDetails?: any; // from /api/loans if it's a loan
+  creditDetails?: any; 
   onHistoryClick: (accountNumber: string) => void;
 }
 

@@ -75,7 +75,7 @@ export default function AbsSearchPage() {
           <div className="flex size-20 items-center justify-center rounded-full bg-muted mb-6">
             <UserX className="size-10 text-muted-foreground/60" />
           </div>
-          <h3 className="text-lg font-semibold text-foreground mb-1">Клиент не найден</h3>
+          <h3 className="text-lg font-semibold text-foreground mb-1">По заданным критериям клиент не найден</h3>
           <p className="text-sm">Попробуйте изменить параметры поиска</p>
         </div>
       )}
