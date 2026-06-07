@@ -136,7 +136,7 @@ function parseLoanDetailsSoapResponse(xmlText: string) {
       paymentOptions.push({
         code: getElementValue(node, "code"),
         name: getElementValue(node, "name"),
-        accCode: getElementValue(node, "accCode"),
+        accCode: getElementValue(node, "account") || getElementValue(node, "accCode"),
         colvirReferenceId: getElementValue(node, "colvirReferenceId"),
       });
     }

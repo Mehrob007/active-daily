@@ -52,15 +52,15 @@ export const RepayModal: React.FC<RepayModalProps> = ({
 
   return (
     <Dialog open={!!credit} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md p-6 rounded-2xl gap-6">
         <DialogHeader>
-          <DialogTitle>Досрочное погашение кредита</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-slate-900">Погасить кредит</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4 py-4">
+        <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label>Счет для списания</Label>
+            <Label className="text-sm font-semibold text-slate-700">Счет для списания:</Label>
             <Select onValueChange={setSelectedAccount}>
-              <SelectTrigger>
+              <SelectTrigger className="h-12 rounded-xl">
                 <SelectValue placeholder="Выберите счет" />
               </SelectTrigger>
               <SelectContent>
@@ -73,20 +73,33 @@ export const RepayModal: React.FC<RepayModalProps> = ({
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Сумма погашения ({credit?.currency})</Label>
+            <Label className="text-sm font-semibold text-slate-700">Тип погашения</Label>
+            <Select defaultValue="od" disabled>
+              <SelectTrigger className="h-12 rounded-xl bg-slate-50 text-slate-700">
+                <SelectValue placeholder="Частично (Основной долг)" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="od">Частично (Основной долг)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm font-semibold text-slate-700">Сумма</Label>
             <Input
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="0.00"
+              placeholder="Введите сумму"
+              className="h-12 rounded-xl"
             />
           </div>
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={isLoading}>
-            Отмена
-          </Button>
-          <Button onClick={handleRepay} disabled={isLoading || !amount || !selectedAccount}>
+        <DialogFooter className="sm:justify-start pt-2">
+          <Button 
+            className="w-full bg-[#b91c1c] hover:bg-[#b91c1c]/90 text-white h-12 text-base font-bold rounded-xl"
+            onClick={handleRepay} 
+            disabled={isLoading || !amount || !selectedAccount}
+          >
             {isLoading ? 'Выполнение...' : 'Погасить'}
           </Button>
         </DialogFooter>

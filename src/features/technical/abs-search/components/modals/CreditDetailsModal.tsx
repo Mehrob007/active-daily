@@ -54,7 +54,7 @@ export const CreditDetailsModal: React.FC<CreditDetailsModalProps> = ({ credit, 
         type: item.Type,
       };
     }
-    const amount = parseFloat(item.CalculatingAmount || '0');
+    const amount = parseFloat(item.Amount || '0');
     if (item.Code === 'CR_PD' || item.LongName === 'Основной долг') {
       acc[date].principal += amount;
     } else if (item.Code === 'CR_INTER' || item.LongName === 'Проценты по кредиту') {
@@ -195,7 +195,9 @@ export const CreditDetailsModal: React.FC<CreditDetailsModalProps> = ({ credit, 
                                   {row.status || '-'}
                                 </span>
                               </td>
-                              <td className="px-4 py-3 text-xs text-slate-600">{row.type || '-'}</td>
+                              <td className="px-4 py-3 text-xs text-slate-600">
+                                {row.type === 'Задана вручную' || row.type === 'Задано вручную' ? 'Досрочное погашение' : (row.type || '-')}
+                              </td>
                             </tr>
                           );
                         })

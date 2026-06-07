@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { History } from "lucide-react";
 import { Credit } from "../types";
 import { loanSoapService } from "../services/loan-service";
 import { absService } from "../services/abs-service";
@@ -9,6 +10,7 @@ import { absService } from "../services/abs-service";
 interface CreditCardItemProps {
   credit: Credit;
   onOpenDetails: (referenceId: string) => void;
+  onOpenRepay: (credit: Credit) => void;
 }
 
 const DEPARTMENTS_MAP: Record<string, string> = {
@@ -18,6 +20,7 @@ const DEPARTMENTS_MAP: Record<string, string> = {
 export const CreditCardItem: React.FC<CreditCardItemProps> = ({
   credit,
   onOpenDetails,
+  onOpenRepay,
 }) => {
   const [remainingBalance, setRemainingBalance] = useState<number | null>(null);
   const [percentRate, setPercentRate] = useState<string | null>(null);
@@ -161,7 +164,11 @@ export const CreditCardItem: React.FC<CreditCardItemProps> = ({
               {credit.productName?.replace(/\\"/g, '"') || "-"}
             </h3>
             {credit.statusName && (
-              <Badge className="bg-[#65a30d] hover:bg-[#65a30d] text-white px-3 py-0.5 rounded-full text-xs font-normal border-none">
+              <Badge className={`${
+                credit.statusName.toLowerCase().includes('погашен') || credit.statusName.toLowerCase().includes('закрыт')
+                  ? 'bg-slate-400 hover:bg-slate-400'
+                  : 'bg-[#65a30d] hover:bg-[#65a30d]'
+              } text-white px-3 py-0.5 rounded-full text-xs font-normal border-none`}>
                 {credit.statusName}
               </Badge>
             )}
@@ -243,15 +250,24 @@ export const CreditCardItem: React.FC<CreditCardItemProps> = ({
           </div>
         </div>
 
-        <Button
-          variant="link"
-          className="text-[#b91c1c] p-0 h-auto font-medium hover:no-underline hover:opacity-80"
-          onClick={() =>
-            credit.referenceId && onOpenDetails(credit.referenceId)
-          }
-        >
-          Подробнее
-        </Button>
+        <div className="flex items-center gap-4">
+          <Button
+            size="sm"
+            className="h-9 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl gap-1.5"
+            onClick={() => onOpenRepay(credit)}
+          >
+            <History className="size-4" /> Погасить
+          </Button>
+          <Button
+            variant="link"
+            className="text-[#b91c1c] p-0 h-auto font-medium hover:no-underline hover:opacity-80"
+            onClick={() =>
+              credit.referenceId && onOpenDetails(credit.referenceId)
+            }
+          >
+            Подробнее
+          </Button>
+        </div>
       </div>
     </Card>
   );

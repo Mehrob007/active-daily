@@ -14,6 +14,40 @@ interface SearchFormProps {
   onSearch: () => void;
 }
 
+const detectSearchType = (val: string): string | null => {
+  const cleanDigits = val.replace(/\D/g, '');
+  
+  if (/[a-zA-Zа-яА-ЯёЁ]/.test(val)) {
+    return "fullName";
+  }
+  
+  if (val.length === 11 && val.includes('.')) {
+    return "client/info/client-index?clientIndex=";
+  }
+  
+  if (val.length === 12 && val.startsWith('1')) {
+    return "cardId";
+  }
+  
+  if (cleanDigits.length === 20) {
+    return "account";
+  }
+  
+  if (cleanDigits.length >= 11 && cleanDigits.length <= 13) {
+    return "client/info?phoneNumber=";
+  }
+  
+  if (cleanDigits.length === 9) {
+    return "client/info/inn?inn=";
+  }
+  
+  if (cleanDigits.length === 4) {
+    return "card4";
+  }
+  
+  return null;
+};
+
 export const SearchForm: React.FC<SearchFormProps> = ({
   searchType,
   setSearchType,
@@ -25,51 +59,16 @@ export const SearchForm: React.FC<SearchFormProps> = ({
   const selectedOpt = TYPE_SEARCH_CLIENT.find(opt => opt.value === searchType);
   const isApiMissing = selectedOpt?.disabled || false;
 
-  
-  useEffect(() => {
-    if (!selectedOpt) return;
-    const type = selectedOpt.type;
-    
-    let val = searchQuery;
-    if (type === 'phone' || type === 'inn' || type === 'account' || type === 'card4' || type === 'cardId') {
-      val = val.replace(/\D/g, '');
-    } else if (type === 'code') {
-      val = val.replace(/[^0-9.]/g, '');
-    }
-    
-    if (type === 'inn') {
-      val = val.slice(0, 9);
-    } else if (type === 'account') {
-      val = val.slice(0, 20);
-    } else if (type === 'card4') {
-      val = val.slice(0, 4);
-    }
-
-    if (val !== searchQuery) {
-      setSearchQuery(val);
-    }
-  }, [searchType, selectedOpt, searchQuery, setSearchQuery]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let val = e.target.value;
-    if (!selectedOpt) return;
-    const type = selectedOpt.type;
-
-    if (type === 'phone' || type === 'inn' || type === 'account' || type === 'card4' || type === 'cardId') {
-      val = val.replace(/\D/g, '');
-    } else if (type === 'code') {
-      val = val.replace(/[^0-9.]/g, '');
+    const rawVal = e.target.value;
+    const cleanVal = rawVal.replace(/[^a-zA-Zа-яА-ЯёЁ0-9.\s]/g, '');
+    
+    const detectedType = detectSearchType(cleanVal);
+    if (detectedType && detectedType !== searchType) {
+      setSearchType(detectedType);
     }
-
-    if (type === 'inn') {
-      val = val.slice(0, 9);
-    } else if (type === 'account') {
-      val = val.slice(0, 20);
-    } else if (type === 'card4') {
-      val = val.slice(0, 4);
-    }
-
-    setSearchQuery(val);
+    
+    setSearchQuery(cleanVal);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -128,7 +127,24 @@ export const SearchForm: React.FC<SearchFormProps> = ({
               <button
                 key={opt.value}
                 type="button"
-                onClick={() => setSearchType(opt.value)}
+                onClick={() => {
+                  setSearchType(opt.value);
+                  let val = searchQuery;
+                  const type = opt.type;
+                  if (type === 'phone' || type === 'inn' || type === 'account' || type === 'card4' || type === 'cardId') {
+                    val = val.replace(/\D/g, '');
+                  } else if (type === 'code') {
+                    val = val.replace(/[^0-9.]/g, '');
+                  }
+                  if (type === 'inn') {
+                    val = val.slice(0, 9);
+                  } else if (type === 'account') {
+                    val = val.slice(0, 20);
+                  } else if (type === 'card4') {
+                    val = val.slice(0, 4);
+                  }
+                  setSearchQuery(val);
+                }}
                 className={`inline-flex items-center gap-1.5 rounded-lg border px-4 py-2.5 text-sm font-medium transition-all ${
                   isActive
                     ? 'border-bank-red bg-bank-active text-bank-red shadow-sm'

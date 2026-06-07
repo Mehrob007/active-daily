@@ -61,6 +61,7 @@ export const CreditsTable: React.FC<CreditsTableProps> = ({
               key={credit.contractNumber || idx} 
               credit={credit} 
               onOpenDetails={() => onOpenDetails(credit)} 
+              onOpenRepay={onOpenRepay}
             />
           ))}
         </div>

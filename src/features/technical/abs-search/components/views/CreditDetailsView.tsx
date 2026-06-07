@@ -50,7 +50,7 @@ export const CreditDetailsView: React.FC<CreditDetailsViewProps> = ({ credit, on
         type: item.Type,
       };
     }
-    const amount = parseFloat(item.CalculatingAmount || '0');
+    const amount = parseFloat(item.Amount || '0');
     if (item.Code === 'CR_PD' || item.LongName === 'Основной долг') {
       acc[date].principal += amount;
     } else if (item.Code === 'CR_INTER' || item.LongName === 'Проценты по кредиту') {
@@ -253,7 +253,9 @@ export const CreditDetailsView: React.FC<CreditDetailsViewProps> = ({ credit, on
                                   {row.status || '-'}
                                 </span>
                               </td>
-                              <td className="px-5 py-4 text-xs text-slate-500 font-medium">{row.type || '-'}</td>
+                              <td className="px-5 py-4 text-xs text-slate-500 font-medium">
+                                {row.type === 'Задана вручную' || row.type === 'Задано вручную' ? 'Досрочное погашение' : (row.type || '-')}
+                              </td>
                             </tr>
                           );
                         })
