@@ -34,10 +34,10 @@ export const AccountCard: React.FC<AccountCardProps> = ({
 
   const getAccountTypeLabel = (type: string) => {
     const t = type?.toUpperCase() || "";
-    if (t === "AC" || t === "ТЕКУЩИЙ СЧЕТ") return "Текущий счет";
-    if (t === "ДЕПОЗИТ" || t === "ДЕПОЗИТНЫЙ СЧЕТ") return "Депозитный счет";
-    if (t === "СЧЕТ ПО КРЕДИТУ" || t.includes("LLINE")) return "% - счет по кредиту";
-    if (t === "СЧЕТ ПО ДЕПОЗИТУ" || t.includes("OTHERS")) return "% счет по депозиту";
+    if (t === "AC" || t === "ТЕКУЩИЙ СЧЕТ" || t === "CURR") return "Текущий счет";
+    if (t === "ДЕПОЗИТ" || t === "ДЕПОЗИТНЫЙ СЧЕТ" || t === "TEDP") return "Депозитный счет";
+    if (t === "СЧЕТ ПО КРЕДИТУ" || t === "LLINE") return "% - счет по кредиту";
+    if (t === "СЧЕТ ПО ДЕПОЗИТУ" || t === "OTHERS") return "% счет по депозиту";
     if (t === "КРЕДИТНЫЙ СЧЕТ" || t === "LOAN") return "Кредитный счет";
     if (t === "КАРТОЧНЫЙ СЧЕТ" || t === "CCUR") return "Карточный счет";
     return type || "Неизвестный счет";
@@ -55,89 +55,106 @@ export const AccountCard: React.FC<AccountCardProps> = ({
     }
   };
 
-  const typeLabel = getAccountTypeLabel(account.accountType);
+  const typeLabel = getAccountTypeLabel(account.Type || account.accountType);
   const typeColor = getAccountTypeColor(typeLabel);
+  
+  const balance = creditDetails ? creditDetails.debtAmount : (account.Balance ?? account.balance);
+  const currency = creditDetails ? creditDetails.currency : (account.Currency?.Code || account.currency);
+  const branchName = account.Branch?.Name || account.branchName || 'Мудирияти амалиёти ш. Душанбе';
+  const openDate = account.DateOpened || account.openDate || '10.01.2026';
+  const accountNumber = account.Number || account.accountNumber;
+  
+  const statusName = account.Status?.Name || account.statusName || 'Открыт';
+  const isOpened = account.Status?.Code !== 'CLOSED' && statusName.toLowerCase() !== 'закрыт';
+  const statusColor = isOpened ? 'bg-[#439655] hover:bg-[#439655]' : 'bg-[#b91c1c] hover:bg-[#b91c1c]';
 
   return (
-    <Card className="rounded-3xl p-6 bg-white border-none shadow-sm flex flex-col gap-6 relative overflow-hidden">
-      <div className="flex gap-2 flex-wrap mb-2">
-        {cardData && (
+    <Card className="rounded-[32px] p-6 bg-white border-none shadow-sm flex flex-col relative overflow-hidden">
+      {/* Badges Row */}
+      <div className="flex gap-2 flex-wrap mb-6">
+        <Badge className={`${statusColor} text-white px-3 py-1 rounded-full text-xs font-medium border-none`}>
+          {statusName}
+        </Badge>
+        
+        {cardData ? (
           <>
-            <Badge className="bg-[#eab308] hover:bg-[#eab308] text-white px-3 py-0.5 rounded-full text-xs font-normal border-none">
-              {cardData.cardNumber || cardData.CardNumber}
+            <Badge className="bg-[#eab308] hover:bg-[#eab308] text-white px-3 py-1 rounded-full text-xs font-medium border-none">
+              Карточный счет
             </Badge>
-            {cardData.cardName && (
-              <Badge className="bg-[#eab308] hover:bg-[#eab308] text-white px-3 py-0.5 rounded-full text-xs font-normal border-none">
-                {cardData.cardName}
-              </Badge>
-            )}
+            <Badge className="bg-[#eab308] hover:bg-[#eab308] text-white px-3 py-1 rounded-full text-xs font-medium border-none">
+              Карта: {cardData.cardNumber || cardData.CardNumber}
+            </Badge>
           </>
-        )}
-        {!cardData && (
-          <Badge className={`px-3 py-0.5 rounded-full text-xs font-normal border-none ${typeColor}`}>
+        ) : (
+          <Badge className={`px-3 py-1 rounded-full text-xs font-medium border-none ${typeColor}`}>
             {typeLabel}
           </Badge>
         )}
-        {isMain && (
-          <Badge className="bg-[#eab308] hover:bg-[#eab308] text-white px-3 py-0.5 rounded-full text-xs font-normal border-none">
-            Основной счет
+        
+        {creditDetails && (
+          <Badge className="bg-[#0ea5e9] hover:bg-[#0ea5e9] text-white px-3 py-1 rounded-full text-xs font-medium border-none">
+            Кредит: {creditDetails.agreementNumber || creditDetails.agreementId || creditDetails.id}
           </Badge>
         )}
-        <Badge className="bg-[#439655] hover:bg-[#439655] text-white px-3 py-0.5 rounded-full text-xs font-normal border-none">
-          Открыт
-        </Badge>
+        
+        {isMain && (
+          <Badge className="bg-[#6ee7b7] hover:bg-[#6ee7b7] text-[#064e3b] px-3 py-1 rounded-full text-xs font-medium border-none">
+            Основной счет в МП
+          </Badge>
+        )}
       </div>
 
-      <div className="flex justify-between items-start">
+      {/* Balances Row */}
+      <div className="flex justify-between items-start mb-6">
         <div className="space-y-1">
-          <div className="text-sm text-slate-400">
-            {creditDetails ? 'Сумма долга' : (cardData ? 'Остаток в АБС' : 'Остаток')}
+          <div className="text-sm text-slate-500 font-medium">
+            Остаток
           </div>
-          <div className="text-2xl font-bold text-slate-900">
-            {formatMoney(creditDetails ? creditDetails.debtAmount : account.balance || account.Balance)} {creditDetails ? creditDetails.currency : account.currency || account.Currency?.Code}
+          <div className="text-[28px] font-bold text-slate-900 flex items-baseline gap-2 leading-none">
+            {formatMoney(balance)} <span className="text-xl font-bold">{currency}</span>
           </div>
           <div className="text-sm text-slate-500 mt-2">
-            {account.branchName || 'Филиал не указан'}
+            {branchName}
           </div>
         </div>
 
         {cardData && (
           <div className="text-right">
-            <div className="text-sm text-slate-400 mb-1">
+            <div className="text-sm text-slate-500 font-medium mb-1">
               Остаток в ПЦ
             </div>
-            <div className="text-xl text-slate-800">
-              {formatMoney(cardData.balance || account.balance || account.Balance)} {account.currency || account.Currency?.Code}
+            <div className="text-[22px] font-bold text-slate-900 leading-none">
+              {formatMoney(cardData.balance || account.balance || account.Balance)}
             </div>
           </div>
         )}
       </div>
 
-      <div className="text-sm text-slate-400">
-        Дата открытия: 10.01.2026
+      {/* Date */}
+      <div className="text-sm text-slate-500 mb-2 font-medium">
+        Дата открытия : {openDate}
       </div>
 
-      <div className="bg-slate-50 rounded-xl p-4 flex items-center justify-between">
+      {/* Account Number Block */}
+      <div className="bg-slate-100 rounded-xl p-4 flex items-center justify-between mb-6">
         <div className="space-y-1">
-          <div className="text-xs text-slate-400">Номер счета</div>
-          <div className="font-mono text-base text-slate-700">{account.accountNumber || account.Number}</div>
+          <div className="text-sm text-slate-500 font-medium">Номер счета</div>
+          <div className="font-mono text-xl text-slate-800">{accountNumber}</div>
         </div>
-        <Button variant="ghost" size="icon" className="text-slate-400 hover:text-slate-600" onClick={() => handleCopy(account.accountNumber || account.Number)}>
+        <Button variant="ghost" size="icon" className="text-slate-600 hover:text-black hover:bg-slate-200" onClick={() => handleCopy(accountNumber)}>
           <Copy className="size-5" />
         </Button>
       </div>
 
+      {/* Bottom Buttons */}
       <div className="flex flex-wrap gap-3">
-        <Button variant="outline" className="rounded-full border-red-200 text-red-600 hover:bg-red-50" onClick={() => onHistoryClick(account.accountNumber || account.Number)}>
-          Выписка
+        <Button variant="outline" className="rounded-xl border-[#b91c1c] text-[#b91c1c] hover:bg-red-50 bg-white font-medium" onClick={() => onHistoryClick(accountNumber)}>
+          Выписка (АБС)
         </Button>
-        <Button variant="outline" className="rounded-full bg-slate-50 border-none text-slate-700 hover:bg-slate-100" onClick={() => onHistoryClick(account.accountNumber || account.Number)}>
-          История
+        <Button variant="secondary" className="rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border-none font-medium" onClick={() => onHistoryClick(accountNumber)}>
+          История (ПЦ)
         </Button>
-        <Button variant="outline" className="rounded-full bg-slate-50 border-none text-slate-700 hover:bg-slate-100">
-          Реквизиты
-        </Button>
-        <Button variant="outline" className="rounded-full bg-slate-50 border-none text-slate-700 hover:bg-slate-100 ml-auto">
+        <Button variant="secondary" className="rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border-none font-medium">
           Скачать реквизиты
         </Button>
       </div>

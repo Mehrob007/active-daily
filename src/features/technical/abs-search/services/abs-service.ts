@@ -37,7 +37,7 @@ export const absService = {
   },
 
   async getAccounts(clientCode: string) {
-    const response = await fetch(`${ABS_BASE_URL}/accounts?clientIndex=${clientCode}`, {
+    const response = await fetch(`http://10.65.10.20:5000/accounts?clientIndex=${clientCode}`, {
       headers: getHeaders(),
     });
     return response.ok ? response.json() : [];
@@ -109,18 +109,20 @@ export const absService = {
   },
 
   async unblockCard(cardId: string) {
-    const response = await fetch(`${ABS_BASE_URL}/api/v1/processing/card/${cardId}/unblock`, {
+    const response = await fetch(`${SYSTEM_5012_URL}/api/Transactions/validate-card`, {
       method: 'POST',
       headers: getHeaders(),
+      body: JSON.stringify({ cardId: String(cardId) }),
     });
     if (!response.ok) throw new Error('Unblock failed');
     return response.json();
   },
 
   async resetPinCounter(cardId: string) {
-    const response = await fetch(`${ABS_BASE_URL}/api/v1/processing/card/${cardId}/reset-pin-counter`, {
+    const response = await fetch(`${SYSTEM_5012_URL}/api/Transactions/reset-pin-counter`, {
       method: 'POST',
       headers: getHeaders(),
+      body: JSON.stringify({ cardId }),
     });
     if (!response.ok) throw new Error('Reset PIN failed');
     return response.json();
