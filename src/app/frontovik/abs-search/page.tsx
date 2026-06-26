@@ -1,6 +1,8 @@
+'use client';
+
 import React from 'react';
-import { ABSSearchPage } from '@/features/frontovik/ABSSearchPage';
+import AbsSearchPage from '@/features/technical/AbsSearchPage';
 
 export default function Page() {
-  return <ABSSearchPage />;
+  return <AbsSearchPage />;
 }
