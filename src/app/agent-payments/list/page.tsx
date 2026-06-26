@@ -1,6 +1,6 @@
 import React from 'react';
-import { AgentTaskPage } from '@/features/agent/AgentTaskPage';
+import { AgentPaymentsListPage } from '@/features/agent-payments/AgentPaymentsListPage';
 
-export default function AgentPaymentsListPage() {
-  return <AgentTaskPage title="Платежи" subtitle="Список платежей агента" />;
+export default function Page() {
+  return <AgentPaymentsListPage />;
 }
