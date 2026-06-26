@@ -1,7 +1,6 @@
-'use client';
+import React from 'react';
+import { AgentTaskPage } from '@/features/agent/AgentTaskPage';
 
-import QRWithdrawSettingsPage from '@/features/agent-qr/pages/QRWithdrawSettingsPage';
-
-export default function Page() {
-  return <QRWithdrawSettingsPage />;
+export default function AccountsQRSettingsPage() {
+  return <AgentTaskPage title="Настройки QR" subtitle="Настройки счетов QR" />;
 }

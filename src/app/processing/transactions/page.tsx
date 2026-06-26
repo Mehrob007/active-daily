@@ -1,8 +1,6 @@
-'use client';
-
 import React from 'react';
-import TransactionsPage from '@/features/processing/pages/TransactionsPage';
+import { ManagementPage } from '@/features/processing/ManagementPage';
 
-export default function Page() {
-  return <TransactionsPage />;
+export default function ProcessingTransactionsPage() {
+  return <ManagementPage title="Транзакции ПЦ" subtitle="Просмотр и управление транзакциями процессингового центра" />;
 }

@@ -1,8 +1,6 @@
-'use client';
-
 import React from 'react';
-import OperatorTestsPage from '@/features/back-office/OperatorTestsPage';
+import { OperatorPage } from '@/features/operator/OperatorPage';
 
-export default function Page() {
-  return <OperatorTestsPage />;
+export default function OperatorTestsPage() {
+  return <OperatorPage title="Тесты" subtitle="Управление тестированием сотрудников" />;
 }

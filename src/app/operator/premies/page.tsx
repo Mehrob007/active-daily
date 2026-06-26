@@ -1,8 +1,6 @@
-'use client';
-
 import React from 'react';
-import OperatorPremiesPage from '@/features/back-office/OperatorPremiesPage';
+import { OperatorPage } from '@/features/operator/OperatorPage';
 
-export default function Page() {
-  return <OperatorPremiesPage />;
+export default function OperatorPremiesPage() {
+  return <OperatorPage title="Премии" subtitle="Управление и распределение премий" />;
 }

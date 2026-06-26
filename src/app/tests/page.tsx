@@ -1,8 +1,6 @@
-'use client';
-
 import React from 'react';
-import TestsPage from '@/features/back-office/TestsPage';
+import { UnderConstructionPage } from '@/features/shared/UnderConstructionPage';
 
-export default function Page() {
-  return <TestsPage />;
+export default function TestsPage() {
+  return <UnderConstructionPage title="Тесты" subtitle="Прохождение тестирования" />;
 }

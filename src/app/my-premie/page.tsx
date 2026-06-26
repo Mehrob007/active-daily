@@ -1,8 +1,6 @@
-'use client';
-
 import React from 'react';
-import MyPremiePage from '@/features/agent/MyPremiePage';
+import { UnderConstructionPage } from '@/features/shared/UnderConstructionPage';
 
-export default function Page() {
-  return <MyPremiePage />;
+export default function MyPremiePage() {
+  return <UnderConstructionPage title="Моя премия" subtitle="Просмотр личных достижений и премий" />;
 }

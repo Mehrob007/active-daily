@@ -1,8 +1,6 @@
-'use client';
-
 import React from 'react';
-import KnowledgeBasePage from '@/features/knowledge-base/KnowledgeBasePage';
+import { UnderConstructionPage } from '@/features/shared/UnderConstructionPage';
 
-export default function Page() {
-  return <KnowledgeBasePage />;
+export default function KnowledgeBasePage() {
+  return <UnderConstructionPage title="База знаний" subtitle="Документация и справочные материалы" />;
 }

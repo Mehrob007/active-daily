@@ -1,8 +1,6 @@
-'use client';
-
 import React from 'react';
-import LimitsPage from '@/features/processing/pages/LimitsPage';
+import { ProcessingLimitsPage } from '@/features/processing/ProcessingLimitsPage';
 
 export default function Page() {
-  return <LimitsPage />;
+  return <ProcessingLimitsPage />;
 }
