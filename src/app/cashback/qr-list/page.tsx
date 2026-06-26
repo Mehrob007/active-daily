@@ -1,6 +1,6 @@
 import React from 'react';
-import { AgentTaskPage } from '@/features/agent/AgentTaskPage';
+import { CashbackQRListPage } from '@/features/cashback/CashbackQRListPage';
 
-export default function CashbackQRListPage() {
-  return <AgentTaskPage title="Кешбэк QR" subtitle="Список QR с кешбэком" />;
+export default function Page() {
+  return <CashbackQRListPage />;
 }

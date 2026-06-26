@@ -1,6 +1,6 @@
 import React from 'react';
-import { AgentTaskPage } from '@/features/agent/AgentTaskPage';
+import { CashbackCardListPage } from '@/features/cashback/CashbackCardListPage';
 
-export default function CashbackCardListPage() {
-  return <AgentTaskPage title="Кешбэк Карты" subtitle="Список карт с кешбэком" />;
+export default function Page() {
+  return <CashbackCardListPage />;
 }
