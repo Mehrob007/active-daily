@@ -62,6 +62,8 @@ export const useAuthStore = create<AuthStore>()(
             ? data.role_ids.map(Number) 
             : data.role_ids !== undefined ? [Number(data.role_ids)] : [];
 
+          document.cookie = `role_ids=${JSON.stringify(roleIds)}; path=/; max-age=${tokens.expiresIn || 3600}`;
+
           const userProfile: User = {
             id: credentials.username,
             username: credentials.username,
@@ -124,6 +126,7 @@ export const useAuthStore = create<AuthStore>()(
         document.cookie = "access_token=; path=/; max-age=0";
         document.cookie = "refresh_token=; path=/; max-age=0";
         document.cookie = "v2_token=; path=/; max-age=0";
+        document.cookie = "role_ids=; path=/; max-age=0";
 
         if (lastPasswordChange)
           localStorage.setItem("last_password_change", lastPasswordChange);
