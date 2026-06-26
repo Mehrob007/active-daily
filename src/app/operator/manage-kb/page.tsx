@@ -1,6 +1,6 @@
 import React from 'react';
-import { OperatorPage } from '@/features/operator/OperatorPage';
+import { ManageKBPage } from '@/features/operator/ManageKBPage';
 
 export default function OperatorManageKBPage() {
-  return <OperatorPage title="Управление Базой Знаний" subtitle="Редактирование статей и материалов базы знаний" />;
+  return <ManageKBPage />;
 }
