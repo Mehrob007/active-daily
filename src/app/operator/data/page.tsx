@@ -1,6 +1,6 @@
 import React from 'react';
-import { OperatorPage } from '@/features/operator/OperatorPage';
+import { OperatorDataPage } from '@/features/operator/OperatorDataPage';
 
-export default function OperatorDataPage() {
-  return <OperatorPage title="Данные оператора" subtitle="Управление системными данными и справочниками" />;
+export default function Page() {
+  return <OperatorDataPage />;
 }

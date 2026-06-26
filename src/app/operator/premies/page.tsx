@@ -1,6 +1,6 @@
 import React from 'react';
-import { OperatorPage } from '@/features/operator/OperatorPage';
+import { OperatorPremiesPage } from '@/features/operator/OperatorPremiesPage';
 
-export default function OperatorPremiesPage() {
-  return <OperatorPage title="Премии" subtitle="Управление и распределение премий" />;
+export default function Page() {
+  return <OperatorPremiesPage />;
 }

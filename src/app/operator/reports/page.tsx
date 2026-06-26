@@ -1,6 +1,6 @@
 import React from 'react';
-import { OperatorPage } from '@/features/operator/OperatorPage';
+import { OperatorReportsPage } from '@/features/operator/OperatorReportsPage';
 
-export default function OperatorReportsPage() {
-  return <OperatorPage title="Отчеты оператора" subtitle="Просмотр статистических и финансовых отчетов" />;
+export default function Page() {
+  return <OperatorReportsPage />;
 }
