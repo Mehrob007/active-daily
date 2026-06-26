@@ -67,9 +67,46 @@ export function AgentCardFormPage() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
+      // 1. Формируем настоящий FormData (как было в старом GiftCard.jsx)
+      const formBody = new FormData();
+      formBody.append('surname', formData.surname);
+      formBody.append('name', formData.name);
+      formBody.append('patronymic', formData.patronymic);
+      formBody.append('phone_number', formData.phone);
+      formBody.append('inn', formData.iin);
+      formBody.append('birth_date', formData.birthDate);
+      formBody.append('gender', formData.gender);
+      formBody.append('card_type', formData.cardType);
+      formBody.append('secret_word', formData.secretWord);
+      formBody.append('delivery_address', formData.deliveryAddress);
+      formBody.append('receiving_office', formData.receivingOffice);
+      formBody.append('is_resident', formData.isResident ? 'true' : 'false');
+
+      // 2. Добавляем сканы документов (файлы)
+      if (formData.frontPassport) {
+        formBody.append('front_side_of_the_passport', formData.frontPassport);
+      }
+      if (formData.backPassport) {
+        formBody.append('back_side_of_the_passport', formData.backPassport);
+      }
+      if (formData.selfie) {
+        formBody.append('selfie_with_passport', formData.selfie);
+      }
+
+      // Раскомментируйте, когда backend будет готов:
+      /*
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        },
+        body: formBody
+      });
+      if (!response.ok) throw new Error('Ошибка сети');
+      */
+      
       await new Promise(r => setTimeout(r, 1000));
       toast.success('Заявка на карту успешно создана!');
-      // Navigate back or to list
     } catch (e) {
       toast.error('Ошибка при создании заявки');
     } finally {
@@ -259,9 +296,11 @@ export function AgentCardFormPage() {
                       <SelectValue placeholder="Выберите тип" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="VISA Platinum">VISA Platinum</SelectItem>
-                      <SelectItem value="Mastercard Gold">Mastercard Gold</SelectItem>
-                      <SelectItem value="UnionPay Classic">UnionPay Classic</SelectItem>
+                      <SelectItem value="1635.11">Visa Business</SelectItem>
+                      <SelectItem value="1635.03">Visa Gold</SelectItem>
+                      <SelectItem value="1636.04">MC Platinum</SelectItem>
+                      <SelectItem value="1636.02">MC Standard</SelectItem>
+                      <SelectItem value="1637.01">Korti Milli Fast Card</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
