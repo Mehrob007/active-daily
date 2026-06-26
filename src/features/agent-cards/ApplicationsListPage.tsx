@@ -177,7 +177,7 @@ export function ApplicationsListPage() {
                   Найдено записей: {applications.length}
                 </CardDescription>
               </div>
-              <Button variant="secondary" onClick={() => router.push('/agent/card')}>
+              <Button variant="secondary" onClick={() => router.push('/card-apps/create')}>
                 Новая заявка
               </Button>
             </div>
@@ -233,7 +233,7 @@ export function ApplicationsListPage() {
                       <td className="p-4">{new Date(app.CreatedAt).toLocaleDateString('ru-RU')}</td>
                       <td className="p-4 text-right">
                         <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon" onClick={() => router.push(`/agent/card/${app.ID}`)}>
+                          <Button variant="ghost" size="icon" onClick={() => router.push(`/card-apps/create/${app.ID}`)}>
                             <Edit2 className="h-4 w-4 text-green-600" />
                           </Button>
                           <Button variant="ghost" size="icon" onClick={() => handleDelete(app.ID)}>

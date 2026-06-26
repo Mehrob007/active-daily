@@ -1,6 +1,6 @@
 import React from 'react';
-import ApplicationsPage from '@/features/agent/ApplicationsPage';
+import { ApplicationsListPage } from '@/features/agent-cards/ApplicationsListPage';
 
-export default function CardApplicationsPage() {
-  return <ApplicationsPage type="card" />;
+export default function Page() {
+  return <ApplicationsListPage />;
 }
