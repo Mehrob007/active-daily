@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export default function Page() {
   return (
-    <PageContainer title="Банкоматы" subtitle="Таблица и управление банкоматами">
+    <PageContainer title="Агент по таможне" subtitle="Просмотр и оплата таможенных деклараций">
       <Card>
         <CardContent className="p-12 text-center text-muted-foreground flex flex-col items-center justify-center">
           <div className="text-2xl font-semibold mb-2 text-foreground">Модуль в разработке</div>
