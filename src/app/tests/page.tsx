@@ -1,6 +1,6 @@
 import React from 'react';
-import { UnderConstructionPage } from '@/features/shared/UnderConstructionPage';
+import { TestsPage } from '@/features/tests/TestsPage';
 
-export default function TestsPage() {
-  return <UnderConstructionPage title="Тесты" subtitle="Прохождение тестирования" />;
+export default function Page() {
+  return <TestsPage />;
 }

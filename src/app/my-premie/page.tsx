@@ -1,6 +1,6 @@
 import React from 'react';
-import { UnderConstructionPage } from '@/features/shared/UnderConstructionPage';
+import { MyPremiePage } from '@/features/my-premie/MyPremiePage';
 
-export default function MyPremiePage() {
-  return <UnderConstructionPage title="Моя премия" subtitle="Просмотр личных достижений и премий" />;
+export default function Page() {
+  return <MyPremiePage />;
 }

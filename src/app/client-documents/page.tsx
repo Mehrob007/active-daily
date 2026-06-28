@@ -1,6 +1,6 @@
 import React from 'react';
-import { ManagementPage } from '@/features/processing/ManagementPage';
+import { ClientDocumentsPage } from '@/features/client-documents/ClientDocumentsPage';
 
-export default function ClientDocumentsPage() {
-  return <ManagementPage title="База документов" subtitle="Просмотр и поиск документов клиентов" />;
+export default function Page() {
+  return <ClientDocumentsPage />;
 }
