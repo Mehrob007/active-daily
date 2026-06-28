@@ -1,6 +1,6 @@
 import React from 'react';
-import ApplicationsPage from '@/features/agent/ApplicationsPage';
+import { CreditApplicationsListPage } from '@/features/credit-apps/list/CreditApplicationsListPage';
 
-export default function CreditApplicationsPage() {
-  return <ApplicationsPage type="credit" />;
+export default function Page() {
+  return <CreditApplicationsListPage />;
 }
