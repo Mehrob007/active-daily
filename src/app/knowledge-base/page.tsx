@@ -1,6 +1,6 @@
 import React from 'react';
-import { UnderConstructionPage } from '@/features/shared/UnderConstructionPage';
+import { KnowledgeBasePage } from '@/features/knowledge-base/KnowledgeBasePage';
 
-export default function KnowledgeBasePage() {
-  return <UnderConstructionPage title="База знаний" subtitle="Документация и справочные материалы" />;
+export default function Page() {
+  return <KnowledgeBasePage />;
 }
