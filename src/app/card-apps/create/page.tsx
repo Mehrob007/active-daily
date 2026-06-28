@@ -1,6 +1,6 @@
 import React from 'react';
-import { AgentCardFormPage } from '@/features/agent-cards/AgentCardFormPage';
+import { CardApplicationForm } from '@/features/card-apps/create/CardApplicationForm';
 
 export default function Page() {
-  return <AgentCardFormPage />;
+  return <CardApplicationForm />;
 }
