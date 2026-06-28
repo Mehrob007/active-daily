@@ -1,6 +1,6 @@
 import React from 'react';
-import { ProductsPage } from '@/features/products/ProductsPage';
+import { ProductsDepositsPage } from '@/features/products-deposits/ProductsDepositsPage';
 
-export default function DepositsPage() {
-  return <ProductsPage type="deposits" />;
+export default function Page() {
+  return <ProductsDepositsPage />;
 }

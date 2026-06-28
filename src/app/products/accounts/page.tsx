@@ -1,6 +1,6 @@
 import React from 'react';
-import { ProductsPage } from '@/features/products/ProductsPage';
+import { ProductsAccountsPage } from '@/features/products-accounts/ProductsAccountsPage';
 
-export default function AccountsPage() {
-  return <ProductsPage type="accounts" />;
+export default function Page() {
+  return <ProductsAccountsPage />;
 }

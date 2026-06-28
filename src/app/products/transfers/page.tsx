@@ -1,6 +1,6 @@
 import React from 'react';
-import { ProductsPage } from '@/features/products/ProductsPage';
+import { ProductsTransfersPage } from '@/features/products-transfers/ProductsTransfersPage';
 
-export default function TransfersPage() {
-  return <ProductsPage type="transfers" />;
+export default function Page() {
+  return <ProductsTransfersPage />;
 }

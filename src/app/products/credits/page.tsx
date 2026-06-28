@@ -1,6 +1,6 @@
 import React from 'react';
-import { ProductsPage } from '@/features/products/ProductsPage';
+import { ProductsCreditsPage } from '@/features/products-credits/ProductsCreditsPage';
 
-export default function CreditsPage() {
-  return <ProductsPage type="credits" />;
+export default function Page() {
+  return <ProductsCreditsPage />;
 }
