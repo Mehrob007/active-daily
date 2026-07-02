@@ -1,6 +1,6 @@
 import React from 'react';
-import { AgentTaskPage } from '@/features/agent/AgentTaskPage';
+import { PVNSettingsPage } from '@/features/pvn/settings/PVNSettingsPage';
 
-export default function PVNSettingsListPage() {
-  return <AgentTaskPage title="Настройки ПВН" subtitle="Управление настройками ПВН" />;
+export default function Page() {
+  return <PVNSettingsPage />;
 }
