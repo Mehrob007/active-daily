@@ -26,6 +26,8 @@ const MOCK_APPLICATIONS = [
   { id: 3, fullName: 'Сидорова Анна Сергеевна', phone: '+992900334455', loanType: 'Ипотека', amount: 250000, term: 120, inn: '456123789', statusId: '3', createdAt: '2026-06-27T14:15:00Z' },
 ];
 
+const test = {"success":true,"message":"Site settings loaded successfully.","data":{"contact":[{"key":"contact_email","value":"info@example.com","type":"text","group":"contact"},{"key":"contact_phone","value":"+992 00 000 00 00","type":"text","group":"contact"}],"general":[{"key":"site_description","value":"Official public website","type":"text","group":"general"},{"key":"site_name","value":"Public Website","type":"text","group":"general"}],"social":[{"key":"facebook_url","value":null,"type":"text","group":"social"},{"key":"instagram_url","value":null,"type":"text","group":"social"}]}}
+
 export function CreditApplicationsListPage() {
   const router = useRouter();
   const [data, setData] = useState(MOCK_APPLICATIONS);
