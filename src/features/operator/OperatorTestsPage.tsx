@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Plus, Edit2, Trash2, ChevronRight, Clock, HelpCircle, CheckCircle2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, ChevronRight, Clock, HelpCircle, CheckCircle2, GraduationCap } from 'lucide-react';
 import { toast } from 'sonner';
 
 // Dummy data
