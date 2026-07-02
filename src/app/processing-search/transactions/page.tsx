@@ -1,6 +1,6 @@
 import React from 'react';
-import { ManagementPage } from '@/features/processing/ManagementPage';
+import { TransactionsSearchPage } from '@/features/processing-search/TransactionsSearchPage';
 
-export default function ProcessingSearchTransactionsPage() {
-  return <ManagementPage title="Поиск транзакций" subtitle="Расширенный поиск транзакций ПЦ" />;
+export default function Page() {
+  return <TransactionsSearchPage />;
 }
