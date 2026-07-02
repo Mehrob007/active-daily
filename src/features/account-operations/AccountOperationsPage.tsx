@@ -33,13 +33,11 @@ export const AccountOperationsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
-  // OTP Modal State
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
   const [otpError, setOtpError] = useState<string | null>(null);
 
-  // Set default dates (last 30 days) on mount
   useEffect(() => {
     const today = new Date();
     const thirtyDaysAgo = new Date(today);
@@ -102,7 +100,6 @@ export const AccountOperationsPage = () => {
     }
   }, [accountNumber, fromDate, toDate, toast]);
 
-  // Initial search if account was provided in URL
   useEffect(() => {
     if (initialAccount && fromDate && toDate && !hasSearched) {
       handleSearch(initialAccount);

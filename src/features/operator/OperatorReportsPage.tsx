@@ -33,7 +33,6 @@ export function OperatorReportsPage() {
     toast.info('Формирование отчета в Excel...');
   };
 
-  // Dummy data generators for the reports
   const generateCardsData = () => Array.from({ length: 5 }).map((_, i) => ({
     id: i + 1,
     name: `Сотрудник ${i + 1}`,

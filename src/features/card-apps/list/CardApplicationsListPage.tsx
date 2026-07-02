@@ -12,7 +12,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Search, Loader2, Download, Filter, Archive, Edit, Trash2, FileImage } from 'lucide-react';
 import { toast } from 'sonner';
 
-// Mock Data
 const MOCK_APPLICATIONS = [
   { id: 1, surname: 'Иванов', name: 'Иван', phone: '992900000001', code_word: 'Мама', card_name: 'Visa Classic', status: 'Новая', created_at: '2023-10-01', resident: true, file: 'passport.jpg' },
   { id: 2, surname: 'Петров', name: 'Петр', phone: '992900000002', code_word: 'Дерево', card_name: 'Корти Милли', status: 'В обработке', created_at: '2023-10-02', resident: true, file: null },

@@ -14,7 +14,6 @@ export function OfficeStatsPage() {
   const [activeTab, setActiveTab] = useState("office");
   const [year, setYear] = useState(currentYear.toString());
 
-  // Mock data for the tables to keep the UI complete
   const mockOfficeData = [
     { id: 1, month: 'Январь', cardsSold: 120, turnovers: 50000, newClients: 45, planProgress: 85 },
     { id: 2, month: 'Февраль', cardsSold: 145, turnovers: 62000, newClients: 52, planProgress: 95 },

@@ -11,7 +11,6 @@ import { Switch } from '@/components/ui/switch';
 import { Save, UploadCloud, User, Briefcase, FileText, CheckCircle2, Phone, Calendar, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-// Dictionaries
 const loanTypes = [
   "ПОД ЗАЛОГ ЗОЛОТА",
   "ПОТРЕБИТЕЛЬСКИЙ КРЕДИТ",
@@ -53,7 +52,6 @@ export function CreditFormPage() {
     identity_verified: false,
     is_new_client: false,
     
-    // Files
     frontPassport: null as File | null,
     backPassport: null as File | null,
     selfie: null as File | null,
@@ -80,7 +78,6 @@ export function CreditFormPage() {
     try {
       const formBody = new FormData();
       
-      // Text Fields
       formBody.append('name', formData.name.trim());
       formBody.append('surname', formData.surname.trim());
       formBody.append('patronymic', formData.patronymic.trim());
@@ -100,11 +97,9 @@ export function CreditFormPage() {
       formBody.append('address', formData.address.trim());
       formBody.append('credit_status_id', formData.credit_status_id);
       
-      // Booleans
       formBody.append('identity_verified', String(formData.identity_verified));
       formBody.append('is_new_client', String(formData.is_new_client));
 
-      // Files
       if (formData.frontPassport) {
         formBody.append('front_side_of_the_passport_file', formData.frontPassport);
       }

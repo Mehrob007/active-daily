@@ -37,7 +37,6 @@ export function OperatorPremiesPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Mocked for migration until endpoint is verified
       await new Promise(r => setTimeout(r, 600));
       
       setData([

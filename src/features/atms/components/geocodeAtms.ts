@@ -21,11 +21,9 @@ function normalizeAddress(raw) {
 }
 
 function toNumberOrNull(x) {
-  // забираем только число (если после "—" есть комментарии)
   const s = String(x || "").trim();
   if (!s || s === "—" || s === "-") return null;
 
-  // найдём первое число в строке
   const m = s.replace(",", ".").match(/-?\d+(\.\d+)?/);
   if (!m) return null;
 
@@ -33,7 +31,6 @@ function toNumberOrNull(x) {
   return Number.isFinite(n) ? n : null;
 }
 
-// небольшой “разброс” вокруг центра региона
 function jitterCoords(center, radiusKm = 2.5) {
   const dLat = (radiusKm / 111) * (Math.random() * 2 - 1);
   const dLng =
@@ -95,7 +92,6 @@ function buildAtmsFromList(list) {
       approx = true;
     }
 
-    // ключ с округлением, чтобы jitter не создавал "ложные дубликаты"
     const key = `${region}|${item.addressLine}|${lat.toFixed(5)}|${lng.toFixed(5)}`;
     if (seen.has(key)) continue;
     seen.add(key);
@@ -142,18 +138,14 @@ const parsed = parseRawAtms(RAW_ATMS);
 
 export const ATMS = buildAtmsFromList(parsed);
 
-// Для совместимости со старым кодом, где использовался CITY_CENTERS
 export const CITY_CENTERS = buildCentersFromAtms(ATMS, REGION_CENTERS);
 
-// Если где-то в UI вызывают buildMockAtms() — оставляем
 export function buildMockAtms() {
   return ATMS;
 }
-// === ПРОСТОЙ ТЕСТОВЫЙ СЧЁТЧИК ===
 console.log("ATM TOTAL:", ATMS.length);
 
 
-// Статистика (удобно проверить)
 export const ATMS_STATS = {
   totalRows: parsed.length,
   withRealCoords: parsed.filter((x) => x.hasCoords).length,

@@ -62,19 +62,15 @@ export function PVNTransactionsListPage() {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [payingIds, setPayingIds] = useState<Set<string>>(new Set());
 
-  // Date filters
   const [fromDateTime, setFromDateTime] = useState('');
   const [toDateTime, setToDateTime] = useState('');
 
-  // Column filters
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<Record<string, string>>({});
 
-  // Sorting
   const [sortField, setSortField] = useState('id');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
-  // Modals
   const [showPayConfirmation, setShowPayConfirmation] = useState(false);
   const [paymentsToProcess, setPaymentsToProcess] = useState<PVNTransaction[]>([]);
   const [showSinglePayConfirmation, setShowSinglePayConfirmation] = useState(false);

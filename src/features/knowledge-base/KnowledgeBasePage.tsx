@@ -11,7 +11,6 @@ import { Download, Search, FileText, BookOpen, Loader2, File } from 'lucide-reac
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
-// Mock data as fallback
 const MOCK_BASES = [
   { ID: 1, title: 'Регламенты работы' },
   { ID: 2, title: 'Инструкции для операторов' },

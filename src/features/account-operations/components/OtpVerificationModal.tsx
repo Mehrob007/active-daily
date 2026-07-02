@@ -35,7 +35,6 @@ export const OtpVerificationModal: React.FC<OtpVerificationModalProps> = ({
     }
   };
 
-  // Reset code when modal opens
   React.useEffect(() => {
     if (open) {
       setCode('');

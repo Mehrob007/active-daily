@@ -20,7 +20,6 @@ export function ApplicationsListPage() {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [isArchive, setIsArchive] = useState(false);
   
-  // Image Preview Modal
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -30,7 +29,6 @@ export function ApplicationsListPage() {
   const fetchApplications = async () => {
     setLoading(true);
     try {
-      // Mock API fetch
       await new Promise(r => setTimeout(r, 600));
       setApplications([
         {

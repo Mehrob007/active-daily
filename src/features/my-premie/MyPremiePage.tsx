@@ -71,7 +71,6 @@ export function MyPremiePage() {
     setError(null);
     try {
       const token = localStorage.getItem("access_token");
-      // Пример запроса по аналогии со старым кодом
       const res = await fetch(`${baseURL}/workers/reports?month=${m}&year=${y}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -84,7 +83,6 @@ export function MyPremiePage() {
       setData(json);
     } catch (err) {
       console.warn("Failed to fetch worker premia, using fallback mock data.");
-      // Подставляем моки, чтобы UI работал для верстки
       setData({
         ID: 1,
         Salary: 3500,

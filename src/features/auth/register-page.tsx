@@ -25,14 +25,12 @@ const registerSchema = z.object({
   password: z.string().min(6, 'Минимум 6 символов'),
   roleIds: z.array(z.number()).min(1, 'Выберите хотя бы одну роль'),
   
-  // Role 6/8 fields
   salary: z.string().optional(),
   position: z.string().optional(),
   plan: z.string().optional(),
   salaryProject: z.string().optional(),
   placeWork: z.string().optional(),
 
-  // Role 5 fields
   officeTitle: z.string().optional(),
   officeCode: z.string().optional(),
   officeDesc: z.string().optional(),

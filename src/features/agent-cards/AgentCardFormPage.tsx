@@ -18,7 +18,6 @@ export function AgentCardFormPage() {
   const [checkingTerror, setCheckingTerror] = useState(false);
   const [terrorStatus, setTerrorStatus] = useState<'idle' | 'checking' | 'clean' | 'match'>('idle');
 
-  // Form State
   const [formData, setFormData] = useState({
     surname: '',
     name: '',
@@ -28,12 +27,10 @@ export function AgentCardFormPage() {
     birthDate: '',
     gender: 'Мужской',
     
-    // Step 2
     frontPassport: null as File | null,
     backPassport: null as File | null,
     selfie: null as File | null,
     
-    // Step 3
     cardType: 'VISA Platinum',
     secretWord: '',
     deliveryCity: '',
@@ -48,7 +45,6 @@ export function AgentCardFormPage() {
 
   const handleNext = () => {
     if (currentStep === 1) {
-      // Fake terror check trigger when leaving step 1
       if (formData.surname && formData.name) {
         setTerrorStatus('checking');
         setTimeout(() => {
@@ -67,7 +63,6 @@ export function AgentCardFormPage() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      // 1. Формируем настоящий FormData (как было в старом GiftCard.jsx)
       const formBody = new FormData();
       formBody.append('surname', formData.surname);
       formBody.append('name', formData.name);
@@ -82,7 +77,6 @@ export function AgentCardFormPage() {
       formBody.append('receiving_office', formData.receivingOffice);
       formBody.append('is_resident', formData.isResident ? 'true' : 'false');
 
-      // 2. Добавляем сканы документов (файлы)
       if (formData.frontPassport) {
         formBody.append('front_side_of_the_passport', formData.frontPassport);
       }
@@ -93,7 +87,6 @@ export function AgentCardFormPage() {
         formBody.append('selfie_with_passport', formData.selfie);
       }
 
-      // Раскомментируйте, когда backend будет готов:
       /*
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
         method: 'POST',

@@ -53,7 +53,6 @@ export function TestsPage() {
       setTests(data || []);
     } catch (err) {
       console.warn('Failed to fetch tests', err);
-      // Fallback mock
       setTests([{ ID: 1, Title: 'Мок тест', description: 'Описание мок теста' }]);
     } finally {
       setLoadingTests(false);
@@ -401,7 +400,6 @@ export function TestsPage() {
   );
 }
 
-// Простой модальный компонент через fixed overlay
 function CrudModal({ modal, onClose, onSave }: any) {
   const [form, setForm] = useState(modal.data || {});
   const [errors, setErrors] = useState<any>({});

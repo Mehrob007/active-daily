@@ -23,7 +23,6 @@ export const exportAccountOperationsToExcel = (
 
   const ws = xlsx.utils.json_to_sheet(sheetRows);
   
-  // Auto-fit columns
   const keys = Object.keys(sheetRows[0] || {});
   ws["!cols"] = keys.map((k) => {
     const maxLen = Math.max(k.length, ...sheetRows.map((row) => String((row as any)[k] ?? "").length));

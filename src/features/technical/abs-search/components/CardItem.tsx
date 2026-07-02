@@ -37,12 +37,10 @@ export const CardItem: React.FC<CardItemProps> = ({
     toast({ title: 'Скопировано', description: 'Номер успешно скопирован' });
   };
 
-  // Status computation
   const absStatus = card.statusName || '-';
   const pcStatusDesc = card.details?.statusDescription || '-';
   const isPcValid = pcStatusDesc.toLowerCase().includes('valid');
 
-  // Services
   const svcs = card.services || [];
   const smsService = svcs.find((s: any) => s.identification?.serviceId === '300');
   const tdsService = svcs.find((s: any) => s.identification?.serviceId === '330');
@@ -55,13 +53,10 @@ export const CardItem: React.FC<CardItemProps> = ({
 
   const isMuted = isPinBlocked || isHotCardBlocked;
 
-  // Card details
   const cardType = card.cardTypeDisplay || card.CardTypeName || card.details?.cardTypeName || card.type || 'Корти Милли';
   const cardNumber = card.CardNumber || card.details?.cardNumberMask || card.cardId || '-';
 
-  // Extract expiry from "Valid ... thru MM/YY" if possible, or just default to "-"
   let expiry = '12/26'; // Placeholder or fallback
-  // You can extract expiry if it's available in `card` somewhere
 
   return (
     <Card className="rounded-[32px] p-6 bg-white border-none shadow-sm flex flex-col gap-6 w-full max-w-4xl mx-auto mb-6">

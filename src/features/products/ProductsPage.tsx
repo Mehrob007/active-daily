@@ -27,7 +27,6 @@ const descriptions = {
   transfers: 'Управление системами денежных переводов',
 };
 
-// Dummy data for visual representation
 const mockData = [
   { id: 1, name: 'Standard Product 1', type: 'Local', status: 'Active', updated: '2023-10-01' },
   { id: 2, name: 'Premium Product 2', type: 'International', status: 'Active', updated: '2023-10-05' },

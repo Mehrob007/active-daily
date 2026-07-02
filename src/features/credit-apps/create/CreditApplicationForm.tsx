@@ -20,13 +20,11 @@ import { AddressSection } from './sections/AddressSection';
 const fileSchema = z.custom<File>((val) => val instanceof File, 'Файл обязателен').optional();
 
 const formSchema = z.object({
-  // Files
   frontPassport: fileSchema,
   backPassport: fileSchema,
   selfie: fileSchema,
   incomeProof: z.custom<File>((val) => val instanceof File).optional(),
 
-  // Personal Data
   identityVerified: z.boolean().default(false),
   sendSms: z.boolean().default(false),
   surname: z.string().min(2, 'Обязательное поле'),
@@ -36,14 +34,12 @@ const formSchema = z.object({
   inn: z.string().min(5, 'Неверный ИНН'),
   clientCode: z.string().min(1, 'Обязательное поле'),
 
-  // Employment
   workplace: z.string().min(2, 'Обязательное поле'),
   employmentDate: z.string().min(1, 'Обязательное поле'),
   salary: z.string().min(1, 'Обязательное поле'),
   additionalIncomeSource: z.string().optional(),
   additionalIncomeAmount: z.string().optional(),
 
-  // Loan Details
   loanType: z.string().min(1, 'Обязательное поле'),
   branchOffice: z.string().min(1, 'Обязательное поле'),
   loanPurpose: z.string().min(2, 'Обязательное поле'),
@@ -51,7 +47,6 @@ const formSchema = z.object({
   loanTerm: z.string().min(1, 'Обязательное поле'),
   creditStatusId: z.string().min(1, 'Обязательное поле'),
 
-  // Address
   address: z.string().min(5, 'Полный адрес обязателен'),
 });
 
@@ -96,7 +91,6 @@ export function CreditApplicationForm() {
       if (data.selfie) formData.append('selfie_with_passport_file', data.selfie);
       if (data.incomeProof) formData.append('income_proof_document_file', data.incomeProof);
 
-      // Add mock delay to simulate network request
       await new Promise(r => setTimeout(r, 1500));
       
       toast.success('Заявка на кредит успешно создана!');

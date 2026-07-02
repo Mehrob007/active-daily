@@ -14,7 +14,6 @@ export function BankStatsPage() {
   const [activeTab, setActiveTab] = useState("bank");
   const [year, setYear] = useState(currentYear.toString());
 
-  // Mock data for the tables
   const mockBankData = [
     { id: 1, month: 'Январь', cardsSold: 1250, turnovers: 540000, newClients: 450, planProgress: 98 },
     { id: 2, month: 'Февраль', cardsSold: 1405, turnovers: 620000, newClients: 520, planProgress: 105 },

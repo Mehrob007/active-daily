@@ -27,11 +27,9 @@ export function ProcessingTransactionsPage() {
   const [searchValue, setSearchValue] = useState('');
   const [transactions, setTransactions] = useState<any[]>([]);
 
-  // Для поиска по сумме
   const [amountFrom, setAmountFrom] = useState('');
   const [amountTo, setAmountTo] = useState('');
 
-  // Для поиска по времени/датам
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
 
@@ -43,7 +41,6 @@ export function ProcessingTransactionsPage() {
 
     setLoading(true);
     try {
-      // Имитация API запроса
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       const mockData = [

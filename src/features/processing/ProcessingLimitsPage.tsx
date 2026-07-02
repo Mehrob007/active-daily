@@ -14,7 +14,6 @@ import { Switch } from '@/components/ui/switch';
 import { Loader2, Save } from 'lucide-react';
 import { toast } from 'sonner';
 
-// Пример маппинга лимитов из старого проекта
 const LIMIT_NAMES_MAPPING = {
   "LMTTZ201": "Лимит на снятие наличных в банкомате",
   "LMTTZ202": "Лимит на оплату в интернете",
@@ -47,7 +46,6 @@ export function ProcessingLimitsPage() {
   const onSubmit = async (values: z.infer<typeof limitSchema>) => {
     setIsSubmitting(true);
     try {
-      // Имитация API запроса
       await new Promise(resolve => setTimeout(resolve, 1500));
       console.log('Отправка данных лимита:', { ...values, limitValue: `${values.limitValue}00` });
       toast.success('Лимит успешно изменен');

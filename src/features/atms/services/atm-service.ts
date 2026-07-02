@@ -44,7 +44,6 @@ export const fetchATMReport = async (atmId: string, fromDate: string, toDate: st
 
 export const fetchHistory = async (fromDate: string, toDate: string) => {
     try {
-        // Использование сервиса поиска транзакций для получения истории банкоматов
         return await fetchTransactionsSearch({
             transactionTypes: ['700'],
             fromDate,

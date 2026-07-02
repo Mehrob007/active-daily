@@ -24,19 +24,16 @@ import { CustomsDataTable } from './components/CustomsDataTable';
 import { AbsStatementTable } from './components/AbsStatementTable';
 
 export function CustomsPayPage() {
-  // EQMS State
   const [data, setData] = useState<CustomsTransaction[]>([]);
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
   
-  // Statement State
   const [statementData, setStatementData] = useState<any[]>([]);
   const [statementLoading, setStatementLoading] = useState(false);
   const [absStartDate, setAbsStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [absEndDate, setAbsEndDate] = useState(new Date().toISOString().split('T')[0]);
 
-  // Filters
   const [filters, setFilters] = useState({
     id: '',
     docId: '',
@@ -48,14 +45,11 @@ export function CustomsPayPage() {
     amount: '',
   });
 
-  // Sorting
   const [sortField, setSortField] = useState<string>('id');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
-  // Selection
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   
-  // Payment processing
   const [payingIds, setPayingIds] = useState<Set<string | number>>(new Set());
   const [showSingleConfirm, setShowSingleConfirm] = useState(false);
   const [showMultiConfirm, setShowMultiConfirm] = useState(false);
@@ -146,7 +140,6 @@ export function CustomsPayPage() {
     return arr;
   }, [filteredData, sortField, sortDirection]);
 
-  // Mass Selection
   const toggleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedRows(sortedData.map(r => r.id));
@@ -177,7 +170,6 @@ export function CustomsPayPage() {
     setSelectedRows(ids);
   };
 
-  // Payment Logic
   const handlePaySingleConfirm = async () => {
     if (!singleTxToPay) return;
     
@@ -292,7 +284,6 @@ export function CustomsPayPage() {
     }
   };
 
-  // Stats
   const totalPaid = useMemo(() => sortedData.filter((row) => getPaymentStatus(row) !== 'pending').length, [sortedData]);
   const totalAmountSelected = useMemo(() => {
     return sortedData.filter(row => selectedRows.includes(row.id)).reduce((sum, row) => sum + (row.amount || 0), 0);

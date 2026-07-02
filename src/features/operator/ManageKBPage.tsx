@@ -29,7 +29,6 @@ export function ManageKBPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalConfig, setModalConfig] = useState<{ entity: string; data: any; mode: 'create' | 'edit' }>({ entity: '', data: null, mode: 'create' });
 
-  // Form states
   const [formTitle, setFormTitle] = useState('');
   const [formDescription, setFormDescription] = useState('');
   const [formFile, setFormFile] = useState<File | null>(null);

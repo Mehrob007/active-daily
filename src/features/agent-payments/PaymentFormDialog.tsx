@@ -47,7 +47,6 @@ export function PaymentFormDialog({ isOpen, onClose, onSuccess }: PaymentFormDia
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validation
     const requiredFields = ['cashback_amount', 'beneficiary_idn', 'beneficiary_iban', 'beneficiary_name', 'payment_details', 'payer_idn', 'payer_name', 'payer_iban'];
     if (paymentType === 'domestic') {
       requiredFields.push('bic');

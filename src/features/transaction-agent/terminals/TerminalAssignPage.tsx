@@ -31,7 +31,6 @@ export function TerminalAssignPage() {
   const [data, setData] = useState<TerminalAssignItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Filters
   const [filters, setFilters] = useState({
     transactionType: '',
     description: '',
@@ -39,11 +38,9 @@ export function TerminalAssignPage() {
     currency: '',
   });
 
-  // Sorting
   const [sortField, setSortField] = useState<keyof TerminalAssignItem>('id');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
-  // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [editItem, setEditItem] = useState<TerminalAssignItem | null>(null);
   const [saving, setSaving] = useState(false);

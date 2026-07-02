@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
 export const applicationFormSchema = z.object({
-  // Basic Info
   surname: z.string().min(2, "Фамилия обязательна"),
   name: z.string().min(2, "Имя обязательно"),
   patronymic: z.string().optional(),
@@ -15,7 +14,6 @@ export const applicationFormSchema = z.object({
   client_code: z.string().optional(),
   is_resident: z.boolean().default(false),
   
-  // Documents
   type_of_certificate: z.number().optional(),
   documents_series: z.string().optional(),
   document_number: z.string().optional(),
@@ -24,7 +22,6 @@ export const applicationFormSchema = z.object({
   issued_by: z.string().optional(),
   inn: z.string().optional(),
   
-  // Address & Geography
   country: z.string().optional(),
   regin_type: z.number().optional(),
   region: z.string().optional(),
@@ -42,7 +39,6 @@ export const applicationFormSchema = z.object({
   apartment_number: z.string().optional(),
   client_index: z.string().optional(),
   
-  // Bank details (Product)
   product: z.string().min(1, "Продукт обязателен"),
   account_usd: z.string().min(1, "Счет USD обязателен"),
   account_eur: z.string().min(1, "Счет EUR обязателен"),
@@ -50,13 +46,11 @@ export const applicationFormSchema = z.object({
   contract_number: z.string().min(1, "Номер договора обязателен"),
   contract_date: z.string().min(1, "Дата договора обязательна"),
   
-  // Verification & SMS
   identity_verified: z.boolean().default(false),
   is_new_client: z.boolean().default(false), // "Отправить СМС?" in the old form
   message_type: z.string().optional(),
   rejection_reason: z.string().optional(),
 
-  // Files
   front_side_of_the_passport_file: z.any().optional(),
   back_side_of_the_passport_file: z.any().optional(),
   selfie_with_passport_file: z.any().optional(),

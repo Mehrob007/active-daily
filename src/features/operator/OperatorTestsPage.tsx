@@ -13,7 +13,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Plus, Edit2, Trash2, ChevronRight, Clock, HelpCircle, CheckCircle2, GraduationCap } from 'lucide-react';
 import { toast } from 'sonner';
 
-// Dummy data
 const initialTests = [
   { id: 1, title: 'Аттестация по продуктам', description: 'Обязательный тест для новых сотрудников', active: true },
   { id: 2, title: 'Правила безопасности', description: 'Ежегодный срез знаний по ИБ', active: true },
@@ -50,7 +49,6 @@ export function OperatorTestsPage() {
   const [tests, setTests] = useState<any[]>(initialTests);
   const [selectedTestId, setSelectedTestId] = useState<number | null>(null);
   
-  // Modals state
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
   const [modalEntity, setModalEntity] = useState<'test' | 'question' | 'option'>('test');
@@ -326,5 +324,4 @@ export function OperatorTestsPage() {
   );
 }
 
-// Ensure GraduationCap is exported from lucide-react, if not used already
 import { GraduationCap as GradCapIcon } from 'lucide-react';

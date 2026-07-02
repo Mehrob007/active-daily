@@ -10,7 +10,6 @@ import { toast } from '@/hooks/use-toast';
 import * as XLSX from 'xlsx';
 import { apiClient } from '@/services/api-client';
 
-// Map of currency codes
 const getCurrencyCode = (code: string) => {
   const codeMap: Record<string, string> = {
     "972": "TJS",

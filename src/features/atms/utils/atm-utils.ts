@@ -79,10 +79,8 @@ export const getRegionGroup = (region: any): string => {
   const r = String(region).trim().toLowerCase();
   if (!r) return "Прочие";
 
-  // Душанбе
   if (r.includes("душанбе")) return "Душанбе";
 
-  // Согдийская область
   if (
     r.includes("хучанд") ||
     r.includes("худжанд") ||
@@ -93,7 +91,6 @@ export const getRegionGroup = (region: any): string => {
   )
     return "Вилояти Суғд";
 
-  // Куляб (Хатлон)
   if (
     r.includes("кулоб") ||
     r.includes("куляб") ||
@@ -102,7 +99,6 @@ export const getRegionGroup = (region: any): string => {
   )
     return "Минтақаи Қӯлоб";
 
-  // Бохтар (Хатлон)
   if (
     r.includes("бохтар") ||
     r.includes("кубодиён") ||
@@ -114,7 +110,6 @@ export const getRegionGroup = (region: any): string => {
   )
     return "Минтақаи Бохтар";
 
-  // ГБАО (Горный Бадахшан)
   if (
     r.includes("гбао") ||
     r.includes("горный бадахшан") ||
@@ -124,7 +119,6 @@ export const getRegionGroup = (region: any): string => {
   )
     return "ГБАО";
 
-  // НТЧ (Рогун, Турсунзода, Вахдат, Ҳисор, Шаҳринав, Файзобод и др.)
   if (
     r.includes("рогун") ||
     r.includes("турсунзода") ||
@@ -138,6 +132,5 @@ export const getRegionGroup = (region: any): string => {
   )
     return "НТЧ";
 
-  // Если регион не классифицирован — Прочие
   return "Прочие";
 };

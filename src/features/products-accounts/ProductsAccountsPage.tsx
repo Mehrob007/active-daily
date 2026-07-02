@@ -27,7 +27,6 @@ export function ProductsAccountsPage() {
   const [editingAccount, setEditingAccount] = useState<any>(null);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Form State
   const [overdraftAllowed, setOverdraftAllowed] = useState(false);
 
   const handleOpenCreate = () => {

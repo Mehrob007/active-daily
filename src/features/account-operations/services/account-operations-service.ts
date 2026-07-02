@@ -46,8 +46,6 @@ export const fetchAccountOperations = async (
 
   const url = `${BACKEND_ABS_URL}/account/operations?${params.toString()}`;
   
-  // Use native fetch to be able to set dynamic baseUrl if we bypass apiClient, 
-  // but it's better to use apiClient with full URL or custom base.
   const response = await apiClient.get<any[]>(url, { baseURL: '' });
   
   if (response && Array.isArray(response)) {

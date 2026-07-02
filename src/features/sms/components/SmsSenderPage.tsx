@@ -25,7 +25,6 @@ export function SmsSenderPage() {
       return;
     }
 
-    // Optional validation for basic format
     const phoneRegex = /^[0-9]+$/;
     if (!phoneRegex.test(phoneNumber.replace(/\+/g, ''))) {
       toast.error('Неверный формат номера телефона. Используйте только цифры (и + в начале)');

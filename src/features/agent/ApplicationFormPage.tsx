@@ -56,7 +56,6 @@ export default function ApplicationFormPage({ type, id }: ApplicationFormPagePro
   const messageType = watch('message_type');
   const phoneNumber = watch('phone_number');
 
-  // Simulated ABS Search
   const handleSearchABS = async () => {
     if (!phoneNumber || phoneNumber.length < 9) {
       toast.error('Введите корректный номер телефона для поиска');
@@ -87,11 +86,6 @@ export default function ApplicationFormPage({ type, id }: ApplicationFormPagePro
     try {
       console.log('Submitting data:', data);
       
-      // Simulate API call
-      // In reality: 
-      // const formData = new FormData();
-      // append all fields to formData
-      // await agentService.createApplication(formData)
 
       await new Promise(resolve => setTimeout(resolve, 2000));
       toast.success(isEdit ? 'Заявка успешно обновлена' : 'Заявка успешно создана');

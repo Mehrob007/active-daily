@@ -14,7 +14,6 @@ interface TransactionsFilterProps {
 }
 
 export function TransactionsFilter({ onSearch, isLoading, isLimitedAccess, initialCardId }: TransactionsFilterProps) {
-  // Filters state
   const [cardNumber, setCardNumber] = useState('');
   const [displayCardNumber, setDisplayCardNumber] = useState('');
   const [cardId, setCardId] = useState(initialCardId || '');
@@ -36,7 +35,6 @@ export function TransactionsFilter({ onSearch, isLoading, isLimitedAccess, initi
   const [excludeMcc, setExcludeMcc] = useState('');
   const [excludeAccounts, setExcludeAccounts] = useState('');
   
-  // Date and Time
   const initFromDate = new Date();
   initFromDate.setDate(initFromDate.getDate() - 30);
   const [fromDate, setFromDate] = useState(initFromDate.toISOString().split('T')[0]);
@@ -44,7 +42,6 @@ export function TransactionsFilter({ onSearch, isLoading, isLimitedAccess, initi
   const [fromTime, setFromTime] = useState('');
   const [toTime, setToTime] = useState('');
 
-  // Transaction Types Tags
   const [transactionTypes, setTransactionTypes] = useState<string[]>([]);
   const [tagInputVal, setTagInputVal] = useState('');
 

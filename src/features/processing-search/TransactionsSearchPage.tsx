@@ -23,11 +23,9 @@ export function TransactionsSearchPage({ initialCardId }: { initialCardId?: stri
   const [transactions, setTransactions] = useState<ProcessingTransaction[]>([]);
   const [exchangeRates, setExchangeRates] = useState({ USD: 1, EUR: 1, RUB: 1 });
   
-  // Dummy logic for limited access based on your rules, just passing false for now
   const isLimitedAccess = false; 
 
   useEffect(() => {
-    // Fetch initial conversion rates
     loadConversionRates();
   }, []);
 
@@ -56,7 +54,6 @@ export function TransactionsSearchPage({ initialCardId }: { initialCardId?: stri
     try {
       const results = await fetchTransactionsSearch(params);
       
-      // Process results to append nationalAmount
       const processed = results.map(tx => {
         let nationalAmount = tx.amount;
         if (tx.currency !== 972) {
@@ -73,8 +70,6 @@ export function TransactionsSearchPage({ initialCardId }: { initialCardId?: stri
         };
       });
 
-      // Optionally filter by transaction types mapped value if we had that logic
-      // In the old code, it filtered by getTransactionTypeValue, but the API might do it now.
       
       setTransactions(processed);
       if (processed.length === 0) {

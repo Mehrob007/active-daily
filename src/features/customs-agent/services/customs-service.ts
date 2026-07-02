@@ -102,7 +102,6 @@ export const exportCustomsExcel = async (transactions: CustomsTransaction[], fil
 };
 
 export const getAbsStatement = async (startDate: string, endDate: string, account: string): Promise<any[]> => {
-  // Format dates expected by backend: DD.MM.YYYY
   const formatDateForQuery = (dateStr: string) => {
     if (!dateStr) return '';
     const parts = dateStr.split('-');

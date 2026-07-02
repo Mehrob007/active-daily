@@ -29,7 +29,6 @@ export function TransactionUpdatePage() {
   const [data, setData] = useState<TransactionTypeItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Filters
   const [filters, setFilters] = useState({
     type: '',
     name: '',
@@ -37,11 +36,9 @@ export function TransactionUpdatePage() {
     id: '',
   });
 
-  // Sorting
   const [sortField, setSortField] = useState<keyof TransactionTypeItem>('id');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
-  // Modal state
   const [editItem, setEditItem] = useState<TransactionTypeItem | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -108,7 +105,6 @@ export function TransactionUpdatePage() {
   const handleSave = async (originalItem: TransactionTypeItem, updatedItem: TransactionTypeItem) => {
     setSaving(true);
     try {
-      // Check what changed
       const nameChanged = originalItem.name !== updatedItem.name;
       const numberChanged = String(originalItem.number) !== String(updatedItem.number);
 

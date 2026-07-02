@@ -36,7 +36,6 @@ export function ClientDocumentsPage() {
   const [previewDoc, setPreviewDoc] = useState<any | null>(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   
-  // Upload state
   const [uploadInn, setUploadInn] = useState('');
   const [uploadTitle, setUploadTitle] = useState('');
   const [uploadFile, setUploadFile] = useState<File | null>(null);
@@ -68,7 +67,6 @@ export function ClientDocumentsPage() {
       toast.success(`Найдено документов: ${data.length}`);
     } catch (error) {
       console.warn("API request failed, using mock data.");
-      // Fallback mock data for visual presentation
       setDocuments([
         { id: 1, title: 'Паспорт (Лицевая сторона)', document_type: 'passport_front', source: 'mobile', url: 'https://placehold.co/600x400.png?text=Passport+Front', created_at: new Date().toISOString() },
         { id: 2, title: 'Селфи с паспортом', document_type: 'selfie', source: 'operator', url: 'https://placehold.co/400x400.png?text=Selfie', created_at: new Date().toISOString() },
@@ -94,7 +92,6 @@ export function ClientDocumentsPage() {
 
     setIsUploading(true);
     try {
-      // Simulate API call with FormData
       await new Promise(resolve => setTimeout(resolve, 1500));
       toast.success('Документ успешно загружен');
       setIsUploadModalOpen(false);

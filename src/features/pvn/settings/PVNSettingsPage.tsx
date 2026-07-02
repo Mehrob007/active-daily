@@ -42,11 +42,9 @@ export function PVNSettingsPage() {
   const [items, setItems] = useState<PVNSetting[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Sorting
   const [sortField, setSortField] = useState<keyof PVNSetting | 'ID'>('ID');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
-  // Modals
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingItem, setEditingItem] = useState<PVNSetting | null>(null);

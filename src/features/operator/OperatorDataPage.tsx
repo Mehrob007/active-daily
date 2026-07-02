@@ -13,7 +13,6 @@ export function OperatorDataPage() {
   const [activeTab, setActiveTab] = useState('employees');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Dummy action
   const handleAddNew = () => {
     toast.success('Открыто окно создания новой записи');
   };
