@@ -16,6 +16,7 @@ import {
   paySingleCustoms,
   exportCustomsExcel,
   getAbsStatement,
+  getCustomsBalance,
   CustomsTransaction,
 } from '../services/customs-service';
 import { getPaymentStatus, isWorkingHours } from '../utils/customs-utils';
@@ -33,6 +34,8 @@ export function CustomsPayPage() {
   const [statementLoading, setStatementLoading] = useState(false);
   const [absStartDate, setAbsStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [absEndDate, setAbsEndDate] = useState(new Date().toISOString().split('T')[0]);
+
+  const [balance, setBalance] = useState<number | null>(null);
 
   const [filters, setFilters] = useState({
     id: '',
@@ -56,12 +59,24 @@ export function CustomsPayPage() {
   const [singleTxToPay, setSingleTxToPay] = useState<CustomsTransaction | null>(null);
   const [multiTxToPay, setMultiTxToPay] = useState<CustomsTransaction[]>([]);
 
+  const loadBalance = async () => {
+    try {
+      const res = await getCustomsBalance();
+      if (res && typeof res.balance === 'number') {
+        setBalance(res.balance);
+      }
+    } catch (err) {
+      console.error('Failed to load balance', err);
+    }
+  };
+
   const fetchEqms = async () => {
     try {
       setLoading(true);
       const res = await getCustomsPayments(startDate, endDate);
       setData(res);
       toast.success(`Загружено ${res.length} записей`);
+      loadBalance();
     } catch (err: any) {
       toast.error('Ошибка загрузки данных. Проверьте сервер.');
       setData([]);
@@ -134,7 +149,7 @@ export function CustomsPayPage() {
       const cmp = typeof aVal === 'number' && typeof bVal === 'number' 
         ? aVal - bVal 
         : String(aVal).localeCompare(String(bVal), 'ru', { numeric: true });
-        
+      
       return sortDirection === 'asc' ? cmp : -cmp;
     });
     return arr;
@@ -158,16 +173,46 @@ export function CustomsPayPage() {
 
   const selectAllUnpaid = () => {
     const ids = sortedData
-      .filter(row => getPaymentStatus(row) === 'pending' && String(row.status || '').toLowerCase() === 'success')
+      .filter(row => 
+        (getPaymentStatus(row) === 'pending' || row.statusABS !== 'Оплачено в АБС') && 
+        String(row.status || '').toLowerCase() === 'success'
+      )
       .map(r => r.id);
     setSelectedRows(ids);
   };
 
   const selectAllPaid = () => {
     const ids = sortedData
-      .filter(row => getPaymentStatus(row) !== 'pending' && String(row.status || '').toLowerCase() === 'success')
+      .filter(row => 
+        (getPaymentStatus(row) !== 'pending' && row.statusABS === 'Оплачено в АБС') && 
+        String(row.status || '').toLowerCase() === 'success'
+      )
       .map(r => r.id);
     setSelectedRows(ids);
+  };
+
+  const handlePaySingleClick = (tx: CustomsTransaction) => {
+    const paymentStatus = getPaymentStatus(tx);
+    const absStatus = tx.statusABS || 'Ожидает проверки';
+
+    if (absStatus === 'Оплачено в АБС') {
+      if (paymentStatus === 'already_paid') {
+        toast.warning('Таможня уже оплачена ранее');
+        return;
+      }
+      if (paymentStatus === 'paid') {
+        toast.info('Оплата уже была отправлена (статус Success)');
+        return;
+      }
+    }
+
+    if (absStatus === 'Ожидает проверки' && paymentStatus === 'already_paid') {
+      toast.warning('Оплата уже отправлена и ожидает подтверждения от АБС. Пожалуйста, подождите.');
+      return;
+    }
+
+    setSingleTxToPay(tx);
+    setShowSingleConfirm(true);
   };
 
   const handlePaySingleConfirm = async () => {
@@ -183,7 +228,18 @@ export function CustomsPayPage() {
       toast.success('Оплата успешно отправлена! Ожидаем подтверждения...');
       setTimeout(fetchEqms, 1000);
     } catch (err: any) {
-      toast.error(`Платеж с ID ${tx.id} завершился с ошибкой: ${err.message}`);
+      const errMsg = err?.message || '';
+      const isAlreadyPaid =
+        errMsg.toLowerCase().includes('уже оплачена') ||
+        errMsg.toLowerCase().includes('already_paid') ||
+        errMsg.toLowerCase().includes('already paid');
+
+      if (isAlreadyPaid) {
+        toast.warning('Оплата уже была проведена или находится в обработке. Обновите страницу для проверки статуса.');
+        setTimeout(fetchEqms, 1500);
+      } else {
+        toast.error(`Платеж с ID ${tx.id} завершился с ошибкой: ${errMsg}`);
+      }
     } finally {
       setPayingIds(prev => {
         const next = new Set(prev);
@@ -255,12 +311,40 @@ export function CustomsPayPage() {
   };
 
   const triggerPaySelected = () => {
-    const toPay = sortedData.filter(r => selectedRows.includes(r.id) && getPaymentStatus(r) === 'pending');
+    const toPay = sortedData.filter(
+      (row) =>
+        selectedRows.includes(row.id) &&
+        (getPaymentStatus(row) === 'pending' || row.statusABS !== 'Оплачено в АБС')
+    );
+
     if (toPay.length === 0) {
       toast.warning('Нет выбранных неоплаченных записей для оплаты');
       return;
     }
-    setMultiTxToPay(toPay);
+
+    const alreadySentOrPaid = toPay.filter(
+      (row) =>
+        row.statusABS === 'Оплачено в АБС' ||
+        row.statusABS === 'Ожидает проверки'
+    );
+    if (alreadySentOrPaid.length > 0) {
+      toast.warning(
+        `Среди выбранных записей есть ${alreadySentOrPaid.length} со статусом АБС "Оплачено в АБС" или "Ожидает проверки". Они будут пропущены.`
+      );
+    }
+
+    const filteredToPay = toPay.filter(
+      (row) =>
+        row.statusABS !== 'Оплачено в АБС' &&
+        row.statusABS !== 'Ожидает проверки'
+    );
+
+    if (filteredToPay.length === 0) {
+      toast.info('Все выбранные записи уже отправлены в АБС или оплачены.');
+      return;
+    }
+
+    setMultiTxToPay(filteredToPay);
     setShowMultiConfirm(true);
   };
 
@@ -350,6 +434,15 @@ export function CustomsPayPage() {
                     <span className="text-slate-500 text-xs">Сумма выбранных</span>
                     <strong className="text-primary">{totalAmountSelected.toLocaleString('ru-RU')} С</strong>
                   </div>
+                  {balance !== null && (
+                    <>
+                      <div className="w-px bg-slate-200"></div>
+                      <div className="flex flex-col">
+                        <span className="text-slate-500 text-xs">Доступный баланс</span>
+                        <strong className="text-emerald-600">{balance.toLocaleString('ru-RU')} С</strong>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </CardHeader>
@@ -415,10 +508,7 @@ export function CustomsPayPage() {
                 onToggleSelect={toggleSelect}
                 onToggleSelectAll={toggleSelectAll}
                 payingIds={payingIds}
-                onPaySingle={(row) => {
-                  setSingleTxToPay(row);
-                  setShowSingleConfirm(true);
-                }}
+                onPaySingle={handlePaySingleClick}
               />
             </CardContent>
           </Card>

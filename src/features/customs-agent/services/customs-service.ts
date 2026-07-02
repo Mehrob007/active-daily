@@ -25,11 +25,11 @@ export interface CustomsTransaction {
 }
 
 const getBackendMain = () => {
-  return process.env.NEXT_PUBLIC_BACKEND_PROCESSING_URL || '';
+  return process.env.NEXT_PUBLIC_API_BASE_URL || '';
 };
 
 const getBackendABS = () => {
-  return process.env.NEXT_PUBLIC_BACKEND_ABS_SERVICE_URL || process.env.NEXT_PUBLIC_BACKEND_PROCESSING_URL || '';
+  return process.env.NEXT_PUBLIC_BACKEND_ABS_SERVICE_URL || process.env.NEXT_PUBLIC_API_BASE_URL || '';
 };
 
 const getToken = () => {
@@ -124,5 +124,17 @@ export const getAbsStatement = async (startDate: string, endDate: string, accoun
     throw new Error(`Ошибка HTTP ${res.status}`);
   }
   
+  return res.json();
+};
+
+export const getCustomsBalance = async (): Promise<any> => {
+  const url = `${getBackendMain()}/eqms/balance`;
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: { ...getAuthHeaders() },
+  });
+  if (!res.ok) {
+    throw new Error(`Ошибка HTTP ${res.status}`);
+  }
   return res.json();
 };

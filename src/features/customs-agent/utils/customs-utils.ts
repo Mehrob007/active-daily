@@ -70,4 +70,5 @@ export const CUSTOMS_COLUMNS_TRANSLATION: Record<string, string> = {
   recBankName: 'Банк получателя',
   recBankCode: 'Код банка получателя',
   recAcc: 'Номер счета получателя',
+  statusABS: 'Статус в АБС',
 };

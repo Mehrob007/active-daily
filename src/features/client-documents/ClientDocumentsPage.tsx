@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Search, Loader2, Eye, FileText, Image as ImageIcon, File, Upload, Trash2, Camera } from 'lucide-react';
+import { Search, Loader2, Eye, FileText, Image as ImageIcon, File, Upload, Trash2, Camera, Download } from 'lucide-react';
 import { toast } from 'sonner';
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
