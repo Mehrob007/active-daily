@@ -4,8 +4,8 @@ WORKDIR /app
 
 # Stage 2: Dependencies
 FROM base AS deps
-COPY package.json bun.lock ./
-RUN BUN_CONFIG_NO_VERIFY=1 bun install
+COPY package.json ./
+RUN bun install
 
 # Stage 3: Builder
 FROM base AS builder
