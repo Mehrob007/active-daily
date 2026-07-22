@@ -18,6 +18,7 @@ function getDefaultPageForRoles(roleIds: number[]): string {
   if (roleIds.includes(18)) return "limits";
   if (roleIds.includes(21)) return "transactions";
   if (roleIds.includes(27)) return "documents";
+  if (roleIds.includes(33)) return "account-reconciliation";
   return "dashboard";
 }
 

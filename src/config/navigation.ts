@@ -1,6 +1,6 @@
 import type { MenuItem, RoleId } from "@/types";
 
-const allRoles = [5, 9, 10, 11, 12, 13, 14, 17, 18, 21, 22, 23, 26, 27, 31, 32];
+const allRoles = [5, 9, 10, 11, 12, 13, 14, 17, 18, 21, 22, 23, 26, 27, 31, 32, 33];
 
 const menuTree: MenuItem[] = [
   {
@@ -427,6 +427,13 @@ const menuTree: MenuItem[] = [
     ],
   },
   {
+    id: "account-reconciliation",
+    label: "Сверка счетов",
+    icon: "ShieldCheck",
+    path: "account-reconciliation",
+    roles: allRoles,
+  },
+  {
     id: "payments",
     label: "Платежи",
     icon: "Wallet",
@@ -618,6 +625,9 @@ export function getPathFromPageId(id: string): string {
     case "cashback-qr":
       return "/cashback/qr";
 
+    case "account-reconciliation":
+      return "/account-reconciliation";
+
     case "payments-list":
       return "/payments/list";
 
@@ -688,6 +698,8 @@ export function getPageIdFromPath(pathname: string): string {
   if (p === "/cashback/cards") return "cashback-cards";
   if (p === "/cashback/limits") return "cashback-limits";
   if (p === "/cashback/qr") return "cashback-qr";
+
+  if (p === "/account-reconciliation") return "account-reconciliation";
 
   if (p === "/payments/list") return "payments-list";
 

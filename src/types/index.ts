@@ -15,7 +15,8 @@ export type RoleId =
   | 26 
   | 27 
   | 31 
-  | 32; 
+  | 32
+  | 33;
 
 export interface User {
   id: string;

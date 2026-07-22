@@ -79,6 +79,7 @@ import {
   Database,
   Send,
   RefreshCw,
+  ShieldCheck,
 } from 'lucide-react';
 
 const iconMap: Record<string, React.ElementType> = {
@@ -127,6 +128,7 @@ const iconMap: Record<string, React.ElementType> = {
   Database,
   Send,
   RefreshCw,
+  ShieldCheck,
 };
 
 function MenuIcon({ name, className }: { name?: string; className?: string }) {
