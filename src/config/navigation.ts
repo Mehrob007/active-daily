@@ -106,7 +106,7 @@ const menuTree: MenuItem[] = [
         id: "card-list",
         label: "Заявки",
         icon: "List",
-        path: "card-apps/list",
+        path: "agent/applications-list",
         roles: allRoles,
       },
     ],
@@ -537,7 +537,7 @@ export function getPathFromPageId(id: string): string {
     case "card-create":
       return "/card-apps/create";
     case "card-list":
-      return "/card-apps/list";
+      return "/agent/applications-list";
 
     case "products-cards":
       return "/products/cards";
@@ -642,7 +642,7 @@ export function getPageIdFromPath(pathname: string): string {
   if (p === "/operator/manage-kb") return "operator-manage-kb";
 
   if (p === "/card-apps/create") return "card-create";
-  if (p === "/card-apps/list") return "card-list";
+  if (p === "/card-apps/list" || p === "/agent/applications-list") return "card-list";
 
   if (p === "/products/cards") return "products-cards";
   if (p === "/products/credits") return "products-credits";

@@ -19,6 +19,19 @@ import { exportAccountOperationsToExcel } from './utils/export-utils';
 import { AccountOperationsTable } from './components/AccountOperationsTable';
 import { OtpVerificationModal } from './components/OtpVerificationModal';
 
+const formatDateInputValue = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const formatDateDisplay = (value: string) => {
+  const [year, month, day] = value.split("-");
+  if (!year || !month || !day) return value;
+  return `${day}.${month}.${year}`;
+};
+
 export const AccountOperationsPage = () => {
   const searchParams = useSearchParams();
   const initialAccount = searchParams.get('account') || '';
@@ -42,11 +55,9 @@ export const AccountOperationsPage = () => {
     const today = new Date();
     const thirtyDaysAgo = new Date(today);
     thirtyDaysAgo.setDate(today.getDate() - 30);
-    
-    const formatDate = (date: Date) => date.toISOString().split("T")[0];
-    
-    setFromDate(formatDate(thirtyDaysAgo));
-    setToDate(formatDate(today));
+
+    setFromDate(formatDateInputValue(thirtyDaysAgo));
+    setToDate(formatDateInputValue(today));
   }, []);
 
   const handleSearch = useCallback(async (accNumOverride?: string) => {
@@ -113,11 +124,11 @@ export const AccountOperationsPage = () => {
   };
 
   const clearDates = () => {
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date();
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    setFromDate(thirtyDaysAgo.toISOString().split("T")[0]);
-    setToDate(today);
+    setFromDate(formatDateInputValue(thirtyDaysAgo));
+    setToDate(formatDateInputValue(today));
   };
 
   const handleExportClick = async () => {
@@ -185,7 +196,7 @@ export const AccountOperationsPage = () => {
             <CardTitle className="text-lg">Поиск операций</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col md:flex-row gap-4 items-end">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
               <div className="space-y-2 flex-1 max-w-sm">
                 <label className="text-sm font-medium">Номер счета</label>
                 <Input
@@ -197,33 +208,51 @@ export const AccountOperationsPage = () => {
                 />
               </div>
               
-              <div className="space-y-2 w-full md:w-auto">
-                <label className="text-sm font-medium">С даты</label>
-                <Input
-                  type="date"
-                  value={fromDate}
-                  onChange={(e) => setFromDate(e.target.value)}
-                  disabled={isLoading}
-                  className="w-full md:w-40"
-                />
-              </div>
+              <div className="w-full lg:flex-[1.1]">
+                <div className="rounded-2xl border border-border/70 bg-muted/30 p-3 shadow-sm">
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <span className="text-sm font-semibold text-foreground">Период выписки</span>
+                    {fromDate && toDate && (
+                      <span className="hidden rounded-full bg-background px-3 py-1 text-xs font-medium text-muted-foreground sm:inline-flex">
+                        {formatDateDisplay(fromDate)} — {formatDateDisplay(toDate)}
+                      </span>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">От</label>
+                      <Input
+                        type="date"
+                        value={fromDate}
+                        onChange={(e) => setFromDate(e.target.value)}
+                        disabled={isLoading}
+                        lang="ru"
+                        className="h-11 w-full bg-background text-base"
+                        aria-label="Дата от"
+                      />
+                    </div>
               
-              <div className="space-y-2 w-full md:w-auto">
-                <label className="text-sm font-medium">По дату</label>
-                <Input
-                  type="date"
-                  value={toDate}
-                  onChange={(e) => setToDate(e.target.value)}
-                  disabled={isLoading}
-                  className="w-full md:w-40"
-                />
+                    <div className="space-y-2 sm:text-right">
+                      <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">До</label>
+                      <Input
+                        type="date"
+                        value={toDate}
+                        onChange={(e) => setToDate(e.target.value)}
+                        disabled={isLoading}
+                        lang="ru"
+                        className="h-11 w-full bg-background text-base sm:text-right"
+                        aria-label="Дата до"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2 w-full md:w-auto pt-4 md:pt-0">
+              <div className="flex items-center gap-2 w-full lg:w-auto">
                 <Button 
                   onClick={() => handleSearch()} 
                   disabled={(!accountNumber.trim() && !initialAccount) || isLoading}
-                  className="flex-1 md:flex-none"
+                  className="h-11 flex-1 lg:flex-none"
                 >
                   {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
                   Найти
@@ -234,6 +263,7 @@ export const AccountOperationsPage = () => {
                   disabled={isLoading}
                   title="Очистить даты (установить за 30 дней)"
                   size="icon"
+                  className="h-11 w-11"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -267,7 +297,11 @@ export const AccountOperationsPage = () => {
                 <CardTitle className="text-lg">Операции по счету</CardTitle>
                 <p className="text-sm text-muted-foreground mt-1">
                   Счет: <span className="font-mono font-medium text-foreground">{formatAccountNumber(displayAccountNumber)}</span>
-                  {fromDate && toDate && ` (${fromDate} — ${toDate})`}
+                  {fromDate && toDate && (
+                    <span className="ml-2 inline-flex rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-foreground">
+                      Период: {formatDateDisplay(fromDate)} — {formatDateDisplay(toDate)}
+                    </span>
+                  )}
                 </p>
               </div>
             </CardHeader>

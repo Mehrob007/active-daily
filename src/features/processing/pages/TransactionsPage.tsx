@@ -43,6 +43,31 @@ const searchOptions = [
   { value: 'cardBinSearch', label: 'Поиск по BIN карты и типу транзакции' },
 ];
 
+const currencyMap: Record<string, string> = {
+  "972": "TJS",
+  "840": "USD",
+  "978": "EUR",
+  "643": "RUB",
+};
+
+const getCurrencyCode = (currency: string | number) => currencyMap[String(currency)] || String(currency || "");
+
+const signedAmountClass = (value: string | number | undefined) => {
+  const normalized = String(value ?? "").trim();
+  if (normalized.startsWith("-")) return "text-bank-red";
+  if (normalized.startsWith("+")) return "text-emerald-600";
+  return "text-slate-700";
+};
+
+const formatProcessingAmount = (signedValue: string | number | undefined, fallbackMinorUnits: string | number, currency: string | number) => {
+  if (signedValue !== undefined && signedValue !== null && String(signedValue).trim() !== "") {
+    return `${String(signedValue).trim()} ${getCurrencyCode(currency)}`.trim();
+  }
+
+  const amount = Number(fallbackMinorUnits) / 100;
+  return `${amount.toLocaleString("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${getCurrencyCode(currency)}`.trim();
+};
+
 export default function ProcessingTransactionsPage() {
   const [searchType, setSearchType] = useState('cardId');
   const [filters, setFilters] = useState<any>({
@@ -183,18 +208,22 @@ export default function ProcessingTransactionsPage() {
       id: 'amountOrig',
       header: 'Сумма (Ориг.)',
       cell: ({ row }) => {
-        const amt = Number(row.original.amount) / 100;
-        const curr = row.original.currency === '972' ? 'TJS' : row.original.currency === '840' ? 'USD' : row.original.currency === '978' ? 'EUR' : row.original.currency;
-        return <span className="font-bold tabular-nums text-bank-red">{amt.toLocaleString('ru-RU', { minimumFractionDigits: 2 })} {curr}</span>;
+        return (
+          <span className={`font-bold tabular-nums ${signedAmountClass(row.original.amountCurrency)}`}>
+            {formatProcessingAmount(row.original.amountCurrency, row.original.amount, row.original.currency)}
+          </span>
+        );
       }
     },
     {
       id: 'amountCard',
       header: 'Сумма (Карта)',
       cell: ({ row }) => {
-        const amt = Number(row.original.conamt) / 100;
-        const curr = row.original.conCurrency === '972' ? 'TJS' : row.original.conCurrency === '840' ? 'USD' : row.original.conCurrency === '978' ? 'EUR' : row.original.conCurrency;
-        return <span className="font-mono text-[11px]">{amt.toLocaleString('ru-RU', { minimumFractionDigits: 2 })} {curr}</span>;
+        return (
+          <span className={`font-mono text-[11px] font-semibold tabular-nums ${signedAmountClass(row.original.amountCardCurrency)}`}>
+            {formatProcessingAmount(row.original.amountCardCurrency, row.original.conamt, row.original.conCurrency)}
+          </span>
+        );
       }
     },
     {

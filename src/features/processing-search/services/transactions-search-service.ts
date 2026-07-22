@@ -37,8 +37,10 @@ export interface ProcessingTransaction {
   transactionType: string | number;
   transactionTypeNumber: number;
   amount: number;
+  amountCurrency?: number | string;
   currency: number;
   conamt: number;
+  amountCardCurrency?: number | string;
   conCurrency: number;
   acctbal: number;
   netbal: number;

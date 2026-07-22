@@ -24,6 +24,20 @@ const formatAmount = (value: any) => {
   return Number(value).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };
 
+const signedAmountClass = (value: unknown) => {
+  const normalized = String(value ?? "").trim();
+  if (normalized.startsWith("-")) return "text-red-600";
+  if (normalized.startsWith("+")) return "text-emerald-600";
+  return "text-slate-700";
+};
+
+const formatSignedAmount = (signedValue: unknown, fallbackValue: unknown) => {
+  if (signedValue !== undefined && signedValue !== null && String(signedValue).trim() !== "") {
+    return String(signedValue).trim();
+  }
+  return formatAmount(fallbackValue);
+};
+
 const formatCardNumber = (cardNumber: string) => {
   if (!cardNumber) return '';
   return cardNumber.replace(/(\d{4})/g, '$1 ').trim();
@@ -105,10 +119,16 @@ export function TransactionsTable({ transactions, exchangeRates, onExport }: Tra
                       {tx.transactionTypeName || "N/A"}
                     </TableCell>
                     <TableCell className="text-right whitespace-nowrap font-medium text-slate-700">
-                      {formatAmount(tx.amount)} <span className="text-xs text-slate-500">{getCurrencyCode(tx.currency)}</span>
+                      <span className={signedAmountClass(tx.amountCurrency)}>
+                        {formatSignedAmount(tx.amountCurrency, tx.amount)}
+                      </span>{" "}
+                      <span className="text-xs text-slate-500">{getCurrencyCode(tx.currency)}</span>
                     </TableCell>
                     <TableCell className="text-right whitespace-nowrap font-medium text-slate-700">
-                      {formatAmount(tx.conamt)} <span className="text-xs text-slate-500">{getCurrencyCode(tx.conCurrency)}</span>
+                      <span className={signedAmountClass(tx.amountCardCurrency)}>
+                        {formatSignedAmount(tx.amountCardCurrency, tx.conamt)}
+                      </span>{" "}
+                      <span className="text-xs text-slate-500">{getCurrencyCode(tx.conCurrency)}</span>
                     </TableCell>
                     <TableCell className="text-right whitespace-nowrap text-sm text-slate-600">
                       {formatAmount(tx.acctbal)}

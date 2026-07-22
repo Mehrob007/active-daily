@@ -18,6 +18,10 @@ import {
 import { conversionService } from '@/features/agent-qr/services/conversion-service';
 import { getTransactionTypeValue } from './utils/dataTrans';
 
+const valueOrFallback = (value: unknown, fallback: unknown) => (
+  value !== undefined && value !== null && String(value).trim() !== "" ? value : fallback
+);
+
 export function TransactionsSearchPage({ initialCardId }: { initialCardId?: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const [transactions, setTransactions] = useState<ProcessingTransaction[]>([]);
@@ -107,9 +111,9 @@ export function TransactionsSearchPage({ initialCardId }: { initialCardId?: stri
         "ID карты": t.cardId || "",
         "Тип операции": t.transactionTypeName || "",
         "Код операции": t.transactionType || "",
-        "Сумма (валюта)": t.amount || 0,
+        "Сумма (валюта)": valueOrFallback(t.amountCurrency, t.amount || 0),
         Валюта: getCurrencyCode(t.currency),
-        "Сумма в валюте карты": t.conamt || 0,
+        "Сумма в валюте карты": valueOrFallback(t.amountCardCurrency, t.conamt || 0),
         "Валюта карты": getCurrencyCode(t.conCurrency),
         "Доступный баланс": t.acctbal || 0,
         "Баланс карты": t.netbal || 0,
