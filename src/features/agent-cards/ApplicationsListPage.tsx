@@ -75,6 +75,12 @@ function getApplicationId(app: CardApplication) {
   return Number(app.ID ?? app.id ?? 0);
 }
 
+function getApplicationKey(app: CardApplication) {
+  const id = app.ID ?? app.id;
+  if (id !== undefined && id !== null && String(id).trim()) return String(id);
+  return `${getFullName(app)}-${app.phone_number || ''}-${getCreatedAt(app)}`;
+}
+
 function getFullName(app: CardApplication) {
   return [app.surname, app.name, app.patronymic].filter(Boolean).join(' ').trim() || 'Без имени';
 }
@@ -208,7 +214,7 @@ export function ApplicationsListPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [applications, setApplications] = useState<CardApplication[]>([]);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [selectedStatusId, setSelectedStatusId] = useState(0);
   const [search, setSearch] = useState('');
   const [fromDate, setFromDate] = useState('');
@@ -275,17 +281,17 @@ export function ApplicationsListPage() {
     });
   }, [applications, fromDate, operatorMap, search, toDate]);
 
-  const allVisibleSelected = filteredApplications.length > 0 && filteredApplications.every((app) => selectedIds.includes(getApplicationId(app)));
+  const allVisibleSelected = filteredApplications.length > 0 && filteredApplications.every((app) => selectedIds.includes(getApplicationKey(app)));
 
   function toggleAll(checked: boolean) {
     if (!checked) {
-      setSelectedIds((prev) => prev.filter((id) => !filteredApplications.some((app) => getApplicationId(app) === id)));
+      setSelectedIds((prev) => prev.filter((id) => !filteredApplications.some((app) => getApplicationKey(app) === id)));
       return;
     }
-    setSelectedIds((prev) => Array.from(new Set([...prev, ...filteredApplications.map(getApplicationId)])));
+    setSelectedIds((prev) => Array.from(new Set([...prev, ...filteredApplications.map(getApplicationKey)])));
   }
 
-  function toggleRow(id: number, checked: boolean) {
+  function toggleRow(id: string, checked: boolean) {
     setSelectedIds((prev) => checked ? Array.from(new Set([...prev, id])) : prev.filter((item) => item !== id));
   }
 
@@ -312,7 +318,7 @@ export function ApplicationsListPage() {
   }
 
   function exportRows() {
-    const rows = filteredApplications.filter((app) => selectedIds.length === 0 || selectedIds.includes(getApplicationId(app)));
+    const rows = filteredApplications.filter((app) => selectedIds.length === 0 || selectedIds.includes(getApplicationKey(app)));
     if (rows.length === 0) {
       toast.warning('Нет данных для выгрузки');
       return;
@@ -420,7 +426,11 @@ export function ApplicationsListPage() {
               <thead>
                 <tr className="border-b border-slate-100 text-left text-xs font-bold uppercase tracking-[0.08em] text-slate-500">
                   <th className="w-14 px-5 py-5">
-                    <Checkbox checked={allVisibleSelected} onCheckedChange={(checked) => toggleAll(Boolean(checked))} />
+                    <Checkbox
+                      checked={allVisibleSelected}
+                      onClick={(event) => event.stopPropagation()}
+                      onCheckedChange={(checked) => toggleAll(Boolean(checked))}
+                    />
                   </th>
                   <th className="px-5 py-5">ID</th>
                   <th className="px-5 py-5">Клиент</th>
@@ -447,11 +457,16 @@ export function ApplicationsListPage() {
                 ) : (
                   filteredApplications.map((app) => {
                     const id = getApplicationId(app);
+                    const selectionKey = getApplicationKey(app);
                     const statusId = getStatusId(app);
                     return (
-                      <tr key={id} className="border-b border-slate-100 transition hover:bg-slate-50/70">
-                        <td className="px-5 py-4">
-                          <Checkbox checked={selectedIds.includes(id)} onCheckedChange={(checked) => toggleRow(id, Boolean(checked))} />
+                      <tr key={selectionKey} className="border-b border-slate-100 transition hover:bg-slate-50/70">
+                        <td className="px-5 py-4" onClick={(event) => event.stopPropagation()}>
+                          <Checkbox
+                            checked={selectedIds.includes(selectionKey)}
+                            onClick={(event) => event.stopPropagation()}
+                            onCheckedChange={(checked) => toggleRow(selectionKey, Boolean(checked))}
+                          />
                         </td>
                         <td className="px-5 py-4 font-medium text-slate-500">#{id}</td>
                         <td className="px-5 py-4">
