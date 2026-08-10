@@ -1,3 +1,5 @@
+import { exportEqmsTransactions } from '../utils/eqms-export';
+
 export interface CustomsTransaction {
   id: string | number;
   status: string;
@@ -75,30 +77,8 @@ export const paySingleCustoms = async (transaction: CustomsTransaction): Promise
   return result;
 };
 
-export const exportCustomsExcel = async (transactions: CustomsTransaction[], filename: string) => {
-  const res = await fetch(`${getBackendMain()}/automation/eqms`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeaders(),
-    },
-    body: JSON.stringify(transactions),
-  });
-
-  if (!res.ok) {
-    const errorText = await res.text().catch(() => '');
-    throw new Error(`Ошибка выгрузки: ${res.status} - ${errorText}`);
-  }
-
-  const blob = await res.blob();
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  window.URL.revokeObjectURL(url);
+export const exportCustomsExcel = (transactions: CustomsTransaction[], filename: string) => {
+  exportEqmsTransactions(transactions, filename);
 };
 
 export const getAbsStatement = async (startDate: string, endDate: string, account: string): Promise<any[]> => {

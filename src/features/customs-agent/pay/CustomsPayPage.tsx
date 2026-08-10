@@ -348,7 +348,7 @@ export function CustomsPayPage() {
     setShowMultiConfirm(true);
   };
 
-  const handleExport = async () => {
+  const handleExport = () => {
     const selectedTxs = sortedData.filter(row => selectedRows.includes(row.id));
     if (selectedTxs.length === 0) {
       toast.error('Выберите хотя бы одну запись для выгрузки');
@@ -360,7 +360,7 @@ export function CustomsPayPage() {
       const todayFormatted = new Date().toISOString().slice(0, 10).replace(/-/g, '');
       const filename = allSelected ? `EQMS_Report_${startDate}_to_${endDate}.xlsx` : `EQMS_Report_${todayFormatted}.xlsx`;
       
-      await exportCustomsExcel(selectedTxs, filename);
+      exportCustomsExcel(selectedTxs, filename);
       toast.success(`Файл успешно выгружен (${selectedTxs.length} записей)`);
       setSelectedRows([]);
     } catch (err: any) {
